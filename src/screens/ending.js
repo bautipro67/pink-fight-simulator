@@ -1,36 +1,29 @@
-// The end screen. With SCENES on it comes after the scene that follows the fight (src/knight/scenes.js)
-// and only shows the result and TRY AGAIN / TITLE. With SCENES off it stands in for that scene: on a
-// win, Susie's "We... we actually beat it?" lines over the wind (wind_highplace.ogg at half pitch);
-// after GO FORWARD, the Knight over the fallen party.
+// The end screen. After the win: Pink's first lines of the scene after the fight (obj_dw_pink_encounter,
+// her peace sign, typer 97 = 6 here); after GIVE UP (DEVICE_FAILURE already said "THEN THE WORLD WAS
+// COVERED IN DARKNESS.") just the result. Then TRY AGAIN / TITLE.
 import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_exists, draw_sprite_ext,
   draw_set_color, draw_set_font, draw_set_alpha, draw_rectangle,
-} from '../runtime/gm.js?v=20261115164340';
-import { snd_init, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115164340';
-import { startBattle } from '../battle/setup.js?v=20261115164340';
-import { gotoRoom, scr_darkbox, fadeOut, centerText } from './common.js?v=20261115164340';
+} from '../runtime/gm.js?v=20261115165051';
+import { snd_init, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115165051';
+import { startBattle } from '../battle/setup.js?v=20261115165051';
+import { gotoRoom, scr_darkbox, fadeOut, centerText } from './common.js?v=20261115165051';
 
 const BS = String.fromCharCode(92);
 const LINES = {
-  // obj_ch3_PTB02 con 50 (the Knight defeated)
+  // obj_dw_pink_encounter con 6 (after the final date)
   win: {
     msg: [
-      BS + 'TX ' + BS + 'F0 ' + BS + 'Ee ' + BS + 'FS ' + BS + 'TS %',
-      BS + 'Ee* We..^1. we actually beat it?/',
-      BS + 'EW* What^1, don\'t tell me you\'ve had ENOUGH already?/',
-      BS + 'EY* C\'mon^1, we were just getting started!/%',
+      '* I..^1. I feel..^1. together!/',
+      '* Thank you^1, you three^1! Thanks to you.../',
+      '* We can finally be..^1. in harmony..^1. forever!/%',
     ],
-    title: 'THE ROARING KNIGHT WAS DEFEATED!',
+    title: 'PINK WAS WON OVER!',
     color: 0xffff00,
-    knight: 'spr_roaringknight_hurt',
+    sprite: 'spr_pink_peace_sign',
   },
-  // GO FORWARD (MOVE ON): the story goes on without a victory.
-  lose: {
-    msg: ['* The Roaring Knight stood over the fallen party./', '* ... and then it was gone./%'],
-    title: 'THE ROARING KNIGHT WON...',
-    color: 0xffffff,
-    knight: 'spr_roaringknight_idle',
-  },
+  // GIVE UP
+  lose: { msg: null, title: 'PINK WON...', color: 0xffffff, sprite: 'spr_pink_idle' },
 };
 
 class Ending extends Instance {
@@ -62,7 +55,7 @@ class Ending extends Instance {
     this.t += 1;
     if (this.con == 0 && this.t >= 45) {
       this.con = 1;
-      if (this.afterScene) this.writer = null; // the scene already told it
+      if (this.afterScene || !d.msg) this.writer = null; // nothing to say (or the scene already did)
       else this.say(d.msg);
     }
     if (this.con == 1 && !instance_exists(this.writer)) {
@@ -74,10 +67,8 @@ class Ending extends Instance {
         mus_volume(this.music, 0, 20);
         fadeOut(20, () => {
           mus_stop(this.music);
-          if (i == 0) {
-            if (G.settings?.scenes !== false) S.startKnightFight();
-            else startBattle({ intro: G.settings?.intro !== false });
-          } else S.startTitle();
+          if (i == 0) startBattle({ intro: G.settings?.intro !== false });
+          else S.startTitle();
         });
       }, 'fnt_mainbig', 32);
     }
@@ -86,7 +77,7 @@ class Ending extends Instance {
     const d = LINES[this.kind];
     const a = this.con >= 3 ? 1 : Math.min(1, this.t / 30);
     const bob = Math.cos(this.t / 8) * 8;
-    if (!this.afterScene) draw_sprite_ext(d.knight, 0, 230, 70 + bob, 2, 2, 0, 0xffffff, a);
+    if (!this.afterScene) draw_sprite_ext(d.sprite, 0, 280, 90 + bob, 2, 2, 0, 0xffffff, a);
     if (this.con >= 1 && this.con <= 2) {
       draw_set_color(0);
       draw_rectangle(38, 326, 602, 464, false);

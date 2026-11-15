@@ -1,21 +1,21 @@
-// Title screen: the Knight fight background, the Roaring Knight hovering, and a SOUL menu.
+// Title screen: Pink on her stage, and a SOUL menu.
 // URL params: ?battle starts the fight at once, ?nointro also skips the encounter transition,
 // ?practice[&attack=N][&hp=N] starts practice mode.
 import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, objectExists,
   draw_sprite_ext, draw_set_color, draw_set_font, draw_set_alpha, draw_rectangle, draw_text, controls,
   draw_set_halign, draw_text_transformed, fa_center, fa_left,
-} from '../runtime/gm.js?v=20261115164340';
-import { snd_init, snd_play, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115164340';
-import { startBattle } from '../battle/setup.js?v=20261115164340';
-import * as SB from '../debug/sandbox.js?v=20261115164340';
-import { gotoRoom, fadeOut, centerText, whenSoundsReady } from './common.js?v=20261115164340';
-import { saveSettings, applyVolume, getBest } from '../settings.js?v=20261115164340';
-import { HATS, currentHat, drawHat } from '../hats.js?v=20261115164340';
-import { openEquipment } from './equipment.js?v=20261115164340';
-import { openControls, keyName } from './controls.js?v=20261115164340';
-import './gameover.js?v=20261115164340';
-import './ending.js?v=20261115164340';
+} from '../runtime/gm.js?v=20261115165051';
+import { snd_init, snd_play, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115165051';
+import { startBattle } from '../battle/setup.js?v=20261115165051';
+import * as SB from '../debug/sandbox.js?v=20261115165051';
+import { gotoRoom, fadeOut, centerText, whenSoundsReady } from './common.js?v=20261115165051';
+import { saveSettings, applyVolume, getBest } from '../settings.js?v=20261115165051';
+import { HATS, currentHat, drawHat } from '../hats.js?v=20261115165051';
+import { openEquipment } from './equipment.js?v=20261115165051';
+import { openControls, keyName } from './controls.js?v=20261115165051';
+import './gameover.js?v=20261115165051';
+import './ending.js?v=20261115165051';
 
 // Dark panel over the title art, behind the OPTIONS and CONTROLS lists.
 class Panel extends Instance {
@@ -49,7 +49,7 @@ class Title extends Instance {
   create() {
     this.depth = 0;
     this.t = 0;
-    this.sprite_index = 'spr_roaringknight_idle';
+    this.sprite_index = 'spr_pink_idle';
     this.image_speed = 1 / 6;
   }
   step() { this.t += 1; }
@@ -60,16 +60,12 @@ class Title extends Instance {
     draw_set_color(0xffffff);
     draw_set_alpha(a);
     draw_set_halign(fa_center);
-    draw_text_transformed(320, 24, 'ROARING KNIGHT', 2, 2, 0);
+    draw_text_transformed(320, 24, 'PINK', 2, 2, 0);
     draw_text_transformed(320, 92, 'FIGHT SIMULATOR', 1, 1, 0);
     draw_set_halign(fa_left);
     draw_set_alpha(1);
-    // The Knight hovers (y = ystart + cos(siner / 8) * 8) and leaves afterimages drifting right.
-    const kx = 242, ky = 156, ks = 1.5;
-    for (let k = 4; k >= 1; k--) {
-      draw_sprite_ext('spr_roaringknight_idle', 0, kx + k * 8, ky + Math.cos((t - k * 4) / 8) * 8, ks, ks, 0, 0xffffff, a * 0.5 * (1 - k / 5));
-    }
-    draw_sprite_ext('spr_roaringknight_idle', 0, kx, ky + Math.cos(t / 8) * 8, ks, ks, 0, 0xffffff, a);
+    // Pink in her idle animation (image_speed 1/6), three times her size.
+    draw_sprite_ext('spr_pink_idle', Math.floor(t / 6), 260, 130, 3, 3, 0, 0xffffff, a);
     draw_set_alpha(1);
     draw_set_font('fnt_main');
     draw_set_color(0x808080);
@@ -97,7 +93,6 @@ export function startTitle() {
   }
   gotoRoom();
   global.flag[8] = G.settings.simplify ? 1 : 0;
-  if (objectExists('obj_bgfountaintest') && !G.settings.simplify) instance_create(0, 0, 'obj_bgfountaintest');
   instance_create(0, 0, 'obj_sim_title');
   const music = snd_init('pink_theme.ogg');
   mus_loop_ext(music, 0.8, 1);
@@ -117,7 +112,7 @@ function leave(music, then) {
 function mainMenu(music, cur = 0) {
   const menu = instance_create(MENU_X, MENU_Y, 'obj_sim_heartmenu');
   menu.setup(['BEGIN', 'PRACTICE', 'EQUIPMENT', 'OPTIONS'], (i, m) => {
-    if (i == 0) return leave(music, () => S.startKnightFight());
+    if (i == 0) return leave(music, () => startBattle({ intro: G.settings.intro }));
     instance_destroy(m);
     if (i == 1) practiceMenu(music);
     if (i == 2) equipmentMenu(music);
@@ -193,17 +188,16 @@ function optionsMenu(music, cur = 0, panel = null) {
     () => 'SOUL HAT: < ' + currentHat().name + ' >',
     () => 'EASY MODE: ' + (G.settings.easy ? 'ON' : 'OFF'),
     () => 'INTRO: ' + (G.settings.intro ? 'ON' : 'OFF'),
-    () => 'SCENES: ' + (G.settings.scenes ? 'ON' : 'OFF'),
     () => 'SIMPLIFY VFX: ' + (G.settings.simplify ? 'ON' : 'OFF'),
     'CONTROLS',
     'BACK',
   ], (i, m) => {
-    if (i == 7) return back(m);
-    if (i == 6) {
+    if (i == 6) return back(m);
+    if (i == 5) {
       instance_destroy(m);
       panel.title = 'CONTROLS';
       panel.hatPreview = false;
-      openControls(() => optionsMenu(music, 6, panel));
+      openControls(() => optionsMenu(music, 5, panel));
       return;
     }
     m.done = false;
@@ -212,8 +206,7 @@ function optionsMenu(music, cur = 0, panel = null) {
     if (i == 1) setHat(1);
     if (i == 2) G.settings.easy = !G.settings.easy;
     if (i == 3) G.settings.intro = !G.settings.intro;
-    if (i == 4) G.settings.scenes = !G.settings.scenes;
-    if (i == 5) {
+    if (i == 4) {
       G.settings.simplify = !G.settings.simplify;
       global.flag[8] = G.settings.simplify ? 1 : 0;
     }

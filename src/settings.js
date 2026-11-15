@@ -1,9 +1,9 @@
 // Player options and control bindings, remembered in this browser when storage is available.
-import { G, controls, setControls } from './runtime/gm.js?v=20261115164340';
-import { setMasterVolume } from './runtime/audio.js?v=20261115164340';
+import { G, controls, setControls } from './runtime/gm.js?v=20261115165051';
+import { setMasterVolume } from './runtime/audio.js?v=20261115165051';
 
-const SETTINGS_KEY = 'knight-sim-settings';
-const CONTROLS_KEY = 'knight-sim-controls';
+const SETTINGS_KEY = 'pink-sim-settings';
+const CONTROLS_KEY = 'pink-sim-controls';
 
 function read(key) {
   try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; }
@@ -27,7 +27,7 @@ export function saveControls() {
 }
 
 // Best practice scores of full runs (from attack 1), by starting HP.
-const BEST_KEY = 'knight-sim-best';
+const BEST_KEY = 'pink-sim-best';
 export const getBest = hp => (read(BEST_KEY) || {})[hp] || 0;
 export function saveBest(hp, score) {
   const all = read(BEST_KEY) || {};
