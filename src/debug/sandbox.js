@@ -1,6 +1,6 @@
 // Attack sandbox: ?sandbox&attack=N (N = index in ATTACKS; optional &seed=, &music, &god).
 // Sets up just enough of the battle for the bullet phase, launches the attack the way
-// obj_knight_enemy does (box, SOUL, obj_dbulletcontroller at rtimer 12) and restarts it when the turn ends.
+// obj_pink_enemy does (box, SOUL, obj_dbulletcontroller at rtimer 12) and restarts it when the turn ends.
 // Keys: [ ] previous/next attack, 0-9 (Shift: 10-19) attack, R restart, I invincibility, M music,
 // (F2 hitboxes, F3 pause, F4 frame step from main.js).
 import {
@@ -8,41 +8,45 @@ import {
   instancesOf, event_user, choose, keyboard_check, keyboard_check_pressed, random_set_seed, round, S,
   draw_set_font, draw_set_halign, draw_set_color, draw_set_alpha, draw_rectangle, draw_text, draw_sprite_ext,
   fa_left, fa_center, merge_color, button1_p, vk, draw_self,
-} from '../runtime/gm.js?v=20261115165051';
-import { snd_play, snd_init, mus_loop_ext, mus_stop, snd_stop } from '../runtime/audio.js?v=20261115165051';
-import { audioReady, assets } from '../runtime/assets.js?v=20261115165051';
-import { gotoRoom } from '../screens/common.js?v=20261115165051';
-import { getBest, saveBest } from '../settings.js?v=20261115165051';
-import { drawSoulHat } from '../hats.js?v=20261115165051';
-import { tagParent } from '../pink/common.js?v=20261115165051';
+} from '../runtime/gm.js?v=20261115171016';
+import { snd_play, snd_init, mus_loop_ext, mus_stop, snd_stop } from '../runtime/audio.js?v=20261115171016';
+import { audioReady, assets } from '../runtime/assets.js?v=20261115171016';
+import { gotoRoom } from '../screens/common.js?v=20261115171016';
+import { getBest, saveBest } from '../settings.js?v=20261115171016';
+import { drawSoulHat } from '../hats.js?v=20261115171016';
+import { tagParent } from '../pink/common.js?v=20261115171016';
 
-// The Knight's turns in fight order: [myattackchoice, difficulty, name, object the attack needs].
-// Only the attacks whose objects are ported are listed (ATTACKS).
+// Pink's turns in fight order (obj_pink_enemy User 0): [myattackchoice, difficulty, name, object the
+// attack needs, datecount (how many dates came before it)]. Only attacks whose objects are ported are
+// listed (ATTACKS).
 const FIGHT_ORDER = [
-  [1, 0, 'Stars', 'obj_knight_pointing_cone'],
-  [11, 0, 'Tracking swords', 'obj_tracking_swords_manager'],
-  [2, 0, 'Flurry', 'obj_roaringknight_boxsplitter_attack'],
-  [13, 0, 'Sword tunnel', 'obj_sword_tunnel_manager'],
-  [5, 0, 'Rotating slash', 'obj_knight_rotating_slash'],
-  [1, 1, 'Golden stars', 'obj_knight_pointing_cone'],
-  [2, 1, 'Flurry II', 'obj_roaringknight_boxsplitter_attack'],
-  [13, 3, 'Sword tunnel II', 'obj_sword_tunnel_manager'],
-  [15, 0, 'Sword vortex', 'obj_sword_vortex_manager'],
-  [5, 1, 'Rotating slash II', 'obj_knight_rotating_slash'],
-  [1, 2, 'Stars III', 'obj_knight_pointing_cone'],
-  [2, 3, 'Flurry III', 'obj_roaringknight_boxsplitter_attack'],
-  [14, 0, 'Tracking swords III', 'obj_tracking_swords_manager'],
-  [13, 4, 'Sword tunnel III', 'obj_sword_tunnel_manager'],
-  [5, 2, 'Rotating slash III', 'obj_knight_rotating_slash'],
-  [9, 0, 'The Roaring', 'obj_knight_roaring2'],
-  // Not used in the fight (the Knight's code still has them).
-  [10, 0, 'Swords falling (unused)', 'obj_knight_swordfall'],
-  [0, 0, 'Crescent slashes (unused)', 'obj_bullet_knight_crescentGenerator'],
-  // Phase 1 turns 6-9: phase 1 always ends on turn 5, so the fight never reaches them.
-  [12, 0, 'Diagonal bullets (unused)', 'obj_diagonal_bullet_manager'],
-  [7, 0, 'Combination (unused)', 'obj_knight_combinations'],
+  // Before the first date (phase 1): turns 1-5, then cats or bombs at random until DOKI MAX.
+  [1, 0, 'Cats', 'obj_pinkcatbullet', 0],
+  [6, 1, 'Bombs', 'obj_fusebomb', 0],
+  [1, 1, 'Cats II', 'obj_pinkcatbullet', 0],
+  [6, 0, 'Bombs II', 'obj_fusebomb', 0],
+  [5, 0, 'Sing', 'obj_pinkspeaker', 0],
+  [1, 4, 'Cats III', 'obj_pinkcatbullet', 0],
+  // After the first date: turns 1-5, then again from turn 1.
+  [3, 0, 'Rotating box', 'obj_pinklanebullet', 1],
+  [4, 0, '3D tunnel', 'obj_pink3durgenter', 1],
+  [6, 4, 'Bombs III', 'obj_fusebomb', 1],
+  [5, 1, 'Sing II', 'obj_pinkspeaker', 1],
+  [3, 2, 'Rotating box II', 'obj_pinklanebullet', 1],
+  // After the second date: turns 1-7, then from turn 3 again.
+  [3, 1, 'Rotating box III', 'obj_pinklanebullet', 2],
+  [6, 2, 'Bombs IV', 'obj_fusebomb', 2],
+  [1, 2, 'Cats IV', 'obj_pinkcatbullet', 2],
+  [4, 1, '3D tunnel II', 'obj_pink3durgenter', 2],
+  [1, 3, 'Cats V', 'obj_pinkcatbullet', 2],
+  [6, 3, 'Bombs V', 'obj_fusebomb', 2],
+  [5, 2, 'Sing III', 'obj_pinkspeaker', 2],
+  // Not used in the fight: Pink's code has these choices, but User 0 never picks them.
+  [2, 0, 'Bombs (unused)', 'obj_fusebomb', 0],
+  [7, 0, 'Vertical lanes (unused)', 'obj_pinklanebullet', 0],
+  [8, 0, 'Vertical lanes II (unused)', 'obj_pinklanebullet', 0],
 ];
-const UNUSED_FROM = 16;
+const UNUSED_FROM = 18;
 export const ATTACKS = FIGHT_ORDER.filter(a => objectExists(a[3]));
 const KEY_LBRACKET = 219, KEY_RBRACKET = 221, KEY_SHIFT = 16;
 
@@ -97,14 +101,14 @@ function setupGlobals() {
     g.battlemag[i] = sum('mag', 'itemmag', 0);
   }
   g.charinstance = arr(3, null);
-  // Monster slots; the Knight in slot 0 (scr_monstersetup type 104).
+  // Monster slots; Pink in slot 0 (scr_monstersetup type 118).
   g.monster = [1, 0, 0];
-  g.monstertype = [104, 0, 0];
-  g.monsterinstancetype = ['obj_knight_enemy', 0, 0];
-  g.monstername = ['Knight', ' ', ' '];
-  g.monstermaxhp = [7300, 0, 0];
-  g.monsterhp = [7300, 0, 0];
-  g.monsterat = [40, 0, 0];
+  g.monstertype = [118, 0, 0];
+  g.monsterinstancetype = ['obj_pink_enemy', 0, 0];
+  g.monstername = ['Pink', ' ', ' '];
+  g.monstermaxhp = [7000, 0, 0];
+  g.monsterhp = [7000, 0, 0];
+  g.monsterat = [16, 0, 0];
   g.monsterdf = [0, 0, 0];
   g.monsterattackname = ['', '', ''];
   g.monsterx = arr(3);
@@ -297,25 +301,50 @@ class SandboxController extends tagParent('obj_battlecontroller') {
     } else if (this.phase === 'wait') this.wait = 1;
   }
   begin() {
-    const [choice, difficulty] = ATTACKS[this.attackIndex] || [1, 0];
+    const [choice, difficulty, , , datecount] = ATTACKS[this.attackIndex] || [1, 0, '', '', 0];
     global.targeted = arr(3);
     global.myfight = -1;
     if (!instance_exists('obj_darkener')) instance_create(0, 0, 'obj_darkener');
-    // obj_knight_enemy's talk phase ends (mnfight 1.5): it makes the box, sends the SOUL in and
-    // at rtimer 12 creates the obj_dbulletcontroller for its chosen attack.
-    for (const k of instancesOf('obj_knight_enemy')) {
+    // obj_heartmarker (where obj_moveheart sends the SOUL) is never destroyed: the fight's first bombs
+    // turn leaves one at (280, 160), and every later turn starts the SOUL there. Jumping to an attack
+    // sets it as the fight would have it.
+    const markers = instancesOf('obj_heartmarker');
+    const order = FIGHT_ORDER.indexOf(ATTACKS[this.attackIndex]);
+    if (order === 0) for (const m of markers) instance_destroy(m);
+    else if (order >= 2 && order < UNUSED_FROM && !markers.length) instance_create(280, 160, 'obj_heartmarker');
+    // Pink jumping back to her place after the last attack (in the fight the menu gives her time to
+    // land): her Destroy shows her again and puts the box back.
+    for (const b of instancesOf('obj_pink_battlemovement')) instance_destroy(b);
+    // obj_pink_enemy's talk phase ends (mnfight 1.5): she makes the box, sends the SOUL in (purple
+    // for most attacks) and at rtimer 12 creates the obj_dbulletcontroller for her chosen attack.
+    for (const k of instancesOf('obj_pink_enemy')) {
       k.user0 = () => {}; // the attack is the sandbox's to choose
       k.myattackchoice = choice;
       k.difficulty = difficulty;
-      if (choice === 9) { k.phase = 3; k.phase4turn = 3; }
+      k.datecount = datecount;
+      k.doki = 0; // (DOKI MAX would start a date instead)
+      k.dokimax = datecount >= 2 ? 20 : 15;
+      for (const u of instancesOf('obj_date_ui')) { u.dokimax = k.dokimax; u.current = 0; }
+      // After the second date her ghost is out of her BODY (ghostintrocon 2, as her ghost intro
+      // leaves it); during the attack it goes back in and comes out when the turn ends.
+      const ghost = k.ghostmarker;
+      if (datecount >= 2 && k.ghostintrocon == 0 && ghost) {
+        k.ghostintrocon = 2;
+        Object.assign(ghost, { x: k.x - 25, y: k.y - 25, image_xscale: 2, image_yscale: 2, image_alpha: 0.5 });
+      } else if (datecount < 2 && k.ghostintrocon != 0) {
+        k.ghostintrocon = 0;
+        k.saturation_effect_enabled = false;
+        k.pos = 0;
+        if (ghost) Object.assign(ghost, { hspeed: 0, vspeed: 0, image_alpha: 0 });
+      }
       S.scr_randomtarget(k);
+      // (her talk phase, which the sandbox skips, starts every turn with these)
+      k.setbattlemsg = false;
       k.talked = 1;
       k.attacked = 0;
       k.rtimer = 0;
       k.image_alpha = 1;
       k.visible = true;
-      k.chargeupcon = 0;
-      k.chargeuptimer = 0;
     }
     global.mnfight = 1.5;
     global.turntimer = 120;
@@ -419,7 +448,7 @@ defineObject('obj_sandboxcontroller', SandboxController);
 // ---------------------------------------------------------------- practice mode
 
 // Bad Time Simulator style: dodge each attack of the real fight in order. Losing the whole
-// HP bar restarts the attack; surviving it moves on to the next one, up to the Final Chaos.
+// HP bar restarts the attack; surviving it moves on to the next one, up to her last attack.
 // Score: 1000 per cleared attack, +500 if it was cleared without a hit, plus grazing points
 // earned in the successful attempt, all multiplied by the HP difficulty; each retry costs 300.
 // Practice runs the fight-order attacks (not the unused ones).
@@ -482,7 +511,7 @@ class PracticeController extends SandboxController {
         global.tension = 0;
       }
     }
-    // The party never falls, so the Knight keeps targeting the way it does in the real fight.
+    // The party never falls, so Pink keeps targeting the way she does in the real fight.
     for (let i = 0; i < 3; i++) {
       const c = global.char[i];
       if (global.hp[c] <= 0) S.scr_revive(i);
@@ -541,7 +570,7 @@ class PracticeController extends SandboxController {
   drawEnd() {
     const x = G.camX, y = G.camY;
     const [, , name] = ATTACKS[this.attackIndex] || [0, 0, ''];
-    // The HUD fades while the SOUL is down in its area (the Final Chaos board fills the screen).
+    // The HUD fades while the SOUL is down in its area (the 3D tunnel fills the screen).
     const hearts = instancesOf('obj_heart');
     const near = hearts.some(h => h.y > y + 330);
     this.hudAlpha = (this.hudAlpha ?? 1) + ((near ? 0.25 : 1) - (this.hudAlpha ?? 1)) * 0.25;
@@ -614,7 +643,7 @@ export function startPractice({ start = 0, hp = 90 } = {}) {
 
 // ---------------------------------------------------------------- entry points
 
-// The Knight, the party stand-ins and the background, driven by the given controller object.
+// Pink, the party stand-ins and her stage, driven by the given controller object.
 function setupArena(controllerName, attackIndex) {
   setupGlobals();
   installFallbacks();
@@ -629,8 +658,8 @@ function setupArena(controllerName, attackIndex) {
   const ctl = instance_create(0, 0, controllerName);
   ctl.realGameover = realGameover;
   ctl.attackIndex = attackIndex;
-  // scr_encountersetup(115) positions
-  const heromake = [[126, 104], [80, 142], [58, 190]];
+  // scr_encountersetup(224) positions (the default ones: x 80, y 50 + 80 * i)
+  const heromake = [[80, 50], [80, 130], [80, 210]];
   for (let i = 0; i < 3; i++) {
     const c = global.char[i];
     if (!c || !HERO[c]) continue;
@@ -644,13 +673,18 @@ function setupArena(controllerName, attackIndex) {
     for (const n of ['canact', 'actactor', 'actcost', 'actsimul']) global[n + s] ??= Array.from({ length: 3 }, () => Array(6).fill(0));
     for (const n of ['actname', 'actdesc']) global[n + s] ??= Array.from({ length: 3 }, () => Array(6).fill(' '));
   }
-  const knight = instance_create(425, 78, 'obj_knight_enemy');
-  knight.myself = 0;
-  global.monsterinstance[0] = knight;
+  // Pink's Create skips her intro on a retry (global.tempflag[96] > 1 after its own increment),
+  // and starts the battle music, which the sandbox leaves to its M key.
+  global.tempflag[96] = Math.max(1, global.tempflag[96] || 0);
+  global.batmusic ??= [];
+  const pink = instance_create(470, 131, 'obj_pink_enemy');
+  if (global.batmusic[1]) mus_stop(global.batmusic[1]);
+  pink.myself = 0;
+  global.monsterinstance[0] = pink;
   try {
-    event_user(knight, 12);
+    event_user(pink, 12);
   } catch (e) {
-    console.warn('obj_knight_enemy Other_22 / scr_monstersetup failed; using the default stats', e);
+    console.warn('obj_pink_enemy Other_22 / scr_monstersetup failed; using the default stats', e);
   }
   return ctl;
 }

@@ -6,8 +6,8 @@ import {
   G, global, defineScript, draw_rectangle, draw_rectangle_color, draw_triangle, draw_line_width, draw_set_color, draw_set_alpha,
   draw_get_color, draw_get_alpha, point_direction, point_distance, lengthdir_x, lengthdir_y, instance_create_depth,
   instance_destroy, instancesOf, gpu_set_blendmode, S, Instance, defineObject, instance_create, controls,
-} from './rt.js?v=20261115165051';
-import { scr_lerpvar, scr_script_delayed } from './common.js?v=20261115165051';
+} from './rt.js?v=20261115171016';
+import { scr_lerpvar, scr_script_delayed } from './common.js?v=20261115171016';
 
 defineScript('ossafe_fill_rectangle', (x1, y1, x2, y2, outline = false) => {
   draw_rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2), outline);

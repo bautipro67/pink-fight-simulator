@@ -7,8 +7,8 @@ import {
   font_add_sprite_ext, draw_rectangle_color, draw_line_color, draw_line_width_color, draw_circle, draw_set_font, draw_line,
   draw_ellipse, snd_play, snd_loop, point_distance, sprite_get_width, sprite_get_height, sprite_get_xoffset, sprite_get_yoffset,
   draw_circle_color, draw_get_color, draw_set_color, draw_text_transformed, keyboard_check_pressed, mus_volume,
-} from './rt.js?v=20261115165051';
-import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261115165051';
+} from './rt.js?v=20261115171016';
+import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261115171016';
 
 // The date's scripts (obj_date_controller).
 defineScript('d_circle_color', (x, y, r, c1, c2, outline) => draw_circle_color(x, y, r, c1, c2, outline));
@@ -103,8 +103,8 @@ defineScript('scr_draw_sprite_tiled_area', (spr, img, xx, yy, x1, y1, x2, y2, xs
   ctx.restore();
 });
 void point_distance;
-import { moveToPoint } from '../screens/cutscene.js?v=20261115165051';
-import { subst } from '../battle/common.js?v=20261115165051';
+import { moveToPoint } from '../screens/cutscene.js?v=20261115171016';
+import { subst } from '../battle/common.js?v=20261115171016';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")
