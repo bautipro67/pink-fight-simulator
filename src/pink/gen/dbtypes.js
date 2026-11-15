@@ -1,14 +1,14 @@
-// obj_dbulletcontroller's attack types 200-209 (Pink) (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
+// obj_dbulletcontroller's attack types 200-210 (Pink) (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
 /* eslint-disable */
 import {
   S, choose, frac, global, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, objectClass, snd_play,
-} from '../rt.js?v=20261115074155';
+} from '../rt.js?v=20261115164340';
 import {
   i_ex, scr_fire_bullet, scr_get_box,
-} from '../common.js?v=20261115074155';
+} from '../common.js?v=20261115164340';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261115074155';
+} from '../gml.js?v=20261115164340';
 
 // !!! gml_Object_obj_dbulletcontroller_Alarm_2.gml has a decompiler WARNING: check the asm
 // !!! gml_Object_obj_dbulletcontroller_Alarm_4.gml has a decompiler WARNING: check the asm
@@ -271,6 +271,28 @@ class PinkTypes {
                     this.grid_y = this.grid_y + 4;
                 }
             }
+        }
+    }
+  }
+  type210() {
+    let dir, xx, yy, num, d, slasher, i, attacktimer, quizReady, _maru, _batsu, xmod, shadowman_tommygun_manager, triangle_count, tempnum, _flip, _angle, _dist, choosey, choosex, shuriken, _lifetime, delay, _ratio, _dir, _x, _y, test, _side, angle, dist, a, _max, sinfact, sinebase, _spread, iii, __dir, _spd, _sameattacki, _smashcut, spring, scarecrow1, scarecrow2, scarecrow3, o, offset_last, bx, by, off, last_blue, bullet_offset, blue, shooter, ___x, ___y, _bullet_speed_modifier, _bullet_interval_modifier, _heart_tension_value, _d_mild, _s_mild, _d_medium, _s_medium, _d_spicy, _s_spicy, _d_beat, _d_conga, _s_conga, _d_conga_last, _hflip, _vflip, _binterval, _bspeed, _d_medmild, _s_medmild, _rside, _box_x, _box_y, _bul, _lane_distance, _bomb, _fill_bulletlist, _d_tuning, _s_tuning, _speed_multiplier, _speed_v, _speed_h, _speed_h1_final, _speed_h2_final, _speed_v_final, _speed_strays, _speed_bursts, _d_bursts, _delay, _speed_12, _speed_3, _diradd, _shot, _doki_queue, _doki_dist, _nextdelay, _speed_final, _shot_prev, _dir_prev, _spd_prev, _heartshot, _bdir, _blane, _bullet_scale, _shootdist, _lanebuldist, _the_value, _timeadd, _startdelay, _list_xy, _randompattern, _list_order, _xsign, _xoffset, _ysign, _yoffset, _xrotate, _yrotate, _box_xscale, _box_yscale, _pattern_speed_modifier, _node_dist_test, t70a, t70b, t70_bullet, t70rand, _purple_omega, _green_omega, _aqua_chainknife, _aqua_fanofknives, _aqua_knife_leafling, _aqua_knife_everything, _duck, _sethsupport, _step, fi, _rate, spread, tracktime, loc, do_dir, _words1, _words2, _newtimer;
+    if (this.type == 210) {
+        if (this.made == 0) {
+            this.made = 1;
+            _node_dist_test = 54;
+            if (W('obj_heart', function (other) {
+                this.sprite_index = 'spr_purpleheart';
+                this.canmove = 0;
+            }, this) === EXIT) return;
+            if (W('obj_growtangle', function (other) {
+                instance_destroy(this);
+            }, this) === EXIT) return;
+            if (!T(i_ex('obj_purplecontrols'))) {
+                instance_create_depth(this.x, this.y, 4, 'obj_purplecontrols');
+            }
+            O('obj_purplecontrols').mode = 8;
+            O('obj_purplecontrols').difficulty = this.difficulty;
+            global.turntimer = 1000;
         }
     }
   }

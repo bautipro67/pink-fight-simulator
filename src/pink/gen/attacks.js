@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_point, collision_rectangle, defineObject, draw_primitive_begin, draw_primitive_end, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_sprite, draw_sprite_ext, draw_vertex, frac, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_find, instance_number, instance_place, irandom, lengthdir_x, lengthdir_y, lerp, merge_color, place_meeting, point_direction, point_distance, random, sign, snd_is_playing, snd_play, snd_stop, sprite_get_height, surface_create, surface_free,
-} from '../rt.js?v=20261115074155';
+} from '../rt.js?v=20261115164340';
 import {
   camerax, cameray, i_ex, scr_afterimage, scr_approach, scr_doom, scr_draw_outline, scr_draw_outline_ext, scr_get_box, scr_lerpvar, scr_script_delayed, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261115074155';
+} from '../common.js?v=20261115164340';
 import {
   BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261115074155';
+} from '../gml.js?v=20261115164340';
 import {
   array_length,
-} from '../lib5.js?v=20261115074155';
+} from '../lib5.js?v=20261115164340';
 
 // obj_bullet_healing (default sprite None, depth 0)
 class BulletHealing extends Instance {
@@ -716,7 +716,7 @@ class Pinkzap extends P('obj_regularbullet') {
         _yy = _yy + lengthdir_y(this.image_yscale * lengthdir_y(3, this.wave_dir), this.image_angle + 90);
     }
     if (this.mode == 1) {
-        draw_sprite_ext(_spr, - 1, _xx, _yy, this.image_xscale, this.image_yscale, this.image_angle, _color, this.image_alpha);
+        draw_sprite_ext(_spr, this.image_index, _xx, _yy, this.image_xscale, this.image_yscale, this.image_angle, _color, this.image_alpha);
         if (this.highlight == 2) {
             _thickness = 2.5;
         } else if (this.highlight == 1) {
@@ -725,14 +725,14 @@ class Pinkzap extends P('obj_regularbullet') {
             _thickness = 1.5;
         }
         if (this.highlight >= 2) {
-            draw_sprite_ext(_spr, - 1, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 90), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 90), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.5 * this.image_alpha, 0, 1));
-            draw_sprite_ext(_spr, - 1, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 270), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 270), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.5 * this.image_alpha, 0, 1));
+            draw_sprite_ext(_spr, this.image_index, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 90), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 90), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.5 * this.image_alpha, 0, 1));
+            draw_sprite_ext(_spr, this.image_index, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 270), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 270), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.5 * this.image_alpha, 0, 1));
         }
     } else {
         if (this.highlight >= 2) {
-            draw_sprite_ext('spr_pinkzap_thick', - 1, _xx, _yy, this.image_xscale, this.image_yscale, this.image_angle, _color, this.image_alpha);
+            draw_sprite_ext('spr_pinkzap_thick', this.image_index, _xx, _yy, this.image_xscale, this.image_yscale, this.image_angle, _color, this.image_alpha);
         } else {
-            draw_sprite_ext(_spr, - 1, _xx, _yy, this.image_xscale, this.image_yscale, this.image_angle, _color, this.image_alpha);
+            draw_sprite_ext(_spr, this.image_index, _xx, _yy, this.image_xscale, this.image_yscale, this.image_angle, _color, this.image_alpha);
         }
         if (this.highlight == 2) {
             _thickness = 2;
@@ -742,8 +742,8 @@ class Pinkzap extends P('obj_regularbullet') {
             _thickness = 1.25;
         }
         if (this.highlight >= 2) {
-            draw_sprite_ext(_spr, - 1, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 90), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 90), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.45 * this.image_alpha, 0, 1));
-            draw_sprite_ext(_spr, - 1, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 270), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 270), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.45 * this.image_alpha, 0, 1));
+            draw_sprite_ext(_spr, this.image_index, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 90), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 90), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.45 * this.image_alpha, 0, 1));
+            draw_sprite_ext(_spr, this.image_index, _xx + lengthdir_x(this.image_xscale * _thickness, this.image_angle + 270), _yy + lengthdir_y(this.image_yscale * _thickness, this.image_angle + 270), this.image_xscale, this.image_yscale, this.image_angle, _color, clamp(0.45 * this.image_alpha, 0, 1));
         }
     }
   }
@@ -826,7 +826,7 @@ class Pinktimeoutzap extends P('obj_regularbullet') {
         i = i + 1;
     } while ((!(_dir >= _dirfill || _dir >= 360)) && LOOP('Pinktimeoutzap#2'));
 
-    draw_sprite_ext(this.sprite_index, - 1, this.x + lengthdir_x(this.radius, 90 - _dirfill), this.y + lengthdir_y(this.radius, 90 - _dirfill), this.image_xscale, this.image_yscale, - _dirfill, this.image_blend, clamp(0.2 + 0.4 * (1 - this.pattern_time), 0, 1));
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x + lengthdir_x(this.radius, 90 - _dirfill), this.y + lengthdir_y(this.radius, 90 - _dirfill), this.image_xscale, this.image_yscale, - _dirfill, this.image_blend, clamp(0.2 + 0.4 * (1 - this.pattern_time), 0, 1));
   }
   animationEnd() {
     this.image_index = 1;
@@ -909,12 +909,12 @@ class Pinklanebullet extends P('obj_regularbullet') {
     _alpha_a = 0.08333333333333333 + 0.16666666666666666 * clamp(this.speed / 10, 0, 1);
     _alpha_b = 0.041666666666666664 + 0.08333333333333333 * clamp(this.speed / 10, 0, 1);
     if (this.mask_index != - 1) {
-        draw_sprite_ext(this.mask_index, - 1, this.x - lengthdir_x(this.speed * _dist * 2, this.direction), this.y - lengthdir_y(this.speed * _dist * 2, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_b));
-        draw_sprite_ext(this.mask_index, - 1, this.x - lengthdir_x(this.speed * _dist * 1, this.direction), this.y - lengthdir_y(this.speed * _dist * 1, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_a));
-        draw_sprite_ext(this.mask_index, - 1, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, this.image_alpha);
+        draw_sprite_ext(this.mask_index, this.image_index, this.x - lengthdir_x(this.speed * _dist * 2, this.direction), this.y - lengthdir_y(this.speed * _dist * 2, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_b));
+        draw_sprite_ext(this.mask_index, this.image_index, this.x - lengthdir_x(this.speed * _dist * 1, this.direction), this.y - lengthdir_y(this.speed * _dist * 1, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_a));
+        draw_sprite_ext(this.mask_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, this.image_alpha);
     } else {
-        draw_sprite_ext(this.sprite_index, - 1, this.x - lengthdir_x(this.speed * _dist * 2, this.direction), this.y - lengthdir_y(this.speed * _dist * 2, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_b));
-        draw_sprite_ext(this.sprite_index, - 1, this.x - lengthdir_x(this.speed * _dist * 1, this.direction), this.y - lengthdir_y(this.speed * _dist * 1, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_a));
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x - lengthdir_x(this.speed * _dist * 2, this.direction), this.y - lengthdir_y(this.speed * _dist * 2, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_b));
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x - lengthdir_x(this.speed * _dist * 1, this.direction), this.y - lengthdir_y(this.speed * _dist * 1, this.direction), this.image_xscale, this.image_yscale, this.image_angle, 0xffffff, Math.min(this.image_alpha, _alpha_a));
         draw_self(this);
     }
   }
@@ -1116,7 +1116,7 @@ class Buzzsaw extends P('obj_regularbullet') {
     this.image_yscale = 2;
   }
   draw() {
-    draw_sprite_ext(this.sprite_index, - 1, this.x, this.y, this.image_xscale, this.image_yscale, this.frame_dir, this.image_blend, this.image_alpha);
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.frame_dir, this.image_blend, this.image_alpha);
   }
   step() {
     super.step?.();
@@ -1398,7 +1398,7 @@ class HugeAnimeFace extends P('obj_regularbullet') {
       case 0:
         switch (this.phase) {
           case 0:
-            draw_sprite_ext(this.sprite_index, - 1, this.x - 2 + irandom(4), this.y, this.image_xscale, this.image_yscale, this.image_angle, _col, this.image_alpha);
+            draw_sprite_ext(this.sprite_index, this.image_index, this.x - 2 + irandom(4), this.y, this.image_xscale, this.image_yscale, this.image_angle, _col, this.image_alpha);
             break;
           case 1:
             draw_self(this);
@@ -1406,7 +1406,7 @@ class HugeAnimeFace extends P('obj_regularbullet') {
         }
         break;
       case 1:
-        draw_sprite_ext(this.sprite_index, - 1, this.x + choose(- 1, 0, 1) + Math.abs(lengthdir_y(3, this.jump_cycle)), this.y + choose(- 1, 0, 1) - Math.abs(lengthdir_y(10, this.jump_cycle)), this.image_xscale, this.image_yscale, this.image_angle, _col, this.image_alpha);
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x + choose(- 1, 0, 1) + Math.abs(lengthdir_y(3, this.jump_cycle)), this.y + choose(- 1, 0, 1) - Math.abs(lengthdir_y(10, this.jump_cycle)), this.image_xscale, this.image_yscale, this.image_angle, _col, this.image_alpha);
         break;
     }
   }
@@ -1834,7 +1834,7 @@ class Fusebomb extends P('obj_regularbullet') {
             break;
         }
     }
-    draw_sprite_ext(this.sprite_index, - 1, _bx, _by, this.image_xscale * this.grow, this.image_yscale * this.grow, this.image_angle, _color, this.image_alpha);
+    draw_sprite_ext(this.sprite_index, this.image_index, _bx, _by, this.image_xscale * this.grow, this.image_yscale * this.grow, this.image_angle, _color, this.image_alpha);
     _fuselength_scale = 1;
     if (this.mode == 1) {
         _fuselength_scale = 2;
@@ -2383,17 +2383,17 @@ class FusebombBig extends P('obj_regularbullet') {
         _burnsprite = 'spr_fusebomb_burning';
     }
     draw_sprite_ext(_burnsprite, Math.floor(this.fuse_frame), _bx - 37 * this.scale_multiplier + (- 3 - this.fuse_time * _fuselength_scale / 9) * this.image_xscale * this.grow, _by - 49 * this.scale_multiplier + (- 3 - this.fuse_time * _fuselength_scale / 9) * this.image_yscale * this.grow, this.image_xscale * this.grow, this.image_yscale * this.grow, this.image_angle, _fusecolor, this.image_alpha);
-    draw_sprite_ext(this.sprite_index, - 1, _bx, _by, this.image_xscale * this.grow, this.image_yscale * this.grow, this.image_angle, _color, this.image_alpha);
+    draw_sprite_ext(this.sprite_index, this.image_index, _bx, _by, this.image_xscale * this.grow, this.image_yscale * this.grow, this.image_angle, _color, this.image_alpha);
     if (this.flashbang > 0) {
         _fscale = (1 - this.flashbang) * 2.5;
         _fsbase = 0.16666666666666666;
-        draw_sprite_ext(this.sprite_index, - 1, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale * 2.6666666666666665), this.image_yscale * this.grow * (_fsbase + _fscale * 2.6666666666666665), this.image_angle, 0x000000, this.flashbang);
-        draw_sprite_ext(this.sprite_index, - 1, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale), this.image_yscale * this.grow * (_fsbase + _fscale), this.image_angle, 0xffffff, this.flashbang);
-        draw_sprite_ext(this.sprite_index, - 1, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale * 2), this.image_yscale * this.grow * (_fsbase + _fscale * 2), this.image_angle, 0xffffff, this.flashbang);
+        draw_sprite_ext(this.sprite_index, this.image_index, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale * 2.6666666666666665), this.image_yscale * this.grow * (_fsbase + _fscale * 2.6666666666666665), this.image_angle, 0x000000, this.flashbang);
+        draw_sprite_ext(this.sprite_index, this.image_index, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale), this.image_yscale * this.grow * (_fsbase + _fscale), this.image_angle, 0xffffff, this.flashbang);
+        draw_sprite_ext(this.sprite_index, this.image_index, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale * 2), this.image_yscale * this.grow * (_fsbase + _fscale * 2), this.image_angle, 0xffffff, this.flashbang);
     } else if (this.scale_multiplier > 1) {
         _fscale = - this.flashbang * 0.125;
         _fsbase = 1;
-        draw_sprite_ext(this.sprite_index, - 1, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale), this.image_yscale * this.grow * (_fsbase + _fscale), this.image_angle, 0xffffff, 1 + this.flashbang);
+        draw_sprite_ext(this.sprite_index, this.image_index, _bx, _by, this.image_xscale * this.grow * (_fsbase + _fscale), this.image_yscale * this.grow * (_fsbase + _fscale), this.image_angle, 0xffffff, 1 + this.flashbang);
     }
     if (this.active == 1) {
         if (W('obj_purplecontrols', function (other) {
@@ -2816,7 +2816,7 @@ class Pinkchargeball extends Instance {
     let _life, _dist;
     _life = this.life_time / Math.max(1, this.life_time_max);
     _dist = lengthdir_x(this.distance, 330 + 120 * _life);
-    draw_sprite_ext(this.sprite_index, - 1, this.x + lengthdir_x(_dist, this.direction), this.y + lengthdir_y(_dist, this.direction), 2, 2, 0, 0xffffff, _life);
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x + lengthdir_x(_dist, this.direction), this.y + lengthdir_y(_dist, this.direction), 2, 2, 0, 0xffffff, _life);
   }
   step() {
     this.direction = this.direction + this.spin * 3 * (3.14 * (this.life_time / Math.max(1, this.life_time_max)));
@@ -2913,7 +2913,7 @@ class Pinkwave extends P('obj_regularbullet') {
     this.image_yscale = 1;
   }
   draw() {
-    draw_sprite_ext(this.sprite_index, - 1, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
   }
   step() {
     super.step?.();
@@ -3067,11 +3067,11 @@ class Roundbellbullet extends P('obj_regularbullet') {
   }
   draw() {
     if (this.phase == 2) {
-        draw_sprite_ext(this.sprite_index, - 1, this.x - this.hspeed * 3, this.y - this.hspeed * 3, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, 0.25);
-        draw_sprite_ext(this.sprite_index, - 1, this.x - this.hspeed * 1.5, this.y - this.vspeed * 1.5, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, 0.5);
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x - this.hspeed * 3, this.y - this.hspeed * 3, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, 0.25);
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x - this.hspeed * 1.5, this.y - this.vspeed * 1.5, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, 0.5);
     }
     if (this.phase == 1) {
-        draw_sprite_ext(this.sprite_index, - 1, this.x + lengthdir_x(3, this.shake_dir), this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x + lengthdir_x(3, this.shake_dir), this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
     } else {
         draw_self(this);
     }
@@ -3261,7 +3261,7 @@ class Audienceheart extends P('obj_regularbullet') {
     snd_play_x('snd_ghostappear', 1, 1.5);
   }
   draw() {
-    draw_sprite_ext(this.sprite_index, - 1, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
   }
   step() {
     let _mainscale, _timebeforeturn, _timetolaunch, _dir, _dest, _trail;

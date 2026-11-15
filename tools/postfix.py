@@ -85,6 +85,8 @@ t = t.replace('S.event_perform(8, 0)', 'this.draw?.()')
 t = re.sub(r'\binstance_place\((?!this, )', 'instance_place(this, ', t)
 # Caller-scope scripts the Chapter 5 objects call.
 t = re.sub(r'\bS\.distance_to_object\(', 'S.distance_to_object(this, ', t)
+# Sub-image -1 in a draw is the drawing instance's own image_index (the engine would take the last frame).
+t = re.sub(r'\b(draw_sprite\w*)\(([^,()]+(?:\([^()]*\))?), - ?1,', r'\1(\2, this.image_index,', t)
 
 # Sprite indices the decompiler left bare (no /*spr_x*/ note) in sprite variables (the date's portraits):
 # named from research/names.json (tools/dump_names.py).

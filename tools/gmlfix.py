@@ -76,8 +76,26 @@ for o in objs:
         if not re.fullmatch(r'gml_Object_%s_[A-Za-z]+_\d+\.gml' % re.escape(o), fn) and not fn.startswith('gml_Object_%s_Collision' % o):
             continue
         src = open(os.path.join(code, fn), encoding='utf-8').read()
+        # Local arrays the decompiler left out of "// locals:" (the bytecode writes them through scope -7,
+        # `pushi.e -7` then `[array]undefined.NAME`): added, so they translate as locals, not this.NAME.
+        asm = os.path.join(code, 'asm', fn[:-4] + '.asm')
+        if os.path.exists(asm):
+            alines = open(asm, encoding='utf-8').read().split('\n')
+            extra = set()
+            for k, a in enumerate(alines):
+                mm = re.search(r'\[array\]undefined\.(\w+)', a)
+                if mm and any('pushi.e -7' in alines[j] for j in range(max(0, k - 3), k)):
+                    extra.add(mm.group(1))
+            hm = re.search(r'(?m)^// locals: (.*)$', src)
+            have = set(x.strip() for x in hm.group(1).split(',')) if hm else set()
+            extra -= have
+            if extra:
+                if hm:
+                    src = src[:hm.end()] + ', ' + ', '.join(sorted(extra)) + src[hm.end():]
+                else:
+                    src = re.sub(r'(?m)^(// object .*)$', r'\1\n// locals: ' + ', '.join(sorted(extra)), src, count=1)
         if 'goto L' not in src and not re.search(r'(?m)^\s*case [^:]+:\n\s*\}$', src):
-            shutil.copyfile(os.path.join(code, fn), os.path.join(out, fn))
+            open(os.path.join(out, fn), 'w', encoding='utf-8', newline='\n').write(src)
             continue
         lines = fix(src.split('\n'))
         left = [x.strip() for x in lines if 'goto L' in x]

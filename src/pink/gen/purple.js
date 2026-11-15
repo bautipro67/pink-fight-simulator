@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, button2_h, choose, clamp, collision_rectangle, defineObject, down_h, down_p, draw_clear, draw_clear_alpha, draw_line_width, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text_transformed, draw_vertex_color, global, gpu_set_blendmode, gpu_set_blendmode_ext, gpu_set_colorwriteenable, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_place, irandom, left_h, left_p, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, point_direction, point_distance, random, right_h, right_p, sign, snd_play, snd_stop, string_width, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target, up_h, up_p,
-} from '../rt.js?v=20261115074155';
+} from '../rt.js?v=20261115164340';
 import {
   camerax, cameray, i_ex, scr_approach, scr_fire_bullet, scr_get_box, scr_shakescreen,
-} from '../common.js?v=20261115074155';
+} from '../common.js?v=20261115164340';
 import {
   BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261115074155';
+} from '../gml.js?v=20261115164340';
 import {
   array_length,
-} from '../lib5.js?v=20261115074155';
+} from '../lib5.js?v=20261115164340';
 
 // !!! gml_Object_obj_purplecontrols_Step_0.gml has a decompiler WARNING: check the asm
 // obj_purplecontrols (default sprite spr_purpleheart, depth 0)
@@ -274,7 +274,7 @@ class Purplecontrols extends Instance {
         _scale = 1;
         if (W('obj_growtangle', function (other) {
             draw_sprite_ext(this.sprite_index, 1, this.x + other.x_shake, this.y, this.image_xscale, this.image_yscale, other.image_angle, this.image_blend, this.image_alpha);
-            draw_sprite_ext(this.sprite_index, - 1, this.x + other.x_shake, this.y, this.image_xscale, this.image_yscale, other.image_angle, this.image_blend, this.image_alpha);
+            draw_sprite_ext(this.sprite_index, this.image_index, this.x + other.x_shake, this.y, this.image_xscale, this.image_yscale, other.image_angle, this.image_blend, this.image_alpha);
             _scale = this.image_xscale / 2;
         }, this) === EXIT) return;
         _dir = this.image_angle;
@@ -570,7 +570,7 @@ class Purplecontrols extends Instance {
         this.image_alpha = 1;
     }
     if (W('obj_heart', function (other) {
-        draw_sprite_ext(this.sprite_index, - 1, this.x + other.x_shake + other.heartshake_x + other.heartbump_x, this.y + other.heartshake_y + other.heartbump_y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
+        draw_sprite_ext(this.sprite_index, this.image_index, this.x + other.x_shake + other.heartshake_x + other.heartbump_x, this.y + other.heartshake_y + other.heartbump_y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
     }, this) === EXIT) return;
   }
   user0() {
@@ -592,7 +592,7 @@ class Purplecontrols extends Instance {
     return;
   }
   step() {
-    let _input_buffer_length, _input_buffered, _pressed_something, _hold_repeat_delay, _hold_strongest, _wspeed, _laneswap_speed, _lane_distance, _ytarget, _dust, _y_old, _trail, _xtarget, _x_old, _heart_dir, _heart_dist, _move_dir, _move_dir_original, _allowed_input_angle, _rotate_travel_old, _x_traveled, _tirecorner_angle, _tire_lift, _box_slowdown_factor, _on_lane, _lane_scroll_speed, _ymovementspace, _number_of_lanes, _box_xscale, _box_yscale, _list_vertical_lines, i, _lane, _xx, _yy, _add_dir, _add_dist, _safety, _bul, _heart_speed_multiplier, _tunnel_speed_multiplier, _scale, _rotation_to_go, _rotation_speed, _heart_move_limit, _circle_grow_limit, _heart_zoomin_speed, _circle_interval, _tunnel_grow_factor, _tunnel_grow_addition, _heart_distance_to_center, _starting_radius, _dokidir, _variant, _dir, _atk, _angle, _dir_add, _multiple, _repeats, _moving, _multiple_angle, _zap, _doki, _offsetfix, _ht_old, _true_radius, _rt_old, _rotated_amount, _hx, _hy, _damagedir, _dist, _origdist, _scaling, _spr_offset, _randir, _randist, _li_nodes, _node_dist, _h_multi, _randnode, _li_size, _frequency, _moved, _old_node, _move_amount, _input_activated;
+    let _input_buffer_length, _input_buffered, _pressed_something, _hold_repeat_delay, _hold_strongest, _wspeed, _laneswap_speed, _lane_distance, _ytarget, _dust, _y_old, _trail, _xtarget, _x_old, _heart_dir, _heart_dist, _move_dir, _move_dir_original, _allowed_input_angle, _rotate_travel_old, _x_traveled, _tirecorner_angle, _tire_lift, _box_slowdown_factor, _on_lane, _lane_scroll_speed, _ymovementspace, _number_of_lanes, _box_xscale, _box_yscale, _list_vertical_lines, i, _lane, _xx, _yy, _add_dir, _add_dist, _safety, _bul, _heart_speed_multiplier, _tunnel_speed_multiplier, _scale, _rotation_to_go, _rotation_speed, _heart_move_limit, _circle_grow_limit, _heart_zoomin_speed, _circle_interval, _tunnel_grow_factor, _tunnel_grow_addition, _heart_distance_to_center, _starting_radius, _dokidir, _variant, _dir, _atk, _angle, _dir_add, _multiple, _repeats, _moving, _multiple_angle, _zap, _doki, _offsetfix, _ht_old, _true_radius, _rt_old, _rotated_amount, _hx, _hy, _damagedir, _dist, _origdist, _scaling, _spr_offset, _randir, _randist, _li_nodes, _node_dist, _h_multi, _randnode, _li_size, _frequency, _moved, _old_node, _move_amount, _input_activated, _acts, _tunnel_radius_old;
     if (W('obj_heart', function (other) {
         if (T(this.visible)) {
             this.sprite_index = 'spr_purpleheart';
@@ -1585,11 +1585,11 @@ class Purplecontrols extends Instance {
                 }
             }
         }
-        this._tunnel_radius_old ??= []; this._tunnel_radius_old[7] = 0;
+        _tunnel_radius_old ??= []; _tunnel_radius_old[7] = 0;
         i = 0;
         if (this.tunnel_speed > 0) {
             for (let _r6143 = 0, _n6143 = (8); _r6143 < _n6143; _r6143++) {
-                this._tunnel_radius_old ??= []; this._tunnel_radius_old[i] = this.tunnel_radius[i];
+                _tunnel_radius_old ??= []; _tunnel_radius_old[i] = this.tunnel_radius[i];
                 if (this.tunnel_radius[i] > 0) {
                     this.tunnel_radius ??= []; this.tunnel_radius[i] = this.tunnel_radius[i] * (1 + this.tunnel_radius[i] / (_tunnel_grow_factor / this.tunnel_speed)) + _tunnel_grow_addition * this.tunnel_speed;
                     if (this.tunnel_radius[i] > _circle_grow_limit) {
@@ -2235,18 +2235,18 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(3, _node_dist));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 4), function (other) {
-                    this._acts ??= []; this._acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 5), function (other) {
-                    this._acts ??= []; this._acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 7), function (other) {
-                    this._acts ??= []; this._acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; _acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                 }, this) === EXIT) return;
                 _randnode = choose(2, 6, 8);
                 if (W(S.ds_list_find_value(_li_nodes, _randnode), function (other) {
                     this.doki_delay = 45;
-                    this.act_to_change = this._acts[irandom(2)];
+                    this.act_to_change = _acts[irandom(2)];
                     switch (_randnode) {
                       case 2:
                         this.doki_backup_node = S.ds_list_find_value(_li_nodes, choose(6, 8));
@@ -2286,14 +2286,14 @@ class Purplecontrols extends Instance {
                     this.child ??= []; this.child[0] = S.ds_list_find_value(_li_nodes, 6);
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 1), function (other) {
-                    this._acts ??= []; this._acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
-                    if (W(this._acts[0], function (other) {
+                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    if (W(_acts[0], function (other) {
                         this.pattern = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 3), function (other) {
-                    this._acts ??= []; this._acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
-                    if (W(this._acts[1], function (other) {
+                    _acts ??= []; _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    if (W(_acts[1], function (other) {
                         this.pattern = 1;
                         this.pattern_dir = 180;
                     }, this) === EXIT) return EXIT;
@@ -2335,21 +2335,21 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(3, _node_dist));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 1), function (other) {
-                    this._acts ??= []; this._acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
-                    if (W(this._acts[0], function (other) {
+                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    if (W(_acts[0], function (other) {
                         this.pattern = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 3), function (other) {
-                    this._acts ??= []; this._acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
-                    if (W(this._acts[1], function (other) {
+                    _acts ??= []; _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    if (W(_acts[1], function (other) {
                         this.pattern = 1;
                         this.pattern_dir = 180;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 5), function (other) {
-                    this._acts ??= []; this._acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
-                    if (W(this._acts[2], function (other) {
+                    _acts ??= []; _acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    if (W(_acts[2], function (other) {
                         this.pattern = 2;
                         this.pattern_dir = 210;
                     }, this) === EXIT) return EXIT;
@@ -2494,8 +2494,8 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(0, _node_dist * 2.375));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 39), function (other) {
-                    this._acts ??= []; this._acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
-                    if (W(this._acts[0], function (other) {
+                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    if (W(_acts[0], function (other) {
                         this.mother = other.id;
                         this.mode = 1;
                     }, this) === EXIT) return EXIT;
@@ -2718,8 +2718,8 @@ class Pinkdust extends Instance {
     this.image_speed = 1;
   }
   draw() {
-    draw_sprite_ext(this.sprite_index, - 1, this.x + choose(0, 1), this.y + choose(0, 1), this.image_xscale, this.image_yscale, this.image_angle + 270, 0xffffff, this.image_alpha - this.image_index / 10);
-    draw_sprite_ext(this.sprite_index, - 1, this.x + choose(0, 1), this.y + choose(0, 1), - this.image_xscale, this.image_yscale, this.image_angle + 270, 0xffffff, this.image_alpha - this.image_index / 10);
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x + choose(0, 1), this.y + choose(0, 1), this.image_xscale, this.image_yscale, this.image_angle + 270, 0xffffff, this.image_alpha - this.image_index / 10);
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x + choose(0, 1), this.y + choose(0, 1), - this.image_xscale, this.image_yscale, this.image_angle + 270, 0xffffff, this.image_alpha - this.image_index / 10);
   }
   animationEnd() {
     instance_destroy(this);
@@ -3580,8 +3580,8 @@ class PinkCurtains extends Instance {
             }
             _scale = Math.max(_scale_closed, _scale_column);
             _yy = _camfix_y + this.y + j * 14 - 12 + lengthdir_y(12, 270 + this.curtain_angle[j]);
-            draw_sprite_ext(this.sprite_index, - 1, _xx1 - this.sprite_width * 0.5 * (1 - _scale) + lengthdir_x(12, 270 - this.curtain_angle[j]), _yy, _scale, 1, 0, 0xffffff, 1);
-            draw_sprite_ext(this.sprite_index, - 1, _xx2 + this.sprite_width * 0.5 * (1 - _scale) + lengthdir_x(12, 270 + this.curtain_angle[j]), _yy, _scale, 1, 0, 0xffffff, 1);
+            draw_sprite_ext(this.sprite_index, this.image_index, _xx1 - this.sprite_width * 0.5 * (1 - _scale) + lengthdir_x(12, 270 - this.curtain_angle[j]), _yy, _scale, 1, 0, 0xffffff, 1);
+            draw_sprite_ext(this.sprite_index, this.image_index, _xx2 + this.sprite_width * 0.5 * (1 - _scale) + lengthdir_x(12, 270 + this.curtain_angle[j]), _yy, _scale, 1, 0, 0xffffff, 1);
         }
         i = i + 1;
     }

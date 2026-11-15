@@ -1,5 +1,5 @@
 """Writes a temporary code dir where each Pink attack type of Chapter 5's obj_dbulletcontroller Step
-(the top-level `if (type == N) { ... }` blocks, N = 200-209) is an alarm event of obj_dbulletcontroller
+(the top-level `if (type == N) { ... }` blocks, N = 200-210) is an alarm event of obj_dbulletcontroller
 (Alarm_0 = type 200 ...), so tools/gml2js_obj.py can translate them; tools/gen_pink.sh then turns the
 alarms into typeN methods of the port's controller.
 
@@ -7,7 +7,7 @@ alarms into typeN methods of the port's controller.
 import os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TYPES = list(range(200, 210))
+TYPES = list(range(200, 211))  # (210: the final date's attack)
 src = open(os.path.join(ROOT, 'research', 'code', 'gml_Object_obj_dbulletcontroller_Step_0.gml'), encoding='utf-8').read()
 header = src.split('\n')[:4]
 locals_line = next((l for l in header if l.startswith('// locals:')), '// locals:')
