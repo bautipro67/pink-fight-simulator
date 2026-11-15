@@ -3,9 +3,9 @@
 import {
   global, defineObject, defineScript, instance_create, instance_create_depth, instance_exists, instance_destroy,
   instancesOf, choose, random, random_range, angle_difference, point_direction, lerp, S, snd_volume,
-} from './rt.js?v=20261115054137';
-import { first, camerax, cameray, scr_bullet_inherit, scr_childbullet, scr_loop_ext, snd_play_pitch, callOr } from './common.js?v=20261115054137';
-import { BulletGenParent } from './bullets.js?v=20261115054137';
+} from './rt.js?v=20261115060109';
+import { first, camerax, cameray, scr_bullet_inherit, scr_childbullet, scr_loop_ext, snd_play_pitch, callOr } from './common.js?v=20261115060109';
+import { BulletGenParent } from './bullets.js?v=20261115060109';
 
 const monsterpop = callOr('scr_monsterpop', () => (global.monster ? global.monster[0] + global.monster[1] + global.monster[2] : 1));
 

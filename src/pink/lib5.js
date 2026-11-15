@@ -1,0 +1,135 @@
+// Chapter 5 scripts Pink's fight calls (registered on S): the DOKI meter (scr_dokiadd, scr_item_to_doki,
+// scr_item_to_dokitext), scr_simultext, scr_battle_sprite_set / _reset, scr_rememberxy /
+// scr_move_to_rememberxy, msgsetsubloc, scr_array_shuffle, draw_sprite_ext_flash, d_rectangle,
+// scr_debug_print, and the pink damage font (global.damagefontpink, obj_initializer2).
+import {
+  global, defineScript, S, instance_create, instancesOf, irandom, draw_sprite_ext, d3d_set_fog, draw_rectangle,
+  font_add_sprite_ext, draw_rectangle_color, draw_line_color, draw_line_width_color, draw_circle, draw_set_font, draw_line,
+} from './rt.js?v=20261115060109';
+import { snd_play_x } from './common.js?v=20261115060109';
+import { moveToPoint } from '../screens/cutscene.js?v=20261115060109';
+import { subst } from '../battle/common.js?v=20261115060109';
+
+// (generated from the GML by tools/gen_doki_tables.py)
+// scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")
+const ITEM_DOKI = { 1: 2, 2: 3, 3: 3, 4: 0, 5: 0, 6: 3, 7: 3, 8: 2, 9: 2, 10: 1, 11: 2, 12: 3, 13: 1, 14: 15, 15: 0, 16: 2, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 2, 23: 3, 24: 1, 25: 1, 26: 2, 27: 2, 28: 2, 29: 3, 30: 2, 31: 4, 32: 0, 33: 3, 34: 2, 35: 0, 36: 1, 37: 1, 38: 3, 39: 2, 40: 3, 41: 2, 42: 2, 43: 2, 60: 1, 61: 1, 62: 2, 63: 4, 64: 3, 65: 3, 66: 2, 67: 2, 68: 2, 69: 2, 70: 2 };
+const ITEM_DOKITEXT = { 1: "Sweet!", 2: "Fresh!", 3: "Shiny!", 4: "Ugly!", 5: "Sharp!", 6: "Delicious!", 7: "Delicious!", 8: "Chompy!", 9: "Cute!", 10: "Unsatisfying.", 11: "Yummy!", 12: "Jammy and funky!", 13: "Melty!", 14: "Bepis!", 15: "Slimy!", 16: "Poppy!", 17: "Doesn't fit!", 18: "Yuck!", 19: "Yuck!", 20: "Yuck!", 21: "Yuck!", 22: "Chompy!", 23: "Crunchy!", 24: "Yuck!", 25: "Tangly!", 26: "Peppy!", 27: "Crunchy!", 28: "Crunchy!", 29: "Hyper!", 30: "Dusty!", 31: "Shiny!", 32: "Sickening!", 33: "Wanderful!", 34: "Expired?", 35: "It's, it's not mine!", 36: "Yuck!", 37: "Yuck!", 38: "Fancy!" };
+export const scr_item_to_doki = item => ITEM_DOKI[item] ?? 1;
+export const scr_item_to_dokitext = item => ITEM_DOKITEXT[item] ?? '';
+defineScript('scr_item_to_doki', scr_item_to_doki);
+defineScript('scr_item_to_dokitext', scr_item_to_dokitext);
+
+// scr_dokiadd(monster, amount): Pink's DOKI (0-100), a pink "+N DOKI" number (obj_dmgwriter type 15)
+// and snd_mercyadd, higher-pitched for small amounts.
+defineScript('scr_dokiadd', (m, amount) => {
+  for (const p of instancesOf('obj_pink_enemy')) p.doki = Math.max(0, Math.min(100, p.doki + amount));
+  let play = amount > 0;
+  for (const d of instancesOf('obj_dmgwriter')) if (d.type == 15 && d.mercytimer < 8) play = false;
+  if (play) {
+    let pitch = 0.8;
+    if (amount < 99) pitch = 1;
+    if (amount <= 50) pitch = 1.2;
+    if (amount <= 25) pitch = 1.4;
+    snd_play_x('snd_mercyadd', 0.8, pitch);
+  } else S.snd_play?.('snd_hurt_muffled_2x');
+  const d = instance_create(global.monsterx[m], global.monstery[m] + 20 - global.hittarget[m] * 20, 'obj_dmgwriter');
+  d.damage = amount;
+  d.type = 15;
+  global.hittarget[m]++;
+});
+
+// scr_simultext(who): this hero's line of the simultaneous ACT text (simulorder rows, 30 px apart).
+defineScript('scr_simultext', (self, who) => {
+  const order = { kris: self.simulorderkri, susie: self.simulordersus, ralsei: self.simulorderral, noelle: self.simulordernoe }[who] ?? 0;
+  global.typer = 4;
+  self.battlewriter = instance_create(self.xx + 30, self.yy + 376 + order * 30, 'obj_writer');
+  return self.battlewriter;
+});
+
+// scr_battle_sprite_set(who, sprite, speed, frames) / scr_battle_sprite_reset(who): a hero in state 8
+// (a set sprite) and back.
+const HERO = { kris: 'obj_herokris', susie: 'obj_herosusie', ralsei: 'obj_heroralsei', noelle: 'obj_heronoelle' };
+defineScript('scr_battle_sprite_set', (who, sprite, speed, frames) => {
+  for (const h of instancesOf(HERO[who] ?? 'obj_herokris')) {
+    Object.assign(h, { state: 8, hurt: 0, attacktimer: 0, sprite_index: sprite, image_speed: speed, image_index: 0 });
+    if (frames == 0) h.maxframes = h.image_number;
+    if (frames == -1) h.maxframes = -1;
+    global.faceaction[h.myself] = 0;
+  }
+});
+defineScript('scr_battle_sprite_reset', who => {
+  for (const h of instancesOf(HERO[who] ?? 'obj_herokris')) {
+    Object.assign(h, { state: 0, hurt: 0, attacktimer: 0, attacked: 0 });
+    global.faceaction[h.myself] = 0;
+  }
+});
+
+// scr_rememberxy / scr_move_to_rememberxy(time)
+defineScript('scr_rememberxy', self => {
+  self.___myrememberx = self.x;
+  self.___myremembery = self.y;
+});
+defineScript('scr_move_to_rememberxy', (self, time) => moveToPoint(self, self.___myrememberx, self.___myremembery, time));
+
+// msgsetsubloc(n, format, subs..., id): msgset with ~1, ~2 ... replaced.
+defineScript('msgsetsubloc', (n, fmt, ...rest) => S.msgset(n, subst(fmt, ...rest.slice(0, -1))));
+
+// scr_array_shuffle(array): a shuffled copy.
+defineScript('scr_array_shuffle', a => {
+  if (!Array.isArray(a)) return false;
+  const src = a.slice(), out = [];
+  while (src.length) out.push(src.splice(irandom(src.length - 1), 1)[0]);
+  return out;
+});
+
+// draw_sprite_ext_flash: the sprite drawn as a solid colour (fog).
+defineScript('draw_sprite_ext_flash', (spr, img, x, y, xs, ys, rot, col, alpha) => {
+  d3d_set_fog(true, col, 0, 1);
+  draw_sprite_ext(spr, img, x, y, xs, ys, rot, col, alpha);
+  d3d_set_fog(false, 0, 0, 0);
+});
+defineScript('d_rectangle', (x1, y1, x2, y2, outline) => draw_rectangle(x1, y1, x2, y2, outline));
+defineScript('d_rectangle_color', (x1, y1, x2, y2, c1, c2, c3, c4, outline) => draw_rectangle_color(x1, y1, x2, y2, c1, c2, c3, c4, outline));
+defineScript('d_line_color', (x1, y1, x2, y2, c1, c2) => draw_line_color(x1, y1, x2, y2, c1, c2));
+defineScript('d_line_width_color', (x1, y1, x2, y2, w, c1, c2) => draw_line_width_color(x1, y1, x2, y2, w, c1, c2));
+defineScript('d_circle', (x, y, r, outline) => draw_circle(x, y, r, outline));
+defineScript('d_line', (x1, y1, x2, y2) => draw_line(x1, y1, x2, y2));
+defineScript('scr_debug_print', () => {});
+defineScript('scr_debug_delete_persistent', () => {});
+
+// scr_heroblcon(who): a speech balloon (type 10) beside a hero, pointing left.
+const HERO_NUM = { 1: 'kris', kr: 'kris', 2: 'susie', su: 'susie', 3: 'ralsei', ra: 'ralsei', 4: 'noelle', no: 'noelle' };
+defineScript('scr_heroblcon', who => {
+  const h = instancesOf(HERO[HERO_NUM[who] ?? who])[0];
+  if (!h) return false;
+  const b = S.scr_enemyblcon(h.x + 100, h.y + 40, 10);
+  b.side = -1;
+  return b;
+});
+
+// scr_move_to_point_over_time(x, y, time), in the caller's scope.
+defineScript('scr_move_to_point_over_time', (self, x, y, time) => moveToPoint(self, x, y, time));
+
+// scr_string_format_time(seconds, decimals): "mm:ss".
+defineScript('scr_string_format_time', (t, dec = 0) => {
+  const pad = (n, w, d) => { const s = Number(n).toFixed(d); return s.padStart(w + (d ? d + 1 : 0), '0'); };
+  return pad(Math.floor(t / 60), 2, 0) + ':' + pad(t % 60, 2, dec);
+});
+
+// scr_84_get_sprite / scr_84_set_draw_font: the English sprite, the font by name.
+defineScript('scr_84_get_sprite', name => name);
+defineScript('scr_84_set_draw_font', name => {
+  global.chemg_font = name;
+  draw_set_font('fnt_' + name);
+});
+
+// Shaders (shader_replace_simple, the saturation effect): not drawn yet.
+defineScript('shader_get_uniform', () => -1);
+defineScript('shader_set_uniform_f', () => {});
+defineScript('shader_replace_simple_set_hook', () => {});
+defineScript('shader_replace_simple_reset_hook', () => {});
+
+// obj_initializer2: the pink numbers the DOKI writer uses.
+export function initPinkFonts() {
+  if (!global.damagefontpink) global.damagefontpink = font_add_sprite_ext('spr_numbersfontbig_pink', '0123456789+-%/P$', 20, 0);
+}

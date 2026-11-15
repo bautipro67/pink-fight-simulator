@@ -9,7 +9,7 @@
 // - Colours are 0xRRGGBB numbers. GML literals are BGR: wrap them in bgr(0x...).
 // - Angles are degrees, counter-clockwise; y points down (same as GameMaker).
 // - `global` holds GML globals: global.tension, global.hp[...] etc.
-import { assets, spriteMask } from './assets.js?v=20261115054137';
+import { assets, spriteMask } from './assets.js?v=20261115060109';
 
 export const global = {};
 export const ROOM_W = 640;
@@ -110,6 +110,7 @@ export function defineObject(name, cls) {
 export function objectExists(name) {
   return registry.has(name);
 }
+export const objectClass = name => registry.get(name);
 
 function classFor(name) {
   let cls = registry.get(name);
@@ -991,10 +992,10 @@ function drawGlyph(ctx, font, code, cx, cy, color) {
   ctx.drawImage(tinted(font.img, color, g), g[0], g[1], g[2], g[3], cx + g[5], cy, g[2], g[3]);
 }
 
-export function draw_text_transformed_color(x, y, s, xs, ys, ang, color, alpha) {
+export function draw_text_transformed_color(x, y, s, xs, ys, ang, color, alpha, lines = null, sep = -1) {
   const font = draw.font || fontOf(null);
-  const lines = String(s).split('\n');
-  const lh = lineHeight(font);
+  lines ??= String(s).split('\n');
+  const lh = sep >= 0 ? sep : lineHeight(font);
   const ctx = begin(alpha);
   ctx.translate(x, y);
   if (ang) ctx.rotate(-ang * Math.PI / 180);
@@ -1014,6 +1015,27 @@ export function draw_text_transformed_color(x, y, s, xs, ys, ang, color, alpha) 
   ctx.restore();
 }
 export const draw_text = (x, y, s) => draw_text_transformed_color(x, y, s, 1, 1, 0, draw.color, draw.alpha);
+// draw_text_ext(x, y, s, sep, w): lines sep apart (-1: the font's height), wrapped at spaces to w
+// pixels (-1: no wrapping).
+function wrapLines(s, w) {
+  const font = draw.font || fontOf(null);
+  const width = t => { let n = 0; for (const ch of t) n += charAdvance(font, ch.charCodeAt(0)); return n; };
+  const out = [];
+  for (const para of String(s).split('\n')) {
+    if (!(w > 0)) { out.push(para); continue; }
+    let line = '';
+    for (const word of para.split(' ')) {
+      const next = line === '' ? word : line + ' ' + word;
+      if (line !== '' && width(next) > w) { out.push(line); line = word; } else line = next;
+    }
+    out.push(line);
+  }
+  return out;
+}
+export const draw_text_ext = (x, y, s, sep, w) =>
+  draw_text_transformed_color(x, y, s, 1, 1, 0, draw.color, draw.alpha, wrapLines(s, w), sep);
+export const draw_text_ext_transformed = (x, y, s, sep, w, xs, ys, ang) =>
+  draw_text_transformed_color(x, y, s, xs, ys, ang, draw.color, draw.alpha, wrapLines(s, w), sep);
 export const draw_text_transformed = (x, y, s, xs, ys, ang) => draw_text_transformed_color(x, y, s, xs, ys, ang, draw.color, draw.alpha);
 // Corner colours c1..c4 (TL, TR, BR, BL): a vertical gradient when c1 == c2 and c3 == c4, else c1.
 export const draw_text_color = (x, y, s, c1, c2, c3, c4, alpha) =>

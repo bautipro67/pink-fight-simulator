@@ -4,8 +4,8 @@ import {
   withObj, event_user, choose, random, round, merge_color, button1_p, button2_p, button3_p,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_get_color, draw_rectangle,
   draw_sprite, draw_sprite_ext, draw_text_transformed,
-} from '../runtime/gm.js?v=20261115054137';
-import { withInst, gmlString, knightEnemy } from './common.js?v=20261115054137';
+} from '../runtime/gm.js?v=20261115060109';
+import { withInst, gmlString, knightEnemy } from './common.js?v=20261115060109';
 
 const g = global;
 
@@ -418,11 +418,24 @@ class DmgWriter extends Instance {
       if (this.type == 5) this.damagemessage = (this.damage < 0 ? '' : '+') + gmlString(this.damage) + '%';
     }
     draw_set_font(g.damagefont);
+    // Chapter 5: Pink's DOKI (type 15), pink numbers and the DOKI word (spr_battlemsg 15).
+    if (this.type == 15) {
+      draw_set_font(g.damagefontpink ?? g.damagefont);
+      draw_set_color(0xffffff);
+      message = 0;
+    }
     if (this.hspeed > 0) this.hspeed -= 1;
     if (this.hspeed < 0) this.hspeed += 1;
     if (Math.abs(this.hspeed) < 1) this.hspeed = 0;
     const xs = 2 - this.stretch, ys = this.stretch + this.kill;
-    if (message == 0) {
+    if (message == 0 && this.type == 15) {
+      draw_set_alpha(1 - this.kill);
+      draw_set_halign(2);
+      draw_text_transformed(this.x - 80, this.y - 20, this.damagemessage, xs, ys, 0);
+      draw_set_halign(0);
+      draw_set_alpha(1);
+      draw_sprite_ext('spr_battlemsg', 15, this.x, this.y - 20, xs, ys, 0, 0xffffff, 1 - this.kill);
+    } else if (message == 0) {
       draw_set_alpha(1 - this.kill);
       draw_set_halign(2);
       draw_text_transformed(this.x + 30, this.y, this.damagemessage, xs, ys, this.spec == 1 ? 90 : 0);

@@ -433,6 +433,14 @@ class Translator:
             else:
                 out.append(t)
             i += 1
+        # String literals are kept out of the rewrites below (". alright" or "! This" in a line of
+        # dialogue are not member access or negation).
+        strs = []
+
+        def keep(tok):
+            strs.append(tok)
+            return '\x00%d\x00' % (len(strs) - 1)
+        out = [keep(x) if len(x) >= 2 and x[0] in '"\'' and x[-1] == x[0] else x for x in out]
         s = ' '.join(out)
         s = re.sub(r' ?\. ?', '.', s)
         s = re.sub(r'(\w) \(', r'\1(', s)
@@ -445,6 +453,7 @@ class Translator:
         s = re.sub(r'- -(?=\w)', '--', s)
         s = s.replace('this, )', 'this)')
         s = truthy_not(s)
+        s = re.sub('\x00(\\d+)\x00', lambda m: strs[int(m.group(1))], s)
         return s
 
     def colour_context(self, toks, i, call_stack):

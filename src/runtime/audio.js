@@ -1,5 +1,5 @@
 // WebAudio playback with the Deltarune snd_* / mus_* wrapper semantics.
-import { assets, audioReady, loadMusic } from './assets.js?v=20261115054137';
+import { assets, audioReady, loadMusic } from './assets.js?v=20261115060109';
 
 let ctx = null;
 let master = null;
@@ -71,6 +71,7 @@ class Voice {
       this.src.connect(this.gain);
       this.src.onended = () => this.cleanup();
       this.src.start();
+      this.mark(0);
     }).catch(e => console.warn(e));
     if (!playing.has(key)) playing.set(key, new Set());
     playing.get(key).add(this);
@@ -92,17 +93,34 @@ class Voice {
     } else g.value = v;
   }
   setPitch(p) {
+    this.mark(this.position());
     this.pitch = p;
     if (this.src && !this.paused) this.src.playbackRate.value = p;
   }
   // snd_pause / snd_resume: a stopped playback rate holds the position.
   pause() {
+    this.mark(this.position());
     this.paused = true;
     if (this.src) this.src.playbackRate.value = 0;
   }
   resume() {
+    this.mark(this.position());
     this.paused = false;
     if (this.src) this.src.playbackRate.value = this.pitch;
+  }
+  // audio_sound_get_track_position: seconds into the sound, from when it started and the playback
+  // rates since (mark() notes the position whenever the rate changes).
+  mark(pos) {
+    this.posAt = pos;
+    this.timeAt = ctx.currentTime;
+  }
+  position() {
+    if (!this.src || this.timeAt === undefined) return 0;
+    const rate = this.paused ? 0 : this.pitch;
+    let p = this.posAt + (ctx.currentTime - this.timeAt) * rate;
+    const d = this.src.buffer?.duration ?? 0;
+    if (d > 0) p = this.src.loop ? p % d : Math.min(p, d);
+    return p;
   }
 }
 
@@ -196,6 +214,10 @@ export function mus_stop(stream) {
     stream.voice.stop();
     stream.voice = null;
   }
+}
+
+export function audio_sound_get_track_position(s) {
+  return voiceOf(s)?.position() ?? 0;
 }
 
 export function mus_pause(stream) {

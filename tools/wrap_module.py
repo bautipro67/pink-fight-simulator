@@ -9,10 +9,11 @@ import os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import json
 V = '?v=' + json.load(open(os.path.join(ROOT, 'version.json')))['v']
-SOURCES = [  # (import path from src/gerson/attacks, file)
+SOURCES = [  # (import path from src/pink/gen, file)
     ('../rt.js', ['src/runtime/gm.js', 'src/runtime/audio.js']),
-    ('../common.js', ['src/gerson/common.js']),
-    ('../gml.js', ['src/gerson/gml.js']),
+    ('../common.js', ['src/pink/common.js']),
+    ('../gml.js', ['src/pink/gml.js']),
+    ('../lib5.js', ['src/pink/lib5.js']),
 ]
 
 

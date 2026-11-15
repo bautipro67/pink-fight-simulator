@@ -7,9 +7,9 @@ import {
   left_p, right_p, up_p, down_p, button1_p, button2_p, string_width, string_hash_to_newline,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_rectangle, draw_sprite,
   draw_sprite_ext, draw_text, draw_text_colour, draw_text_transformed, draw_line_width,
-} from '../runtime/gm.js?v=20261115054137';
-import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261115054137';
-import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261115054137';
+} from '../runtime/gm.js?v=20261115060109';
+import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261115060109';
+import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261115060109';
 
 const sin = Math.sin, cos = Math.cos;
 const g = global;
@@ -193,6 +193,9 @@ class BattleController extends Instance {
   ti(i, j) { return this.tempitem[i]?.[j] ?? 0; }
 
   step() {
+    // Chapter 5: the battle waits while Pink's intro (introcon < 3) or her phase 4 intro plays.
+    const pink = instancesOf('obj_pink_enemy')[0];
+    if (pink && (pink.introcon < 3 || pink.phase4introcon > 0)) return;
     const knight = knightEnemy();
     if (knight && knight.end_cutscene_version > 0) {
       // obj_ch3_PTB02 waits for intro == 2, then 30 frames later (con 8) the party is back in the

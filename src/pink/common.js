@@ -13,8 +13,8 @@ import {
   collision_rectangle, d3d_set_fog, draw_set_blend_mode, gpu_get_blendmode, sprite_get_width, sprite_get_height,
   sprite_get_xoffset, sprite_get_yoffset, draw_triangle_color, draw_circle, draw_get_alpha, merge_color, random, S,
   defineScript,
-} from '../runtime/gm.js?v=20261115054137';
-import { snd_play, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261115054137';
+} from '../runtime/gm.js?v=20261115060109';
+import { snd_play, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261115060109';
 
 export const VIEW_W = 640;
 export const VIEW_H = 480;
@@ -619,7 +619,8 @@ export function draw_sprite_ext_centerscale(self, spr, sub, x, y, xs, ys, rot, c
 // ---------------------------------------------------------------- generic effect objects (Chapter 3)
 
 export class Afterimage extends Instance {
-  create() { this.fadeSpeed = 0.04; }
+  // (parentid: Chapter 5's obj_afterimage Create; whoever made it may point it at its source)
+  create() { this.fadeSpeed = 0.04; this.parentid = -1; }
   step() {
     this.image_alpha -= this.fadeSpeed;
     if (this.image_alpha < 0) instance_destroy(this);

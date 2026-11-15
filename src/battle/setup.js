@@ -4,11 +4,11 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, room_reset, objectExists,
   font_add_sprite_ext,
-} from '../runtime/gm.js?v=20261115054137';
-import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115054137';
-import { WEAPONS, ARMORS, BASE_STATS, getLoadout } from './equipment.js?v=20261115054137';
-import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115054137';
-import { registerBackground } from './misc.js?v=20261115054137';
+} from '../runtime/gm.js?v=20261115060109';
+import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115060109';
+import { WEAPONS, ARMORS, BASE_STATS, getLoadout } from './equipment.js?v=20261115060109';
+import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115060109';
+import { registerBackground } from './misc.js?v=20261115060109';
 
 function scr_gamestart() {
   global.chapter = 3;
@@ -148,6 +148,8 @@ defineScript('init_battle_globals', () => {
   global.hpfont = font_add_sprite_ext('spr_numbersfontsmall', '0123456789-+', false, 2);
   global.damagefont = font_add_sprite_ext('spr_numbersfontbig', '0123456789', true, 0);
   global.damagefontgold = global.damagefont;
+  // obj_initializer2 (Chapter 5): the pink numbers of Pink's DOKI meter.
+  global.damagefontpink = font_add_sprite_ext('spr_numbersfontbig_pink', '0123456789+-%/P$', true, 0);
   global.heartx = 310;
   global.hearty = 160;
   global.tempflag[93] = 1;
