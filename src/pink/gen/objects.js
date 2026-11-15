@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, audio_sound_get_track_position, d3d_set_fog, defineObject, draw_clear_alpha, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_set_halign, draw_set_valign, draw_sprite, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_text, draw_text_color, draw_text_ext, draw_text_ext_transformed, draw_text_transformed, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, random, snd_loop, snd_play, snd_stop, snd_volume, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261115060109';
+} from '../rt.js?v=20261115071747';
 import {
   camerawidth, camerax, cameray, i_ex, scr_shakeobj, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261115060109';
+} from '../common.js?v=20261115071747';
 import {
-  EXIT, O, T, W,
-} from '../gml.js?v=20261115060109';
+  EXIT, LOOP, O, T, W,
+} from '../gml.js?v=20261115071747';
 
 // obj_date_ui (default sprite spr_dokibar_blush, depth 0)
 class DateUi extends Instance {
@@ -376,7 +376,7 @@ class PinkLipsync extends Instance {
     } else if (this.trackpos < this.last_trackpos && this.safety_timer == 0) {
         this.noteindex = 0;
     }
-    while (this.noteindex < this.maxnote && !T(this.singing) && this.trackpos > this.noteend[this.noteindex]) {
+    while ((this.noteindex < this.maxnote && !T(this.singing) && this.trackpos > this.noteend[this.noteindex]) && LOOP('PinkLipsync#1')) {
         this.noteindex = this.noteindex + 1;
     }
     if (this.trackpos < this.ftime[0] || this.trackpos > this.ftime[1] && this.trackpos < this.ftime[2] || this.trackpos > this.ftime[3]) {
@@ -445,7 +445,7 @@ class PinkGhostMarker extends Instance {
         __offsetx = - 40;
         __offsety = - 40;
         this.i = 0;
-        while (this.i < this.sprite_height) {
+        while ((this.i < this.sprite_height) && LOOP('PinkGhostMarker#2')) {
             draw_sprite_part_ext('spr_pink_ghost_2xscale', this.image_index, 0, this.i * this.thickness, this.sprite_width, this.thickness + 2, this.x + __offsetx + Math.sin((this.wave_siner + this.i * 8) / 30) * 3, this.y + this.i * this.thickness + __offsety, 1, 1, 0xffffff, this.image_alpha);
             this.i = this.i + this.thickness;
         }
@@ -1290,7 +1290,7 @@ class DokihealAnim extends Instance {
         if (this.t >= 1 && this.heartcount > 0) {
             this.heartcount = this.heartcount - 1;
             this.i = 0;
-            while (this.i < 2) {
+            while ((this.i < 2) && LOOP('DokihealAnim#3')) {
                 this.star ??= []; this.star[this.starcount] = instance_create(this.x + random(this.sw), this.y + random(this.sh), 'obj_marker');
                 if (W(this.star[this.starcount], function (other) {
                     this.image_angle = random(360);
@@ -1311,7 +1311,7 @@ class DokihealAnim extends Instance {
         }
         if (this.t >= 5 && this.t <= 30) {
             this.i = 0;
-            while (this.i < this.starcount) {
+            while ((this.i < this.starcount) && LOOP('DokihealAnim#4')) {
                 if (W(this.star[this.i], function (other) {
                     this.image_angle = this.image_angle - 10;
                     this.image_alpha = this.image_alpha - 0.1;
@@ -1327,7 +1327,7 @@ class DokihealAnim extends Instance {
         }
     } else {
         this.i = 0;
-        while (this.i < this.starcount) {
+        while ((this.i < this.starcount) && LOOP('DokihealAnim#5')) {
             if (W(this.star[this.i], function (other) {
                 instance_destroy(this);
             }, this) === EXIT) return;

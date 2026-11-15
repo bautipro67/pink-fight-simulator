@@ -8,6 +8,27 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 p = sys.argv[1]
 t = open(p, encoding='utf-8').read()
 
+# Every while / do-until loop also calls LOOP(id) (src/pink/gml.js), which stops a runaway loop with an
+# error naming it (the class it is in and its number there) instead of freezing the page.
+_loops = [0]
+
+
+def _guard(cond):
+    _loops[0] += 1
+    cls = re.findall(r'(?m)^class (\w+)', t[:_pos[0]])
+    return '(%s) && LOOP(%s)' % (cond, repr('%s#%d' % (cls[-1] if cls else '?', _loops[0])))
+
+
+_pos = [0]
+out, last = [], 0
+for m in re.finditer(r'(?m)^(\s*)(\} while|while) \((.*)\)( \{|;)$', t):
+    _pos[0] = m.start()
+    out.append(t[last:m.start()])
+    out.append('%s%s (%s)%s' % (m.group(1), m.group(2), _guard(m.group(3)), m.group(4)))
+    last = m.end()
+out.append(t[last:])
+t = ''.join(out)
+
 # Battle-module scripts (on S) that take the calling instance first, as the GML runs them in its scope.
 CALLER_FIRST = [
     'draw_monster_body_part', 'scr_bulletspawner', 'scr_damage', 'scr_damage_all', 'scr_damage_maxhp',
@@ -47,6 +68,33 @@ t = re.sub(r'\bS\.(\w+)\(', direct, t)
 t = t.replace('(this, )', '(this)')
 # `other` outside a with, in an ordinary event, is the instance itself.
 t = t.replace('G.other.', 'this.')
+# The one camera (view_camera[0] is GML's built-in array, not an instance variable).
+t = t.replace('this.view_camera[0]', '0')
+# A collision / instance_place result is an instance or noone (-4) in GML, compared with 0 or -4; here it
+# is an instance or null (and `null >= 0` is true), so those comparisons become existence checks.
+for v in set(re.findall(r'\b(\w+) = (?:collision_\w+|instance_place|instance_position|instance_nearest)\(', t)):
+    t = re.sub(r'\b%s (>=|>) 0\b' % v, '%s != null' % v, t)
+    t = re.sub(r'\b%s (<|<=) 0\b' % v, '%s == null' % v, t)
+    t = re.sub(r'\b%s != - ?4\b' % v, '%s != null' % v, t)
+    t = re.sub(r'\b%s == - ?4\b' % v, '%s == null' % v, t)
+# event_perform(ev_alarm, n) runs the instance's alarm n.
+t = re.sub(r'S\.event_perform\(2, (\d+)\)', r'this.alarm\1?.()', t)
+# event_perform(ev_draw, 0) draws the instance now.
+t = t.replace('S.event_perform(8, 0)', 'this.draw?.()')
+# The engine's instance_place takes the instance first (as place_meeting, which the translator handles).
+t = re.sub(r'\binstance_place\((?!this, )', 'instance_place(this, ', t)
+# Caller-scope scripts the Chapter 5 objects call.
+t = re.sub(r'\bS\.distance_to_object\(', 'S.distance_to_object(this, ', t)
+
+# obj_pinknode Create: fnc_make_node = method(self, ...): a child node at dir * 90 degrees, dist away.
+t = re.sub(r"this\.fnc_make_node = S\.method\([^;]*\);",
+           "this.fnc_make_node = (dir, dist) => { this.child ??= []; this.child[dir] = instance_create_depth("
+           "this.x + lengthdir_x(dist, dir * 90), this.y + lengthdir_y(dist, dir * 90), this.depth, 'obj_pinknode'); "
+           "return this.child[dir]; };", t)
+t = t.replace('S.fnc_make_node(', 'this.fnc_make_node(')
+# obj_pink_tension_glow Create: draw_w_offset only sets its own locals (does nothing).
+t = re.sub(r"this\.draw_w_offset = S\.method\([^;]*\);", "this.draw_w_offset = () => {};", t)
+t = t.replace('S.draw_w_offset(', 'this.draw_w_offset(')
 
 # obj_pink_enemy Create: drop_petal = method(-1, anon...) -> a method of the class (see dropPetal).
 t = re.sub(r"    this\.drop_petal = S\.method\([^;]*\);\n", "", t)

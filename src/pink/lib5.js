@@ -3,12 +3,58 @@
 // scr_move_to_rememberxy, msgsetsubloc, scr_array_shuffle, draw_sprite_ext_flash, d_rectangle,
 // scr_debug_print, and the pink damage font (global.damagefontpink, obj_initializer2).
 import {
-  global, defineScript, S, instance_create, instancesOf, irandom, draw_sprite_ext, d3d_set_fog, draw_rectangle,
+  G, global, defineScript, S, instance_create, instancesOf, irandom, draw_sprite_ext, d3d_set_fog, draw_rectangle,
   font_add_sprite_ext, draw_rectangle_color, draw_line_color, draw_line_width_color, draw_circle, draw_set_font, draw_line,
-} from './rt.js?v=20261115060109';
-import { snd_play_x } from './common.js?v=20261115060109';
-import { moveToPoint } from '../screens/cutscene.js?v=20261115060109';
-import { subst } from '../battle/common.js?v=20261115060109';
+  draw_ellipse, snd_play, snd_loop, point_distance,
+} from './rt.js?v=20261115071747';
+import { snd_play_x, camerax, cameray } from './common.js?v=20261115071747';
+
+// ---------------------------------------------------------------- GML built-ins the Chapter 5 objects use
+// ds_list_*: lists are arrays (a destroyed one is flagged for ds_exists).
+export const array_length = a => a?.length ?? 0;
+defineScript('ds_list_create', () => []);
+defineScript('ds_list_add', (l, ...v) => { l.push(...v); });
+defineScript('ds_list_size', l => l?.length ?? 0);
+defineScript('ds_list_find_value', (l, i) => l?.[i]);
+defineScript('ds_list_find_index', (l, v) => l.indexOf(v));
+defineScript('ds_list_delete', (l, i) => { if (i >= 0 && i < l.length) l.splice(i, 1); });
+defineScript('ds_list_insert', (l, i, v) => { l.splice(i, 0, v); });
+defineScript('ds_list_replace', (l, i, v) => { l[i] = v; });
+defineScript('ds_list_set', (l, i, v) => { l[i] = v; });
+defineScript('ds_list_clear', l => { if (l) l.length = 0; });
+defineScript('ds_list_destroy', l => { if (l) { l.length = 0; l.destroyed = true; } });
+defineScript('ds_exists', l => Array.isArray(l) && !l.destroyed);
+defineScript('ds_list_shuffle', l => {
+  for (let i = l.length - 1; i > 0; i--) { const j = irandom(i); [l[i], l[j]] = [l[j], l[i]]; }
+});
+defineScript('ds_list_sort', (l, asc) => { l.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)); if (!asc) l.reverse(); });
+// The one camera: the view's position.
+defineScript('camera_get_view_x', () => camerax());
+defineScript('camera_get_view_y', () => cameray());
+// audio_play_sound(sound, priority, loop)
+defineScript('audio_play_sound', (snd, prio, loop) => (loop ? snd_loop(snd) : snd_play(snd)));
+defineScript('d_ellipse', (x1, y1, x2, y2, outline) => draw_ellipse(x1, y1, x2, y2, outline));
+// distance_to_object(obj), in the caller's scope: to the nearest instance's bounding box.
+defineScript('distance_to_object', (self, obj) => {
+  let best = Infinity;
+  for (const o of instancesOf(obj)) {
+    if (o === self) continue;
+    const dx = Math.max(o.bbox_left - self.bbox_right, self.bbox_left - o.bbox_right, 0);
+    const dy = Math.max(o.bbox_top - self.bbox_bottom, self.bbox_top - o.bbox_bottom, 0);
+    best = Math.min(best, Math.hypot(dx, dy));
+  }
+  return best === Infinity ? 1000000 : best;
+});
+// scr_wave(from, to, period, offset): a sine between from and to over `period` seconds.
+defineScript('scr_wave', (a, b, period, offset) => {
+  const h = (b - a) * 0.5;
+  return a + h + Math.sin((G.frame / 30 + period * offset) / period * 6.283185307179586) * h;
+});
+defineScript('scr_84_get_font', name => 'fnt_' + name);
+defineScript('show_debug_message_concat', () => {});
+void point_distance;
+import { moveToPoint } from '../screens/cutscene.js?v=20261115071747';
+import { subst } from '../battle/common.js?v=20261115071747';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")

@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   S, button3_p, choose, d3d_set_fog, defineObject, draw_set_alpha, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, keyboard_check_pressed, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, mus_loop_ext, mus_volume, random, random_range, snd_init, snd_loop, snd_play, snd_stop,
-} from '../rt.js?v=20261115060109';
+} from '../rt.js?v=20261115071747';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, scr_afterimage, scr_lerpvar, scr_script_delayed, scr_shakeobj, scr_shakescreen, scr_var, snd_play_x,
-} from '../common.js?v=20261115060109';
+} from '../common.js?v=20261115071747';
 import {
-  EXIT, O, P, T, W,
-} from '../gml.js?v=20261115060109';
+  EXIT, LOOP, O, P, T, W,
+} from '../gml.js?v=20261115071747';
 
 // obj_pink_enemy (default sprite spr_pink_idle, depth 0, parent obj_monsterparent)
 class PinkEnemy extends P('obj_monsterparent') {
@@ -344,7 +344,7 @@ class PinkEnemy extends P('obj_monsterparent') {
         __offsetx = - 6;
         __offsety = 28;
         this.i = 0;
-        while (this.i < this.sprite_height) {
+        while ((this.i < this.sprite_height) && LOOP('PinkEnemy#1')) {
             draw_sprite_part_ext('spr_pink_very_hurt_2xscale', this.image_index, 0, this.i * this.thickness, this.sprite_width, this.thickness + 2, this.x + this.shakex + __offsetx + Math.sin((this.wave_siner + this.i * 8) / 30) * 3, this.y + this.i * this.thickness + __offsety, 1, 1, 0xffffff, 1);
             this.i = this.i + this.thickness;
         }
@@ -356,7 +356,7 @@ class PinkEnemy extends P('obj_monsterparent') {
             __offsetx = - 6;
             __offsety = 28;
             this.i = 0;
-            while (this.i < this.sprite_height) {
+            while ((this.i < this.sprite_height) && LOOP('PinkEnemy#2')) {
                 draw_sprite_part_ext('spr_pink_very_hurt_2xscale', this.image_index, 0, this.i * this.thickness, this.sprite_width, this.thickness + 2, this.x + this.shakex + __offsetx + Math.sin((this.wave_siner + this.i * 8) / 30) * 3, this.y + this.i * this.thickness + __offsety, 1, 1, 0xffffff, 0.2 + Math.sin(this.turnredtimer * 0.35) * 0.2);
                 this.i = this.i + this.thickness;
             }
@@ -760,7 +760,7 @@ class PinkEnemy extends P('obj_monsterparent') {
     }
     this.hero_state = "fail";
     this.ti = 0;
-    while (this.ti < 3) {
+    while ((this.ti < 3) && LOOP('PinkEnemy#3')) {
         this.damage = this.teamdamage;
         this.target = this.ti;
         if (global.hp[global.char[this.ti]] > 0 && global.char[this.ti] != 0) {

@@ -2,13 +2,22 @@
 // W(target, fn, self) is GML's with(): fn runs with `this` = each instance and `other` = self;
 // returning EXIT ends the calling event, BREAK leaves the with loop.
 // O(name) reads the first instance of an object and writes every instance, like obj_x.var in GML.
-import { G, instancesOf, objectClass } from './rt.js?v=20261115060109';
-import { tagParent } from './common.js?v=20261115060109';
+import { G, instancesOf, objectClass } from './rt.js?v=20261115071747';
+import { tagParent } from './common.js?v=20261115071747';
 
 export const EXIT = Symbol('exit');
 export const BREAK = Symbol('break');
 export const VIEW_WPORT = [640];
 export const VIEW_HPORT = [480];
+
+// LOOP(id): every translated while / do-until loop also checks this (tools/postfix.py). A loop that runs
+// 200000 times in one frame would freeze the game, so it is stopped with an error naming it instead.
+let loopFrame = -1, loopCount = 0;
+export function LOOP(id) {
+  if (G.frame !== loopFrame) { loopFrame = G.frame; loopCount = 0; }
+  if (++loopCount > 200000) { loopCount = 0; throw new Error('runaway loop ' + id); }
+  return true;
+}
 
 export function W(target, fn, self) {
   const list = target === 'all' ? G.instances.filter(i => i.alive) : instancesOf(target);
