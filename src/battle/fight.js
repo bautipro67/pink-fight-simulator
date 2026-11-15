@@ -4,8 +4,8 @@ import {
   withObj, event_user, choose, random, round, merge_color, button1_p, button2_p, button3_p,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_get_color, draw_rectangle,
   draw_sprite, draw_sprite_ext, draw_text_transformed,
-} from '../runtime/gm.js?v=20261115180048';
-import { withInst, gmlString, knightEnemy } from './common.js?v=20261115180048';
+} from '../runtime/gm.js?v=20261115213228';
+import { withInst, gmlString, knightEnemy } from './common.js?v=20261115213228';
 
 const g = global;
 
@@ -130,7 +130,8 @@ class AttackPress extends Instance {
         draw_sprite('spr_pressfront', j - 1, x, y + 38 * i);
         if (g.flag[13] == 0) draw_sprite('spr_pressfront_b', 0, x, y + 38 * i);
         if (g.flag[13] == 1) draw_sprite('spr_pressfront_b', i, x, y + 38 * i);
-        draw_sprite('spr_pressspot', j - 1, x + 80, y + 38 * i);
+        // (Kris's row shows a longer spot with the AquaKnife)
+        draw_sprite('spr_pressspot', g.charweapon[1] == 33 && j == 1 ? 4 : j - 1, x + 80, y + 38 * i);
       }
     }
     this.boltcount = [0, 0, 0];
@@ -227,7 +228,12 @@ function scorePress(ap, idx, bc, topclose) {
     bb.image_blend = 0xffff00;
     bb.mag = 0.2;
   }
-  if (p == 1) ap.points[bc] += 120;
+  // AquaKnife (Chapter 5): one frame early still counts as perfect.
+  if (topclose == 1 && g.charweapon[1] == 33) {
+    ap.points[bc] += 150;
+    bb.image_blend = 0xffff00;
+    bb.mag = 0.2;
+  } else if (p == 1) ap.points[bc] += 120;
   if (p == 2) ap.points[bc] += 110;
   if (p >= 3) {
     ap.points[bc] += 100 - Math.abs(topclose) * 2;

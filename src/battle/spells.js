@@ -2,10 +2,10 @@
 import {
   global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instance_find, withObj, event_user, random, ceil, round, merge_color, point_direction, point_distance,
-  angle_difference, button1_p, draw_self, draw_sprite_ext, d3d_set_fog,
-} from '../runtime/gm.js?v=20261115180048';
-import { snd_play, snd_stop } from '../runtime/audio.js?v=20261115180048';
-import { withInst, subst, knightEnemy } from './common.js?v=20261115180048';
+  angle_difference, button1_p, draw_self, draw_sprite_ext, d3d_set_fog, instance_create_depth, instancesOf,
+} from '../runtime/gm.js?v=20261115213228';
+import { snd_play, snd_stop } from '../runtime/audio.js?v=20261115213228';
+import { withInst, subst } from './common.js?v=20261115213228';
 
 const g = global;
 
@@ -91,8 +91,8 @@ defineObject('obj_spellphase', SpellPhase);
 const SPELLTEXT = {
   1: '* ~1 cast RUDE BUSTER!/%', 2: '* ~1 cast HEAL PRAYER!/%', 4: '* ~1 used RUDE BUSTER!/%', 5: '* ~1 used RED BUSTER!/%',
   6: '* ~1 cast DUAL HEAL!/%', 8: '* ~1 cast SLEEPMIST!/%', 9: '* ~1 cast ICESHOCK!/%', 10: '* ~1 cast SNOWGRAVE!/%',
-  11: '* ~1 cast ULTRAHEAL!/%',
-  201: '* ~1 used the DARK CANDY!/%', 202: '* ~1 used the REVIVEMINT!/%', 205: '* ~1 used the BROKEN CAKE!/%',
+  11: '* ~1 cast HEAL!/%', 12: '* ~1 cast REVIVESONG!/%', 13: '* ~1 cast SCYTHEMARE!/%',
+  201: '* ~1 used the DARKER CANDY!/%', 202: '* ~1 used the REVIVEMINT!/%', 205: '* ~1 used the BROKEN CAKE!/%',
   206: '* ~1 used the TOPCAKE!/%', 207: '* ~1 used the SPINCAKE!/%', 208: '* ~1 used the DARKBURGER!/%',
   209: '* ~1 used the LANCERCOOKIE!/%', 210: '* ~1 used the GIGASALAD!/%', 211: '* ~1 used the CLUBS SANDWICH!/%',
   212: '* ~1 used the HEARTS DONUT!/%', 213: '* ~1 used the CHOCO DIAMOND!/%', 214: '* ~1 used the FAV SANDWICH!/%',
@@ -102,7 +102,12 @@ const SPELLTEXT = {
   228: '* ~1 used the TENSIONGEM!/%', 229: '* ~1 used the TENSIONMAX!/%', 230: '* ~1 used the REVIVEDUST!/%',
   231: '* ~1 used the REVIVEBRIGHT!/%', 232: '* ~1 administered S.POISON!/%', 234: '* ~1 used the TVDINNER!/%',
   235: '* ~1 used the PIPIS!/%', 236: '* ~1 used the FLATSODA!/%', 237: '* ~1 used the TVSLOP!/%',
-  238: '* ~1 used the EXECBUFFET!/%', 239: '* ~1 used the DELUXEDINNER!/%',
+  238: '* ~1 used the EXECBUFFET!/%', 239: '* ~1 used the DELUXEDINNER!/%', 240: '* ~1 used the PUNCHBOWL!/%',
+  241: '* ~1 used the FLAVIGNE!/%', 242: '* ~1 used the GREENTEA!/%', 243: '* ~1 used the ORANGEJUICE!/%',
+  260: '* ~1 used the ANCIENTSWEET!/%', 261: '* ~1 used the RHAPSOTEA!/%', 262: '* ~1 used the SCARLIXIR!/%',
+  263: '* ~1 used the BITTERTEAR!/%', 264: '* ~1 used the SCHADENBROT!/%', 265: '* ~1 used the TREECAKE!/%',
+  266: '* ~1 used the S.POTION!/%', 267: '* ~1 used the RAW MOON!/%', 268: '* ~1 used the PHANTA!/%',
+  269: '* ~1 used the FLOWERYSODA!/%', 270: '* ~1 used the SHIKACOLA!/%',
 };
 
 // scr_spelltext(spell, caster): caller scope (spell, caster, star); writes global.msg.
@@ -152,8 +157,11 @@ defineScript('scr_spelltext', (inst, spell, caster) => {
 
 // ---------------------------------------------------------------- spell effects
 
-// scr_dmgwriter_selfchar(): hero scope.
-defineScript('scr_dmgwriter_selfchar', (h) => instance_create(h.x, h.y + h.myheight - 24 - h.tu * 20, 'obj_dmgwriter'));
+// scr_dmgwriter_selfchar(): hero scope (Chapter 5: 40 px higher than before, tu at least -1).
+defineScript('scr_dmgwriter_selfchar', (h) => {
+  if (h.tu < -1) h.tu = -1;
+  return instance_create(h.x, h.y + h.myheight - 40 - 24 - h.tu * 20, 'obj_dmgwriter');
+});
 
 function healFx(h, amount) {
   const ha = instance_create(h.x, h.y, 'obj_healanim');
@@ -167,12 +175,15 @@ function healFx(h, amount) {
   return ha;
 }
 
-// scr_heal_amount_modify_by_equipment(amount): caller scope (caster); BlueRibbon adds 1/8.
+// scr_heal_amount_modify_by_equipment(amount): caller scope (caster); a BlueRibbon or MonarchRBN on the
+// caster adds 1/8 each.
 const healMod = (inst, amt) => {
   const c = g.char[inst.caster] ?? 0;
   let add = 0;
-  if (g.chararmor1[c] == 26) add += ceil(amt / 8);
-  if (g.chararmor2[c] == 26) add += ceil(amt / 8);
+  for (const id of [26, 30]) {
+    if (g.chararmor1[c] == id) add += ceil(amt / 8);
+    if (g.chararmor2[c] == id) add += ceil(amt / 8);
+  }
   return amt + add;
 };
 
@@ -193,9 +204,14 @@ defineScript('scr_healallitemspell', (inst, amount) => {
   g.spelldelay = 20;
 });
 
-// Items that heal one target: id -> amount (Chapter 3).
-const HEAL1 = { 201: 40, 205: 20, 208: 70, 209: 50, 210: 4, 214: 500, 215: 50, 216: 80, 218: 10, 219: 10, 220: 10, 221: 10, 222: 60, 223: 120, 224: 100, 234: 100, 236: 20, 237: 80, 239: 140 };
-const HEALALL = { 206: 160, 207: 150, 211: 70, 225: 30, 238: 100 };
+// Items that heal one target: id -> amount (Chapter 5's scr_spell).
+const HEAL1 = { 201: 120, 205: 20, 208: 70, 209: 50, 210: 4, 214: 500, 215: 50, 216: 80, 218: 10, 219: 10, 220: 10, 221: 10, 222: 60, 223: 120, 224: 100, 234: 100, 236: 20, 237: 80, 239: 140, 241: 130, 242: 180, 243: 80, 261: 115, 266: 200 };
+const HEALALL = { 206: 160, 207: 180, 211: 70, 225: 30, 238: 100, 240: 200, 264: 200, 265: 160, 270: 80 };
+// Items that heal by who takes them: char -> amount (the last entry is everyone else).
+const HEALBY = { 212: { 1: 20, 2: 80, 3: 50, 4: 30 }, 213: { 1: 80, 2: 20, 3: 50, 4: 70 }, 260: { 1: 400, 0: 40 },
+  267: { 1: 200, 0: 100 }, 268: { 2: 200, 0: 100 }, 269: { 3: 200, 0: 50 } };
+// YellowHat on the caster: Susie's and Ralsei's spells 20% stronger (scr_armorcheck_equipped(c, 36)).
+const yellowHat = c => g.chararmor1[c] == 36 || g.chararmor2[c] == 36;
 
 // scr_spell(spell, caster): hero scope.
 defineScript('scr_spell', (inst, spell, caster) => {
@@ -204,17 +220,31 @@ defineScript('scr_spell', (inst, spell, caster) => {
   inst.star = g.chartarget[caster];
   g.spelldelay = 10;
   const star = () => inst.star;
-  const knight = knightEnemy();
   if (HEAL1[spell]) { S.scr_healitemspell(inst, HEAL1[spell]); return; }
   if (HEALALL[spell]) { S.scr_healallitemspell(inst, HEALALL[spell]); return; }
+  if (HEALBY[spell]) {
+    const t = HEALBY[spell];
+    S.scr_healitemspell(inst, t[g.char[star()]] ?? t[0]);
+    return;
+  }
   switch (spell) {
     case 2:
     case 11: {
       let healnum;
-      if (spell == 2) healnum = healMod(inst, g.battlemag[caster] * 5);
+      if (spell == 2) healnum = ceil(healMod(inst, g.battlemag[caster] * (yellowHat(3) ? 6 : 5)));
       else {
-        g.flag[1045] = Math.min(5, g.flag[1045] + 1);
-        healnum = ceil(healMod(inst, g.battlemag[caster] * 1.5 + 5 + g.flag[1045]));
+        // Heal (Chapter 5): grows with each cast up to 15 (flag 1045); a downed ally gets up to twice
+        // as much, enough to stand up.
+        g.flag[20] = 1;
+        g.flag[1045] = Math.min(15, g.flag[1045] + 1);
+        const base = g.battlemag[1] * 5 + 15;
+        healnum = ceil(healMod(inst, (yellowHat(2) ? base * 1.2 : base) + 2 * g.flag[1045]));
+        const hp = g.hp[g.char[star()]];
+        if (hp < 0) {
+          let extra = 0;
+          while (healnum + extra + hp <= 0 && extra < healnum) extra += 1;
+          healnum += extra;
+        }
       }
       S.scr_heal(star(), healnum);
       withInst(g.charinstance[star()], h => {
@@ -255,7 +285,7 @@ defineScript('scr_spell', (inst, spell, caster) => {
         let damage = spell == 4
           ? ceil(g.battlemag[caster] * 5 + g.battleat[caster] * 11 - g.monsterdf[star()] * 3)
           : ceil(g.battlemag[caster] * 6 + g.battleat[caster] * 13 - g.monsterdf[star()] * 6);
-        if (spell == 4 && knight) damage = ceil(damage * (knight.damagereduction + 0.65));
+        if (spell == 4 && yellowHat(2)) damage = ceil(g.battlemag[caster] * 5.5 + g.battleat[caster] * 12 - g.monsterdf[star()] * 3);
         if (g.automiss[star()] == 1) damage = 0;
         const sus = instance_find('obj_herosusie', 0);
         const attack = instance_create(sus ? sus.x : inst.x, sus ? sus.y : inst.y, 'obj_rudebuster_anim');
@@ -286,6 +316,42 @@ defineScript('scr_spell', (inst, spell, caster) => {
       }
       g.spelldelay = 0;
       break;
+    // ReviveSong (Chapter 5, Ralsei): a DOWNed ally stands up and heals 7.5x MAG (9x with the YellowHat),
+    // anyone else heals 10x MAG (12x); obj_spell_revivesong sings and does the healing.
+    case 12: {
+      const hp = g.hp[g.char[star()]];
+      const healnum = hp <= 0
+        ? ceil(healMod(inst, -hp + g.battlemag[caster] * (yellowHat(3) ? 9 : 7.5)))
+        : ceil(healMod(inst, g.battlemag[caster] * (yellowHat(3) ? 12 : 10)));
+      withInst(g.charinstance[star()], h => {
+        h.healnum = healnum;
+        const ha = instance_create(h.x, h.y, 'obj_spell_revivesong');
+        ha.target = star();
+        ha.healnum = healnum;
+        h.tu += 1;
+      });
+      g.spelldelay = 75;
+      break;
+    }
+    // Scythemare (Chapter 5, Susie): a nightmare scythe over every enemy; TIRED ones are SPAREd.
+    case 13: {
+      let count = 0;
+      for (let i = 0; i < 3; i++) {
+        if (g.monster[i] != 1) continue;
+        withInst(g.monsterinstance[i], m => {
+          const sc = instance_create_depth(g.monsterx[m.myself], g.monstery[m.myself], m.depth - 100, 'obj_spell_scythemare');
+          sc.target = m;
+          sc.myself = m.myself;
+          sc.initdelay = count * 10;
+          sc.num = count;
+          count += 1;
+        });
+      }
+      g.spelldelay = 64 + count * 10;
+      const firstScythe = instancesOf('obj_spell_scythemare').find(sc => sc.num == 0);
+      if (firstScythe) firstScythe.laugh = true;
+      break;
+    }
     case 202: {
       const c = g.char[star()];
       let reviveamt = ceil(g.maxhp[c] / 2);
@@ -441,7 +507,6 @@ class RudeBusterBolt extends Instance {
         }
         if (this.red == 1) this.damage += 90;
         g.hittarget[this.star] = 0;
-        if (knightEnemy()) this.damage = round(this.damage / 2);
         S.scr_damage_enemy(this, this.star, this.damage);
         if (g.monstertype[0] != 20) {
           withInst(this.target, tg => {

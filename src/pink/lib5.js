@@ -7,8 +7,9 @@ import {
   font_add_sprite_ext, draw_rectangle_color, draw_line_color, draw_line_width_color, draw_circle, draw_set_font, draw_line,
   draw_ellipse, snd_play, snd_loop, point_distance, sprite_get_width, sprite_get_height, sprite_get_xoffset, sprite_get_yoffset,
   draw_circle_color, draw_get_color, draw_set_color, draw_text_transformed, keyboard_check_pressed, mus_volume,
-} from './rt.js?v=20261115180048';
-import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261115180048';
+  draw_set_alpha, Instance, defineObject, instance_destroy,
+} from './rt.js?v=20261115213228';
+import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261115213228';
 
 // The date's scripts (obj_date_controller).
 defineScript('d_circle_color', (x, y, r, c1, c2, outline) => draw_circle_color(x, y, r, c1, c2, outline));
@@ -103,8 +104,8 @@ defineScript('scr_draw_sprite_tiled_area', (spr, img, xx, yy, x1, y1, x2, y2, xs
   ctx.restore();
 });
 void point_distance;
-import { moveToPoint } from '../screens/cutscene.js?v=20261115180048';
-import { subst } from '../battle/common.js?v=20261115180048';
+import { moveToPoint } from '../screens/cutscene.js?v=20261115213228';
+import { subst } from '../battle/common.js?v=20261115213228';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")
@@ -229,3 +230,43 @@ defineScript('shader_replace_simple_reset_hook', () => {});
 export function initPinkFonts() {
   if (!global.damagefontpink) global.damagefontpink = font_add_sprite_ext('spr_numbersfontbig_pink', '0123456789+-%/P$', 20, 0);
 }
+
+// ---------------------------------------------------------------- Chapter 5 spells (ReviveSong, Scythemare)
+
+defineScript('inverselerp', (a, b, v) => (b == a ? 0 : (v - a) / (b - a)));
+// scr_armorcheck_equipped(char, armor): how many of the char's two armor slots hold it.
+defineScript('scr_armorcheck_equipped', (c, id) => (global.chararmor1[c] == id ? 1 : 0) + (global.chararmor2[c] == id ? 1 : 0));
+// draw_self_surfacespace(xoff, yoff): the caller drawn with its position shifted (for a surface).
+defineScript('draw_self_surfacespace', (inst, xo, yo) => draw_sprite_ext(inst.sprite_index, inst.image_index, inst.x - xo,
+  inst.y - yo, inst.image_xscale, inst.image_yscale, inst.image_angle, inst.image_blend, inst.image_alpha));
+// scr_draw_beam(x, y, length, spread, angle, color, alpha, roundEnd): a light cone (a triangle, and a
+// circle at its end).
+defineScript('scr_draw_beam', (x, y, len, spread, angle, col, alpha, cap) => {
+  const at = a => [x + len * Math.cos(a * Math.PI / 180), y - len * Math.sin(a * Math.PI / 180)];
+  const e0 = at(angle), e1 = at(angle + spread / 2), e2 = at(angle - spread / 2);
+  draw_set_color(col);
+  draw_set_alpha(alpha);
+  if (cap) draw_circle(e0[0], e0[1], spread / 2, false);
+  S.d_triangle(x, y, e1[0], e1[1], e2[0], e2[1], false);
+});
+// snd_play_echo(sound, delay = 15, decay = 0.25, volume = 1, pitch = 1, pitchShift = 0): the sound
+// again every `delay` frames, `decay` quieter each time (obj_snd_echo).
+class SndEcho extends Instance {
+  create() { this.init = false; this.timer = 0; }
+  step() {
+    if (!this.init) { this.init = true; this.timer = this.delay; }
+    if (this.timer >= this.delay) {
+      snd_play_x(this.sound, this.vol, this.pitch);
+      this.timer = 0;
+      this.vol -= this.decay;
+      if (this.pitch_shift) this.pitch += this.pitch_shift;
+      if (this.vol <= 0) instance_destroy(this);
+    } else this.timer += 1;
+  }
+}
+defineObject('obj_snd_echo', SndEcho);
+defineScript('snd_play_echo', (inst, sound, delay = 15, decay = 0.25, vol = 1, pitch = 1, shift = 0) => {
+  const e = instance_create(inst?.x ?? 0, inst?.y ?? 0, 'obj_snd_echo');
+  Object.assign(e, { sound, delay, decay, vol, pitch, pitch_shift: shift });
+  return e;
+});

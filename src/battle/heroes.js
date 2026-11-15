@@ -2,9 +2,9 @@
 import {
   global, Instance, defineObject, S, instance_create, instance_exists, withObj, random, round, ceil,
   merge_color, draw_sprite_ext, d3d_set_fog, sprite_get_number,
-} from '../runtime/gm.js?v=20261115180048';
-import { snd_play, snd_stop, snd_pitch } from '../runtime/audio.js?v=20261115180048';
-import { withInst, knightEnemy } from './common.js?v=20261115180048';
+} from '../runtime/gm.js?v=20261115213228';
+import { snd_play, snd_stop, snd_pitch } from '../runtime/audio.js?v=20261115213228';
+import { withInst } from './common.js?v=20261115213228';
 
 const g = global;
 
@@ -134,6 +134,8 @@ export class HeroParent extends Instance {
         this.image_index = this.attacktimer < this.spellframes ? this.attacktimer : this.spellframes;
         if (S.scr_monsterpop() == 0) this.attacktimer = 0;
         this.thissprite = this.spellsprite;
+        // Chapter 5: Ralsei readies ReviveSong singing.
+        if (this.object_index == 'obj_heroralsei' && g.charspecial[2] == 12) this.thissprite = 'spr_ralsei_sing_ready';
         this.index = this.image_index;
         this.attacktimer += 0.5;
       }
@@ -240,31 +242,24 @@ export class HeroParent extends Instance {
     const me = this.myself;
     g.faceaction[me] = 0;
     S.scr_retarget(this, me);
-    // The Knight takes reduced damage; Kris hits harder the more of the party is down.
-    const knight = knightEnemy();
-    let knightblock = 0;
-    if (knight && knight.blocking == 1 && knight.damagereduction < 0.1) knightblock = 1;
-    this.knightblock = knightblock;
     if (this.cancelattack != 0) return;
     const t = g.chartarget[me];
-    let damage = round(g.battleat[me] * this.points / 20 - g.monsterdf[t] * 3);
-    if (knight) {
-      damage = ceil(damage * knight.damagereduction);
-      if (this.object_index == 'obj_herokris') {
-        if (g.hp[2] < 0 && g.hp[3] < 0) damage = damage * 2;
-        else if (g.hp[2] < 0 || g.hp[3] < 0) damage = damage * 1;
-        else damage = round(damage * 0.5);
-      }
+    // AbsorbAx (Chapter 5): Susie heals a tenth of her max HP with each FIGHT.
+    if (this.object_index == 'obj_herosusie' && [1, 2, 3].some(c => g.charweapon[c] == 54)) {
+      this.star = 1;
+      S.scr_healitemspell(this, ceil(g.maxhp[2] * 0.1));
     }
+    let damage = round(g.battleat[me] * this.points / 20 - g.monsterdf[t] * 3);
     this.damage = damage;
     S.scr_damage_enemy(this, t, damage);
     const dm = this.dm;
     dm.type = this.char - 1;
     dm.delay = 8;
+    // Pink's BODY is invincible: the number always reads 0.
+    if (instance_exists('obj_pink_enemy')) dm.damage = 0;
     if (damage > 0) {
       S.scr_tensionheal(round(this.points / 10));
-      if (knightblock == 1) knight.blockanim = 1;
-      if (knightblock == 0) {
+      {
         const attack = instance_create(g.monsterx[t] + random(6), g.monstery[t] + random(6), 'obj_basicattack');
         if (this.object_index == 'obj_herosusie') {
           attack.sprite_index = 'spr_attack_mash2';

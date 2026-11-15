@@ -4,11 +4,11 @@
 
 Play the Pink boss fight from **DELTARUNE Chapter 5** for free in your browser, on PC or mobile. No download needed.
 
-- Kris, Susie and Ralsei against Pink on her stage: FIGHT, ACT (Flirt, MegaFlirt, GigaFlirt, ShareFood, LovelyBoy), MAGIC, ITEM and DEFEND.
+- Kris, Susie and Ralsei against Pink on her stage: FIGHT, ACT (Flirt, MegaFlirt, GigaFlirt, ShareFood, LovelyBoy), MAGIC (Chapter 5's spells, ReviveSong and Scythemare included), ITEM and DEFEND.
 - The **purple SOUL** on Pink's FELINE WEB, and every attack of hers: cats, bombs, her song, the rotating box, the 3D tunnel.
 - The **DOKI meter** and the **dates**, the GHOST and BODY split, and her final date.
 - The battle logic is machine-translated from the original game's code, so it plays like the real fight.
-- **EQUIPMENT**: pick each character's weapon and armors and the items you bring into the fight.
+- **EQUIPMENT**: pick each character's weapon and armors from Chapter 5's gear (the TrueTie and a few others soften Pink's cat attacks) and the items you bring into the fight.
 - **Codes**: type a secret code in the Codes box under the game to unlock extras.
 - **OPTIONS**: volume, easy mode (half damage), **SOUL hats** and **CONTROLS** to remap every button on keyboard and gamepad. Options are remembered in the browser.
 - **Pause** with Esc / P (Start on a gamepad): continue, restart, volume, quit to title.
@@ -41,7 +41,7 @@ Then open `http://localhost:8000`.
 node tools/selftest/run.mjs
 ```
 
-Plays the whole simulator by itself in a headless Chrome or Edge and lists what passed and what broke (an error, a missing file or sound, a fight that never reaches its end): the whole fight from Pink's intro to the win (every phase and date, her BODY and ghost, the last date's maze), dates answered wrong, a retry after a game over (without her intro), practice mode, every attack in the sandbox, the title menus (options, controls, equipment), a gamepad, the pause menu, the game over, the Codes box, every weapon, armor, item and SOUL hat, and a fight using every battle option. Then it checks the page at desktop, phone and tablet sizes, touch controls included. Nothing to install, only Node 22 or newer and Chrome or Edge. `--quick` skips the sandbox runs and the screen checks, `--only <text>` runs the scenarios whose name has that text (`screen` for the screen checks), `--list` lists them, `--url <address>` tests a published copy such as the GitHub Pages site, and `--shots <folder>` saves the last frame of each. The scenarios are in `tools/selftest/sim.js`.
+Plays the whole simulator by itself in a headless Chrome or Edge and lists what passed and what broke (an error, a missing file or sound, a fight that never reaches its end): the whole fight from Pink's intro to the win (every phase and date, her BODY and ghost, the third date's maze), dates answered wrong, a retry after a game over (without her intro), practice mode, every attack in the sandbox, the title menus (options, controls, equipment), a gamepad, the pause menu, the game over, the Codes box, every weapon, armor, item and SOUL hat, and a fight using every battle option. Then it checks the page at desktop, phone and tablet sizes, touch controls included. Nothing to install, only Node 22 or newer and Chrome or Edge. `--quick` skips the sandbox runs and the screen checks, `--only <text>` runs the scenarios whose name has that text (`screen` for the screen checks), `--list` lists them, `--url <address>` tests a published copy such as the GitHub Pages site, and `--shots <folder>` saves the last frame of each. The scenarios are in `tools/selftest/sim.js`.
 
 ## How it was made
 

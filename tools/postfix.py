@@ -37,7 +37,8 @@ CALLER_FIRST = [
     'scr_retarget', 'scr_retarget_spell', 'scr_spell', 'scr_spelltext', 'scr_targetall', 'scr_afterimage',
     'scr_oflash', 'scr_spareanim', 'scr_battletext_default', 'scr_enemyblcon', 'scr_blconskip', 'scr_simultext',
     'scr_rememberxy', 'scr_move_to_rememberxy', 'position_meeting', 'scr_monster_setup_default',
-    'scr_move_to_point_over_time', 'scr_shakescreen', 'snd_play_delayed',
+    'scr_move_to_point_over_time', 'scr_shakescreen', 'snd_play_delayed', 'draw_self_surfacespace', 'snd_play_echo',
+    'scr_dmgwriter_selfchar',
 ]
 for name in CALLER_FIRST:
     # (the translator already passes `this` to some of them)
@@ -87,6 +88,11 @@ t = re.sub(r'\binstance_place\((?!this, )', 'instance_place(this, ', t)
 t = re.sub(r'\bS\.distance_to_object\(', 'S.distance_to_object(this, ', t)
 # Sub-image -1 in a draw is the drawing instance's own image_index (the engine would take the last frame).
 t = re.sub(r'\b(draw_sprite\w*)\(([^,()]+(?:\([^()]*\))?), - ?1,', r'\1(\2, this.image_index,', t)
+# scr_marker / scr_dark_marker(x, y, sprite) in src/pink/common.js take no caller (gml2js_obj adds one).
+t = re.sub(r'\b(scr_(?:dark_)?marker)\(this, ', r'\1(', t)
+# An object's own variable named `alive` (obj_spell_revivesong: is the target standing?) would overwrite
+# the engine's instance flag and remove the instance; GML has no built-in `alive`, so it is renamed.
+t = re.sub(r'\.alive\b', '.alive_gml', t)
 
 # Sprite indices the decompiler left bare (no /*spr_x*/ note) in sprite variables (the date's portraits):
 # named from research/names.json (tools/dump_names.py).

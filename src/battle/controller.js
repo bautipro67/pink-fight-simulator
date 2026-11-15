@@ -7,9 +7,9 @@ import {
   left_p, right_p, up_p, down_p, button1_p, button2_p, string_width, string_hash_to_newline,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_rectangle, draw_sprite,
   draw_sprite_ext, draw_text, draw_text_colour, draw_text_transformed, draw_line_width,
-} from '../runtime/gm.js?v=20261115180048';
-import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261115180048';
-import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261115180048';
+} from '../runtime/gm.js?v=20261115213228';
+import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261115213228';
+import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261115213228';
 
 const sin = Math.sin, cos = Math.cos;
 const g = global;
@@ -125,9 +125,11 @@ class BattleController extends Instance {
     g.battlespellspecial = arr2(3, 18);
     for (let i = 0; i < 3; i++) {
       const c = g.char[i];
-      g.battleat[i] = g.at[c] + g.itemat[c][0] + g.itemat[c][1] + g.itemat[c][2];
-      g.battledf[i] = g.df[c] + g.itemdf[c][0] + g.itemdf[c][1] + g.itemdf[c][2];
-      g.battlemag[i] = g.mag[c] + g.itemmag[c][0] + g.itemmag[c][1] + g.itemmag[c][2];
+      // Chapter 5: Ralsei's BrokenScarf adds 12 AT, 3 DF and 3 MAG in battle.
+      const scarf = i == 2 && g.charweapon[3] == 35;
+      g.battleat[i] = g.at[c] + g.itemat[c][0] + g.itemat[c][1] + g.itemat[c][2] + (scarf ? 12 : 0);
+      g.battledf[i] = g.df[c] + g.itemdf[c][0] + g.itemdf[c][1] + g.itemdf[c][2] + (scarf ? 3 : 0);
+      g.battlemag[i] = g.mag[c] + g.itemmag[c][0] + g.itemmag[c][1] + g.itemmag[c][2] + (scarf ? 3 : 0);
       g.monsterattackname[i] = ' ';
     }
     S.scr_spellmenu_setup();
@@ -621,6 +623,18 @@ class BattleController extends Instance {
       }
       if (g.bmenuno == 7) {
         g.chartarget[t] = c[g.bmenuno][t];
+        // Chapter 5's drinks (Raw Moon, Phanta, FlowerySoda) also raise TP 16% when given.
+        if ([67, 68, 69].includes(this.ti(c[4][t], t))) {
+          S.scr_tensionheal(ceil(g.maxtension * 0.16));
+          const dn = snd_play('snd_cardrive');
+          snd_pitch(dn, 1.4);
+          snd_volume(dn, 0.8, 0);
+          withInst(g.charinstance[t], h => {
+            const ha = instance_create(h.x, h.y, 'obj_healanim');
+            ha.target = h;
+            ha.particlecolor = 0xffa040; // (c_orange)
+          });
+        }
         S.scr_itemconsumeb(this);
       }
       if (g.bmenuno == 8 || g.bmenuno == 3) {
@@ -1123,6 +1137,27 @@ defineScript('scr_endturn', (ctrl) => {
   withObj('obj_face', f => instance_destroy(f));
   withObj('obj_smallface', f => instance_destroy(f));
   ctrl.idefendedthisturn = 0;
+  // GreenApron (Chapter 5): a hero who DEFENDed heals 16% of their max HP. Then, as in the game,
+  // every hero's damage-number stack (tu) goes down by 3 (scr_dmgwriter_selfchar keeps it at -1 or more).
+  for (let i = 0; i < 3; i++) {
+    const c = i + 1;
+    if ((g.chararmor1[c] == 38 || g.chararmor2[c] == 38) && g.faceaction[i] == 4) {
+      const healnum = round(g.maxhp[c] * 0.16);
+      withInst(g.charinstance[i], h => { h.healnum = healnum; });
+      S.scr_heal(i, healnum);
+      withInst(g.charinstance[i], h => {
+        const ha = instance_create(h.x, h.y, 'obj_healanim');
+        ha.target = h;
+        const dmgwr = S.scr_dmgwriter_selfchar(h);
+        dmgwr.delay = 8;
+        dmgwr.type = 3;
+        if (g.hp[g.char[h.myself]] >= g.maxhp[g.char[h.myself]]) dmgwr.specialmessage = 3;
+        dmgwr.damage = healnum;
+        h.tu += 1;
+      });
+    }
+    withInst(g.charinstance[i], h => { h.tu -= 3; });
+  }
   g.attacking = 0;
   for (let i = 0; i < 3; i++) {
     g.monsterattackname[i] = ' ';

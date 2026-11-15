@@ -1,15 +1,15 @@
 // EQUIPMENT screen: pick each party member's weapon and two armors (only what they can use in
-// Chapter 3) and the items brought into the fight. Saved with the loadout (src/battle/equipment.js).
+// Chapter 5) and the items brought into the fight. Saved with the loadout (src/battle/equipment.js).
 import {
   Instance, defineObject, instance_create, instance_destroy, up_p, down_p, left_p, right_p,
   button1_p, button2_p, draw_set_font, draw_set_color, draw_set_halign, draw_text, draw_sprite_ext,
   fa_left, fa_center,
-} from '../runtime/gm.js?v=20261115180048';
-import { snd_play } from '../runtime/audio.js?v=20261115180048';
+} from '../runtime/gm.js?v=20261115213228';
+import { snd_play } from '../runtime/audio.js?v=20261115213228';
 import {
   WEAPONS, ARMORS, ITEMS, ITEM_SLOTS, CHAR_NAMES, getLoadout, saveLoadout, resetLoadout,
   weaponChoices, armorChoices, itemChoices, charStats,
-} from '../battle/equipment.js?v=20261115180048';
+} from '../battle/equipment.js?v=20261115213228';
 
 const HEADS = { 1: 'spr_headkris', 2: 'spr_headsusie', 3: 'spr_headralsei' };
 const cycle = (list, cur, dir) => list[(list.indexOf(cur) + dir + list.length) % list.length];

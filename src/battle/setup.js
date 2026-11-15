@@ -1,14 +1,14 @@
-// Fresh-fight globals (scr_gamestart for Chapter 3 + the party as it is when the Roaring Knight
-// is fought), encounter/monster setup (encounter 115, monster type 104), spell/item tables,
+// Fresh-fight globals (scr_gamestart + the party as it is when Pink is fought in Chapter 5),
+// encounter/monster setup (encounter 224, monster type 118), spell/item tables,
 // scr_spellmenu_setup and startBattle().
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, room_reset, objectExists,
   font_add_sprite_ext,
-} from '../runtime/gm.js?v=20261115180048';
-import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115180048';
-import { WEAPONS, ARMORS, BASE_STATS, getLoadout } from './equipment.js?v=20261115180048';
-import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115180048';
-import { registerBackground } from './misc.js?v=20261115180048';
+} from '../runtime/gm.js?v=20261115213228';
+import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115213228';
+import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261115213228';
+import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115213228';
+import { registerBackground } from './misc.js?v=20261115213228';
 
 function scr_gamestart() {
   global.chapter = 3;
@@ -118,12 +118,15 @@ function scr_gamestart() {
   global.flag[32] = 0;
 }
 
-// Everything the Knight fight needs on top of scr_gamestart, as in obj_ch3_PTB02 (con 4).
+// Everything Pink's fight needs on top of scr_gamestart.
 defineScript('init_battle_globals', () => {
   scr_gamestart();
   global.char = [1, 2, 3];
   global.darkzone = 1;
   global.plot = 320;
+  // scr_gamestart_chapter_override (Chapter 5): Ralsei learns ReviveSong and Susie Scythemare.
+  global.spell[2][2] = 13;
+  global.spell[3][2] = 12;
   // The equipment and items chosen on the EQUIPMENT screen (src/battle/equipment.js).
   const loadout = getLoadout();
   for (const c of [1, 2, 3]) {
@@ -140,6 +143,10 @@ defineScript('init_battle_globals', () => {
       global.itemat[c][slot] = s[1];
       global.itemdf[c][slot] = s[2];
       global.itemmag[c][slot] = s[3];
+      // (armors only: element resistances, read by scr_element_damage_reduction)
+      const [el, amount] = (slot > 0 && ARMOR_ELEMENTS[slot == 1 ? a1 : a2]) || [0, 0];
+      global.itemelement[c][slot] = el;
+      global.itemelementamount[c][slot] = amount;
     });
   }
   loadout.items.filter(id => id).forEach((it, i) => { global.item[i] = it; });
@@ -162,21 +169,24 @@ defineScript('init_battle_globals', () => {
 
 // ---------------------------------------------------------------- spells
 
-// [spellname, spellnameb, spelldescb, spelldesc, spelltarget, cost]
+// [spellname, spellnameb, spelldescb, spelldesc, spelltarget, cost] (Chapter 5's scr_spellinfo)
 const SPELLS = {
   0: [' ', ' ', 'None', ' ', 0, -1],
-  1: ['Rude Sword', 'RudeSword', 'Rude#Damage#', 'Deals moderate Rude-elemental damage to#one foe. Depends on Attack & Magic.', 2, 125],
-  2: ['Heal Prayer', 'Heal Prayer', 'Heal#Ally', 'Heavenly light restores a little HP to#one party member. Depends on Magic.', 1, 80],
+  1: ['Rude Sword', 'RudeSword', 'Rude#damage', 'Deals moderate Rude-elemental damage to#one foe. Depends on Attack & Magic.', 2, 125],
+  2: ['Heal Prayer', 'Heal Prayer', 'Heal#ally', 'Heavenly light restores a little HP to#one party member. Depends on Magic.', 1, 80],
   3: ['Pacify', 'Pacify', 'Spare#TIRED foe', 'SPARE a tired enemy by putting them to sleep.', 2, 40],
-  4: ['Rude Buster', 'Rude Buster', 'Rude#Damage#', 'Deals moderate Rude-elemental damage to#one foe. Depends on Attack & Magic.', 2, 125],
-  5: ['Red Buster', 'Red Buster', 'Red#Damage#', ' ', 2, 0],
+  4: ['Rude Buster', 'Rude Buster', 'Rude#damage', 'Deals moderate Rude-elemental damage to#one foe. Depends on Attack & Magic.', 2, 125],
+  5: ['Red Buster', 'Red Buster', 'Red#damage', ' ', 2, 0],
   6: ['Dual Heal', 'Dual Heal', 'Heal All#30 HP', ' ', 0, 0],
-  7: ['ACT', 'ACT', 'Use#action', 'Many different skills.#It has nothing to do with magic.', 0, 0],
+  7: ['ACT', 'ACT', 'Use#action', "It's not magic, is it?#No, not something like this.", 0, 0],
   8: ['SleepMist', 'Sleep Mist', 'Spare#TIRED foes', 'A cold mist sweeps through,#sparing all TIRED enemies.', 0, 80],
   9: ['IceShock', 'IceShock', 'Damage#w/ ICE', 'Deals magical ICE damage to#one enemy.', 2, 40],
   10: ['SnowGrave', 'SnowGrave', 'Fatal', 'Deals the fatal damage to#all of the enemies.', 0, 500],
-  11: ['UltraHeal', 'UltraHeal', 'Best#healing', 'An awesome healing spell.#... right?', 1, 225],
+  11: ['Heal', 'Heal', 'Heal#ally', 'A healing spell that has grown#with practice and confidence.', 1, 212.5],
+  12: ['ReviveSong', 'ReviveSong', 'Revive#ally', 'Revives a DOWNed ally and heals them.#Otherwise, heals a lot of HP.', 1, 210],
+  13: ['Scythemare', 'Scythemare', 'Spare all#TIRED foes', 'Inflicts all enemies with bad dreams.#All TIRED enemies will be SPAREd.', 0, 100],
 };
+const wearsAnywhere = id => [1, 2, 3].some(c => global.chararmor1[c] == id || global.chararmor2[c] == id);
 
 // scr_spellinfo(spell): writes cost, spelltarget, spellname(b), spelldesc(b), spellusable on `t`.
 defineScript('scr_spellinfo', (t, id) => {
@@ -192,10 +202,13 @@ defineScript('scr_spellinfo', (t, id) => {
   const s = SPELLS[id];
   if (!s) return;
   [t.spellname, t.spellnameb, t.spelldescb, t.spelldesc, t.spelltarget, t.cost] = s;
+  if (id == 3 && global.charweapon[3] == 32) t.cost = 0; // BlueShoes
   if (id == 4 && global.charweapon[2] == 7) t.cost = 100;
   if (id == 9 && global.charweapon[4] == 13) t.cost *= 0.5;
   if (id == 10) t.cost = global.maxtension * 2 * (global.charweapon[4] == 13 ? 0.5 : 1);
-  if (id == 11) t.cost = 225 - Math.round(global.flag[1045] * 2.5);
+  // Heal gets cheaper with use: 212.5, then 2.5 less every three casts down to 200 (flag 1045).
+  if (id == 11) t.cost = 212.5 - 2.5 * Math.min(5, Math.ceil((global.flag[1045] || 0) / 3));
+  if (id == 13 && wearsAnywhere(37)) t.cost = 50; // O.Glove
 });
 
 defineScript('scr_spellinfo_all', () => {
@@ -409,7 +422,7 @@ defineScript('scr_monster_setup_default', (inst) => {
   S.scr_monstersetup(inst);
 });
 
-// scr_monstersetup(): monster scope (myself). Only type 104 (the Roaring Knight) is used here.
+// scr_monstersetup(): monster scope (myself). Only type 118 (Pink) is used here.
 defineScript('scr_monstersetup', (inst) => {
   const g = global;
   const m = inst.myself;
