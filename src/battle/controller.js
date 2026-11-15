@@ -3,13 +3,13 @@
 // and obj_tensionbar. Special cases for other Chapter 3 battles (Rouxls, Tenna, boards...) are left out.
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
-  instancesOf, withObj, round, floor, ceil, merge_color, point_direction, point_distance, choose,
+  instancesOf, withObj, round, floor, ceil, merge_color, point_direction, point_distance, choose, lerp,
   left_p, right_p, up_p, down_p, button1_p, button2_p, string_width, string_hash_to_newline,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_rectangle, draw_sprite,
   draw_sprite_ext, draw_text, draw_text_colour, draw_text_transformed, draw_line_width,
-} from '../runtime/gm.js?v=20261115071747';
-import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261115071747';
-import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261115071747';
+} from '../runtime/gm.js?v=20261115074155';
+import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261115074155';
+import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261115074155';
 
 const sin = Math.sin, cos = Math.cos;
 const g = global;
@@ -683,6 +683,15 @@ class BattleController extends Instance {
         else this.bp -= 30;
       } else this.bp = 0;
     }
+    // Chapter 5: during Pink's dates the panel sinks to 36 px so the date shows above it.
+    const pink = instancesOf('obj_pink_enemy')[0];
+    if (pink && this.victory == 0) {
+      const date = instancesOf('obj_date_controller')[0];
+      if (pink.datecount == 1) this.bp = lerp(this.bp, date && date.con != 0 ? 36 : 152, 0.3);
+      else if (date && (date.con != 7 || date.date3endingcon == 2)) this.bp = lerp(this.bp, 36, 0.4);
+      else this.bp = lerp(this.bp, 152, 0.3);
+    }
+    if (this.hidebattleui == 1) this.bp = lerp(this.bp, 0, 0.3);
     const bp = this.bp;
     draw_set_color(0);
     draw_rectangle(xx - 10, 481 + yy, xx + 700, 480 - bp + yy - 4, false);

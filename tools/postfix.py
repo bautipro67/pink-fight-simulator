@@ -37,7 +37,7 @@ CALLER_FIRST = [
     'scr_retarget', 'scr_retarget_spell', 'scr_spell', 'scr_spelltext', 'scr_targetall', 'scr_afterimage',
     'scr_oflash', 'scr_spareanim', 'scr_battletext_default', 'scr_enemyblcon', 'scr_blconskip', 'scr_simultext',
     'scr_rememberxy', 'scr_move_to_rememberxy', 'position_meeting', 'scr_monster_setup_default',
-    'scr_move_to_point_over_time',
+    'scr_move_to_point_over_time', 'scr_shakescreen', 'snd_play_delayed',
 ]
 for name in CALLER_FIRST:
     # (the translator already passes `this` to some of them)
@@ -85,6 +85,16 @@ t = t.replace('S.event_perform(8, 0)', 'this.draw?.()')
 t = re.sub(r'\binstance_place\((?!this, )', 'instance_place(this, ', t)
 # Caller-scope scripts the Chapter 5 objects call.
 t = re.sub(r'\bS\.distance_to_object\(', 'S.distance_to_object(this, ', t)
+
+# Sprite indices the decompiler left bare (no /*spr_x*/ note) in sprite variables (the date's portraits):
+# named from research/names.json (tools/dump_names.py).
+import json
+_names = json.load(open(os.path.join(ROOT, 'research', 'names.json')))
+# (also a random pick: pinkportrait = choose(6755, 677, 2038))
+t = re.sub(r'\b((?:this\.)?\w*(?:portrait\d?|_spr|sprite|sprite_index)) = choose\(([\d, ]+)\);',
+           lambda m: "%s = choose(%s);" % (m.group(1), ', '.join("'%s'" % _names['sprites'][int(n)] for n in m.group(2).split(','))), t)
+t = re.sub(r'\b((?:this\.)?\w*(?:portrait\d?|_spr|sprite|sprite_index)) = (\d{2,4});',
+           lambda m: "%s = '%s';" % (m.group(1), _names['sprites'][int(m.group(2))]) if int(m.group(2)) < len(_names['sprites']) else m.group(0), t)
 
 # obj_pinknode Create: fnc_make_node = method(self, ...): a child node at dir * 90 degrees, dist away.
 t = re.sub(r"this\.fnc_make_node = S\.method\([^;]*\);",

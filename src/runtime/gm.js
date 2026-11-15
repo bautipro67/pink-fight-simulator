@@ -9,7 +9,7 @@
 // - Colours are 0xRRGGBB numbers. GML literals are BGR: wrap them in bgr(0x...).
 // - Angles are degrees, counter-clockwise; y points down (same as GameMaker).
 // - `global` holds GML globals: global.tension, global.hp[...] etc.
-import { assets, spriteMask } from './assets.js?v=20261115071747';
+import { assets, spriteMask } from './assets.js?v=20261115074155';
 
 export const global = {};
 export const ROOM_W = 640;
@@ -235,6 +235,14 @@ export function getSprite(name) {
   const s = assets.sprites[name];
   if (!s && !warned.has(name)) { warned.add(name); console.warn('missing sprite', name); }
   return s || null;
+}
+// sprite_set_offset(sprite, xoffset, yoffset): moves the sprite's origin (for every later draw).
+export function sprite_set_offset(name, xo, yo) {
+  const s = getSprite(name);
+  if (s) {
+    s.ox = xo;
+    s.oy = yo;
+  }
 }
 export const sprite_get_width = n => getSprite(n)?.w ?? 0;
 export const sprite_get_height = n => getSprite(n)?.h ?? 0;

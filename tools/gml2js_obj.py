@@ -125,10 +125,12 @@ def truthy_cond(c):
 
 def array_init(e):
     # GML creates arrays on assignment: a[i] = v / a[i][j] = v / obj.a[i] = v
-    m = re.match(r"^((?:this\.|global\.|other\.|O\('[^']+'\)\.)?[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)((?:\[[^\[\]]*\])+)\s*(?:[-+*/]?=)(?!=)", e)
+    # (an index may hold one level of brackets itself: a[b[0]] = v)
+    IDX = r'\[(?:[^\[\]]|\[[^\[\]]*\])*\]'
+    m = re.match(r"^((?:this\.|global\.|other\.|O\('[^']+'\)\.)?[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)((?:" + IDX + r")+)\s*(?:[-+*/]?=)(?!=)", e)
     if not m:
         return ''
-    base, idx = m.group(1), re.findall(r'\[[^\[\]]*\]', m.group(2))
+    base, idx = m.group(1), re.findall(IDX, m.group(2))
     out, cur = [], base
     out.append('%s ??= [];' % cur)
     for k in idx[:-1]:

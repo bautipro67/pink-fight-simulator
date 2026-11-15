@@ -5,9 +5,38 @@
 import {
   G, global, defineScript, S, instance_create, instancesOf, irandom, draw_sprite_ext, d3d_set_fog, draw_rectangle,
   font_add_sprite_ext, draw_rectangle_color, draw_line_color, draw_line_width_color, draw_circle, draw_set_font, draw_line,
-  draw_ellipse, snd_play, snd_loop, point_distance,
-} from './rt.js?v=20261115071747';
-import { snd_play_x, camerax, cameray } from './common.js?v=20261115071747';
+  draw_ellipse, snd_play, snd_loop, point_distance, sprite_get_width, sprite_get_height, sprite_get_xoffset, sprite_get_yoffset,
+  draw_circle_color, draw_get_color, draw_set_color, draw_text_transformed, keyboard_check_pressed, mus_volume,
+} from './rt.js?v=20261115074155';
+import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261115074155';
+
+// The date's scripts (obj_date_controller).
+defineScript('d_circle_color', (x, y, r, c1, c2, outline) => draw_circle_color(x, y, r, c1, c2, outline));
+// draw_text_transformed_outline(x, y, text, xscale, yscale, outline colour): eight offset copies, then the text.
+defineScript('draw_text_transformed_outline', (x, y, s, xs, ys, col = 0) => {
+  const old = draw_get_color();
+  draw_set_color(col);
+  for (const [dx, dy] of [[-1, 0], [-1, -1], [-1, 1], [1, 0], [1, 1], [1, -1], [0, 1], [0, -1]]) draw_text_transformed(x + dx * xs, y + dy * ys, s, xs, ys, 0);
+  draw_set_color(old);
+  draw_text_transformed(x, y, s, xs, ys, 0);
+});
+// mus_fade(stream, frames): the music down to silence.
+defineScript('mus_fade', (s, frames) => mus_volume(s, 0, frames));
+// snd_play_delayed(sound, delay, volume = 0.7, pitch = 1), in the caller's scope.
+defineScript('snd_play_delayed', (self, snd, delay, vol = 0.7, pitch = 1) => scr_script_delayed(self, () => snd_play_x(snd, vol, pitch), delay));
+// scr_fadein(frames): obj_fadein fading the screen in.
+defineScript('scr_fadein', t => {
+  const f = instance_create(0, 0, 'obj_fadein');
+  f.fadespeed = -1 / t;
+  f.depth = 3;
+  return f;
+});
+defineScript('stringset', s => s);
+defineScript('sunkus_kb_check_pressed', k => (global.kbdBlocked ? false : keyboard_check_pressed(k)));
+// Paths (the date makes some for its choice arrows and never draws them).
+defineScript('path_add', () => ({ points: [] }));
+defineScript('path_set_closed', () => {});
+defineScript('path_add_point', (p, x, y, s) => { p?.points?.push([x, y, s]); });
 
 // ---------------------------------------------------------------- GML built-ins the Chapter 5 objects use
 // ds_list_*: lists are arrays (a destroyed one is flagged for ds_exists).
@@ -52,9 +81,30 @@ defineScript('scr_wave', (a, b, period, offset) => {
 });
 defineScript('scr_84_get_font', name => 'fnt_' + name);
 defineScript('show_debug_message_concat', () => {});
+// scr_shakescreen(amount = 4), in the caller's scope.
+defineScript('scr_shakescreen', (self, amount = 4) => {
+  const s = instance_create(self?.x ?? 0, self?.y ?? 0, 'obj_shake');
+  s.shakex = amount;
+  s.shakey = amount;
+});
+// scr_draw_sprite_tiled_area(sprite, subimg, x, y, x1, y1, x2, y2, xscale, yscale, colour, alpha): the
+// sprite tiled from (x, y), drawn only inside the rectangle (x1, y1)-(x2, y2).
+defineScript('scr_draw_sprite_tiled_area', (spr, img, xx, yy, x1, y1, x2, y2, xs, ys, col = 0xffffff, alpha = 1) => {
+  const sw = sprite_get_width(spr) * xs, sh = sprite_get_height(spr) * ys;
+  if (!(sw > 0 && sh > 0)) return;
+  const ctx = G.ctx;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x1, y1, x2 - x1, y2 - y1);
+  ctx.clip();
+  const ox = sprite_get_xoffset(spr) * xs, oy = sprite_get_yoffset(spr) * ys;
+  const startx = xx - Math.ceil((xx - x1) / sw) * sw, starty = yy - Math.ceil((yy - y1) / sh) * sh;
+  for (let i = startx; i <= x2; i += sw) for (let j = starty; j <= y2; j += sh) draw_sprite_ext(spr, img, i + ox, j + oy, xs, ys, 0, col, alpha);
+  ctx.restore();
+});
 void point_distance;
-import { moveToPoint } from '../screens/cutscene.js?v=20261115071747';
-import { subst } from '../battle/common.js?v=20261115071747';
+import { moveToPoint } from '../screens/cutscene.js?v=20261115074155';
+import { subst } from '../battle/common.js?v=20261115074155';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")

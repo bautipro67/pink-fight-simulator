@@ -33,6 +33,8 @@ gen attacks "Pink's attack objects (cats, zaps, lanes, the 3D tunnel, meteors, b
   obj_fusebomb_big obj_pinkbombexplosion obj_pinkchargeball obj_pinkcirclestar obj_pinkwave obj_pinkspeaker obj_roundbellbullet \
   obj_explosion_flamingbit obj_audienceheart obj_audiencehater obj_sweatdrop
 gen movement "Pink moving around the box during her attacks (obj_pink_battlemovement) $NOTE" obj_pink_battlemovement
+gen date "The DATE at DOKI MAX (obj_date_controller) and its hearts and smoke $NOTE" \
+  obj_date_controller obj_date_heart obj_shinobeetle_smokecloud obj_fadein obj_afterimage_screen
 # obj_dbulletcontroller's types 200-209 (Pink's attacks), as typeNNN methods of the port's controller.
 python -I tools/gen_dbullet_types.py "$T/dbt" > /dev/null
 CODE="$T/dbt" GRAFT=1 gen dbtypes "obj_dbulletcontroller's attack types 200-209 (Pink) $NOTE" obj_dbulletcontroller
