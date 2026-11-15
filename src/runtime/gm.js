@@ -9,7 +9,7 @@
 // - Colours are 0xRRGGBB numbers. GML literals are BGR: wrap them in bgr(0x...).
 // - Angles are degrees, counter-clockwise; y points down (same as GameMaker).
 // - `global` holds GML globals: global.tension, global.hp[...] etc.
-import { assets, spriteMask } from './assets.js?v=20261115171016';
+import { assets, spriteMask } from './assets.js?v=20261115180048';
 
 export const global = {};
 export const ROOM_W = 640;
@@ -232,6 +232,7 @@ export function room_reset() {
 // ---------------------------------------------------------------- sprites and masks
 
 export function getSprite(name) {
+  if (name == null || name === -1) return null; // (-1: no sprite, as in GameMaker)
   const s = assets.sprites[name];
   if (!s && !warned.has(name)) { warned.add(name); console.warn('missing sprite', name); }
   return s || null;
@@ -268,7 +269,9 @@ function maskRect(spr) {
 }
 
 function maskSprite(inst) {
-  const name = inst.mask_index ?? inst.sprite_index;
+  // mask_index -1 (or none) collides with the sprite itself.
+  const m = inst.mask_index;
+  const name = m == null || m === -1 ? inst.sprite_index : m;
   return name ? getSprite(name) : null;
 }
 

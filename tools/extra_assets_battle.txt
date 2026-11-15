@@ -9,3 +9,5 @@ spr:^spr_face_(susie_alt|r_nohat|placeholder)$
 spr:^spr_(attack_cut1|attack_shard|tensionbar_cutout|savepoint|gameoverbg)$
 spr:IMAGE_SOUL_BLUR
 snd:^snd_(weaponpull_fast|bell|cardrive|heal_c|break1|break2|error|mercyadd|spellcast|petrify|escaped)$
+# The empty collision mask some of Pink's objects switch to
+spr:^mask_empty$

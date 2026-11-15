@@ -27,7 +27,7 @@ async function bytes(path) {
   return r.arrayBuffer();
 }
 
-export const MUSIC_FILES = ['pink_theme.ogg', 'pink.ogg', 'AUDIO_DEFEAT.ogg', 'AUDIO_DRONE.ogg', 'pink_theme_mad.ogg'];
+export const MUSIC_FILES = ['pink_theme.ogg', 'pink.ogg', 'AUDIO_DEFEAT.ogg', 'AUDIO_DRONE.ogg', 'pink_theme_mad.ogg', 'mus_confession.ogg'];
 
 // Graphics and text block startup; audio (see loadAudioInBackground) does not.
 export async function loadAssets(onProgress = () => {}) {

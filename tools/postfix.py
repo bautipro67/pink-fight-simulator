@@ -97,6 +97,14 @@ t = re.sub(r'\b((?:this\.)?\w*(?:portrait\d?|_spr|sprite|sprite_index)) = choose
            lambda m: "%s = choose(%s);" % (m.group(1), ', '.join("'%s'" % _names['sprites'][int(n)] for n in m.group(2).split(','))), t)
 t = re.sub(r'\b((?:this\.)?\w*(?:portrait\d?|_spr|sprite|sprite_index)) = (\d{2,4});',
            lambda m: "%s = '%s';" % (m.group(1), _names['sprites'][int(m.group(2))]) if int(m.group(2)) < len(_names['sprites']) else m.group(0), t)
+# (and compared: pinkportrait == 1104)
+t = re.sub(r'\b((?:this\.)?\w*(?:portrait\d?|_spr|sprite|sprite_index)) (==|!=) (\d{2,4})\b',
+           lambda m: "%s %s '%s'" % (m.group(1), m.group(2), _names['sprites'][int(m.group(3))]) if int(m.group(3)) < len(_names['sprites']) else m.group(0), t)
+# Sound indices left bare the same way: snd_play(choose(723, 475)) and snd_play_delayed(this, 71, ...).
+_snd = lambda n: "'%s'" % _names['sounds'][int(n)]
+t = re.sub(r'\b(snd_\w+)\(choose\(([\d, ]+)\)', lambda m: '%s(choose(%s)' % (m.group(1), ', '.join(_snd(n) for n in m.group(2).split(','))), t)
+t = re.sub(r'\b(S\.snd_play_delayed\(this, )(\d+),', lambda m: m.group(1) + _snd(m.group(2)) + ',', t)
+t = re.sub(r'\b(snd_(?:play|play_x|loop|stop|volume|pitch|play_pitch)\()(\d+)([,)])', lambda m: m.group(1) + _snd(m.group(2)) + m.group(3), t)
 
 # obj_pinknode Create: fnc_make_node = method(self, ...): a child node at dir * 90 degrees, dist away.
 t = re.sub(r"this\.fnc_make_node = S\.method\([^;]*\);",

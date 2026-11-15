@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_circle, collision_point, defineObject, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, lerp, point_direction, random, sign, snd_play, snd_stop,
-} from '../rt.js?v=20261115171016';
+} from '../rt.js?v=20261115180048';
 import {
   i_ex, scr_approach, scr_get_box,
-} from '../common.js?v=20261115171016';
+} from '../common.js?v=20261115180048';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261115171016';
+} from '../gml.js?v=20261115180048';
 
 // obj_pink_battlemovement (default sprite spr_pink_ball, depth 0)
 class PinkBattlemovement extends Instance {
@@ -386,7 +386,7 @@ class PinkBattlemovement extends Instance {
                         this.shots = this.shots + 1;
                         this.shots_total = this.shots_total + 1;
                         if (!T(instance_exists(this.bigbomb_id))) {
-                            snd_play(choose(723, 475));
+                            snd_play(choose('snd_pink_throw', 'snd_pink_throw2'));
                             snd_play('snd_whip_throw_only');
                             snd_play('snd_bump');
                             _bom = instance_create_depth(this.x - 60 + S.ds_list_find_value(this.list_bomb, this.ammo % 4) * 40, this.y + 58, this.depth - 1, 'obj_fusebomb');
@@ -776,7 +776,7 @@ class PinkBattlemovement extends Instance {
                     _yy = S.ds_list_find_value(this.list_bomb_xy, 1);
                     S.ds_list_delete(this.list_bomb_xy, 0);
                     S.ds_list_delete(this.list_bomb_xy, 0);
-                    snd_play(choose(723, 475));
+                    snd_play(choose('snd_pink_throw', 'snd_pink_throw2'));
                     snd_play('snd_whip_throw_only');
                     this.ammo_b = 0;
                     _bomb = instance_create_depth(_box_x - _lane_distance * 1.5 + _xx * _lane_distance, _box_y - _lane_distance * 1.5 + _yy * _lane_distance, this.depth - 1, 'obj_fusebomb');
@@ -795,7 +795,7 @@ class PinkBattlemovement extends Instance {
                     }, this) === EXIT) return;
                 }
                 if (S.ds_list_find_value(this.list_bomb, 0) == 1) {
-                    snd_play(choose(723, 475));
+                    snd_play(choose('snd_pink_throw', 'snd_pink_throw2'));
                     snd_play('snd_whip_throw_only');
                     this.ammo_b = 1;
                     _xx = choose(1, 2);
@@ -814,7 +814,7 @@ class PinkBattlemovement extends Instance {
                     }, this) === EXIT) return;
                 }
                 if (S.ds_list_find_value(this.list_bomb, 0) == 2 || S.ds_list_find_value(this.list_bomb, 0) == 4) {
-                    snd_play(choose(723, 475));
+                    snd_play(choose('snd_pink_throw', 'snd_pink_throw2'));
                     snd_play('snd_whip_throw_only');
                     this.ammo_b = 1;
                     _xx = S.ds_list_find_value(this.list_bomb_xy, 0);

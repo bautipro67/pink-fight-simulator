@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, button1_h, button3_h, choose, defineObject, draw_clear, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text, draw_text_ext, draw_text_ext_transformed, draw_text_transformed_color, draw_vertex_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, left_h, lengthdir_x, lerp, make_color_hsv, make_color_rgb, merge_color, mus_loop, mus_volume, random, right_h, snd_free_all, snd_init, snd_loop, snd_play, snd_stop, snd_volume, sprite_set_offset, string_char_at, string_copy, string_length, string_width, surface_create, surface_exists, surface_free, surface_get_height, surface_get_width, surface_reset_target, surface_set_target, up_h,
-} from '../rt.js?v=20261115171016';
+} from '../rt.js?v=20261115180048';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, room_height, room_width, scr_approach, scr_lerpvar, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261115171016';
+} from '../common.js?v=20261115180048';
 import {
   EXIT, LOOP, O, T, VIEW_WPORT, W,
-} from '../gml.js?v=20261115171016';
+} from '../gml.js?v=20261115180048';
 
 // obj_date_controller (default sprite None, depth 0)
 class DateController extends Instance {
@@ -547,7 +547,7 @@ class DateController extends Instance {
         this.talktimer2 = this.talktimer2 + 1;
         if ((this.first_text != "" || this.multi_color_text_con == 1) && this.talktimer < 30) {
             this.pinkindex = this.pinkindex + this.portrait1_talkspeed;
-        } else if (this.pinkportrait != 5584 && this.pinkportrait != 2590 && this.pinkportrait != 1087) {
+        } else if (this.pinkportrait != 'spr_pinkspeaker_blinkblush' && this.pinkportrait != 'spr_pinkspeaker_date4_idle' && this.pinkportrait != 'spr_pinkspeaker_date4_questionright') {
             this.pinkindex = 0;
             this.portrait1_talkspeed = 0.16666666666666666;
         }
@@ -577,16 +577,16 @@ class DateController extends Instance {
         this.tailindex2 = this.tailindex2 + 0.16666666666666666;
         portrait_offset_x = 10;
         portrait_offset_y = 0;
-        if (this.pinkportrait2 == 3995) {
+        if (this.pinkportrait2 == 'spr_pinkghost_yell') {
             portrait_offset_x = portrait_offset_x + 25;
         }
-        if (this.portrait2visibility == 1 && (this.pinkportrait2 == 7519 || this.pinkportrait2 == 4862 || this.pinkportrait2 == 2079)) {
+        if (this.portrait2visibility == 1 && (this.pinkportrait2 == 'spr_pinkghost_angry' || this.pinkportrait2 == 'spr_pinkghost_nya_1' || this.pinkportrait2 == 'spr_pinkghost_nya_2')) {
             portrait_offset_x = portrait_offset_x + 4;
         }
-        if (this.pinkportrait2 == 5420) {
+        if (this.pinkportrait2 == 'spr_pinkghost_shock_full') {
             portrait_offset_y = portrait_offset_y - 20;
         }
-        if (this.pinkportrait2 == 2487 || this.pinkportrait2 == 7289) {
+        if (this.pinkportrait2 == 'spr_pinkghost_blush' || this.pinkportrait2 == 'spr_pinkghost_concerned') {
             if (this.portrait2_xscale == 2) {
                 draw_sprite_ext('spr_pinkghost_tail', this.tailindex2, xx + this.pinkportrait2_x, yy + 21 + portrait_offset_y, 2, 2, 0, 0xffffff, this.pinkportraitalpha2 * 0.7);
             } else if (this.portraitscon == 1) {
@@ -608,7 +608,7 @@ class DateController extends Instance {
     }
     if (i_ex('obj_pink_enemy')) {
         this.tailindex = this.tailindex + 0.16666666666666666;
-        if (this.pinkportrait == 1104) {
+        if (this.pinkportrait == 'spr_possessed_mewmew') {
             _float_y = Math.sin(this.tailindex * 1) * 2;
             portrait_offset_x = 10;
             _handx = this.camx + 300;
@@ -619,7 +619,7 @@ class DateController extends Instance {
         } else {
             portrait_offset_x = 0;
             portrait_offset_y = 0;
-            if (this.portraitvisibility == 1 && (this.pinkportrait == 6755 || this.pinkportrait == 677 || this.pinkportrait == 5441 || this.pinkportrait == 2038)) {
+            if (this.portraitvisibility == 1 && (this.pinkportrait == 'spr_pinkspeaker_nya' || this.pinkportrait == 'spr_pinkspeaker_nya2' || this.pinkportrait == 'spr_pinkspeaker_angry' || this.pinkportrait == 'spr_pinkspeaker_tongue')) {
                 portrait_offset_x = 4;
             }
             _scale = 1;
@@ -627,10 +627,10 @@ class DateController extends Instance {
                 _scale = - 1;
                 portrait_offset_x = portrait_offset_x + 224;
             }
-            if (this.pinkportrait == 2590 || this.pinkportrait == 1087) {
+            if (this.pinkportrait == 'spr_pinkspeaker_date4_idle' || this.pinkportrait == 'spr_pinkspeaker_date4_questionright') {
                 this.pinkindex = this.pinkindex + 0.16666666666666666;
             }
-            if (this.pinkportrait == 5231 || this.pinkportrait == 7368 || this.pinkportrait == 6564 || this.pinkportrait == 200) {
+            if (this.pinkportrait == 'spr_pinkspeaker_talk' || this.pinkportrait == 'spr_pinkspeaker_wink' || this.pinkportrait == 'spr_pinkspeaker_concerned' || this.pinkportrait == 'spr_pinkspeaker_talk_happy') {
                 draw_sprite_ext('spr_pinkspeaker_tail', this.tailindex, xx + this.pinkportrait_x + portrait_offset_x, yy + 21 + portrait_offset_y, this.portrait_xscale * _scale, 2, 0, 0xffffff, this.pinkportraitalpha);
             }
             draw_sprite_ext(this.pinkportrait, this.pinkindex, xx + this.pinkportrait_x + portrait_offset_x, yy + this.pinkportrait_y + portrait_offset_y, this.portrait_xscale * _scale, 2, 0, 0xffffff, this.pinkportraitalpha);
@@ -1305,14 +1305,14 @@ class DateController extends Instance {
         gpu_set_fog(0, 16777215, 0, 0);
         this.tailindex = this.tailindex + 0.16666666666666666;
         portrait_offset_x = 0;
-        if (this.pinkportrait == 5441) {
+        if (this.pinkportrait == 'spr_pinkspeaker_angry') {
             portrait_offset_x = 5;
         }
-        if (this.pinkportrait == 6755 || this.pinkportrait == 677) {
+        if (this.pinkportrait == 'spr_pinkspeaker_nya' || this.pinkportrait == 'spr_pinkspeaker_nya2') {
             this.pinkportrait = 'spr_pinkspeaker_tongue';
         }
         portrait_offset_x = 4;
-        if (this.pinkportrait == 5231) {
+        if (this.pinkportrait == 'spr_pinkspeaker_talk') {
             draw_sprite_ext('spr_pinkspeaker_tail', this.tailindex, xx + this.pinkportrait_x, yy + 21, this.portrait_xscale, 2, 0, 0xffffff, this.pinkportraitalpha);
         }
         draw_sprite_ext(this.pinkportrait, this.pinkindex, xx + this.pinkportrait_x + portrait_offset_x, yy + this.pinkportrait_y, this.portrait_xscale, 2, 0, 0xffffff, this.pinkportraitalpha);
@@ -1377,7 +1377,7 @@ class DateController extends Instance {
         S.d_rectangle(this.camx, this.camy, this.camx + this.camwidth, this.camy + this.camheight, false);
         draw_set_alpha(1);
     }
-    if (this.pinkportrait == 1104 && this.draw_box_timer > 20) {
+    if (this.pinkportrait == 'spr_possessed_mewmew' && this.draw_box_timer > 20) {
         if (this.con != 7) {
             if (this.minigame_won == 0 && this.eyeshaft_alpha < 1) {
                 this.eyeshaft_alpha = this.eyeshaft_alpha + 0.1;
@@ -1671,7 +1671,7 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.3333333333333333;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_trip');
             this.second_text = S.stringsetloc("Take a HIKE!!!", "obj_date_controller_slash_Other_11_gml_149_0");
             this.first_text = S.stringsetloc("Date location?", "obj_date_controller_slash_Other_11_gml_150_0");
@@ -1707,9 +1707,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Tear up", "obj_date_controller_slash_Other_11_gml_190_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[1]] = S.stringsetloc("Rip up", "obj_date_controller_slash_Other_11_gml_191_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[2]] = S.stringsetloc("Cry", "obj_date_controller_slash_Other_11_gml_192_0");
@@ -1736,9 +1736,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Call me ROTTEN!", "obj_date_controller_slash_Other_11_gml_220_0");
             this.first_text = S.stringsetloc("A gift for me?", "obj_date_controller_slash_Other_11_gml_221_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Stinky fish", "obj_date_controller_slash_Other_11_gml_222_0");
@@ -1771,9 +1771,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Wrinkled fruit!", "obj_date_controller_slash_Other_11_gml_257_0");
             this.first_text = S.stringsetloc("Did you want to...", "obj_date_controller_slash_Other_11_gml_258_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Date", "obj_date_controller_slash_Other_11_gml_259_0");
@@ -1806,9 +1806,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Disappoint us!", "obj_date_controller_slash_Other_11_gml_294_0");
             this.first_text = S.stringsetloc("Where? I just wrote it.", "obj_date_controller_slash_Other_11_gml_295_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Letter down", "obj_date_controller_slash_Other_11_gml_297_0");
@@ -1841,9 +1841,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Act bored!", "obj_date_controller_slash_Other_11_gml_332_0");
             this.first_text = S.stringsetloc("My bike part?", "obj_date_controller_slash_Other_11_gml_333_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("I tire", "obj_date_controller_slash_Other_11_gml_335_0");
@@ -1876,9 +1876,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Call us scrap!", "obj_date_controller_slash_Other_11_gml_370_0");
             this.first_text = S.stringsetloc("Which metal could?", "obj_date_controller_slash_Other_11_gml_371_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Tin can", "obj_date_controller_slash_Other_11_gml_373_0");
@@ -1908,9 +1908,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Chicken meat!!", "obj_date_controller_slash_Other_11_gml_408_0");
             this.first_text = S.stringsetloc("How'll you hold me?", "obj_date_controller_slash_Other_11_gml_409_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Tender", "obj_date_controller_slash_Other_11_gml_411_0");
@@ -1940,9 +1940,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Female dog!!!", "obj_date_controller_slash_Other_11_gml_446_0");
             this.first_text = S.stringsetloc("Susie's jeans?", "obj_date_controller_slash_Other_11_gml_447_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Husky", "obj_date_controller_slash_Other_11_gml_449_0");
@@ -1972,9 +1972,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Prefer Noelle!", "obj_date_controller_slash_Other_11_gml_484_0");
             this.first_text = S.stringsetloc("Pay attention to me?", "obj_date_controller_slash_Other_11_gml_485_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Fawn over her", "obj_date_controller_slash_Other_11_gml_487_0");
@@ -2004,9 +2004,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Be a weenie!", "obj_date_controller_slash_Other_11_gml_522_0");
             this.first_text = S.stringsetloc("Be honest?", "obj_date_controller_slash_Other_11_gml_523_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Frank", "obj_date_controller_slash_Other_11_gml_525_0");
@@ -2036,9 +2036,9 @@ class DateController extends Instance {
             this.portrait1_talkspeed = 0.2;
             this.portrait2_talkspeed = 0.2;
             snd_play('snd_pink_mew', 1, 1.1);
-            S.snd_play_delayed(this, 71, 12, 1, 1.4);
+            S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
             snd_play('snd_pink_throw');
-            S.snd_play_delayed(this, 723, 8, 1, 0.8);
+            S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
             this.second_text = S.stringsetloc("Set wardrobe aflame!", "obj_date_controller_slash_Other_11_gml_560_0");
             this.first_text = S.stringsetloc("Coordinate outfits?", "obj_date_controller_slash_Other_11_gml_561_0");
             this.choicetext ??= []; this.choicetext[this.rand_array[0]] = S.stringsetloc("Match her style", "obj_date_controller_slash_Other_11_gml_563_0");
@@ -2318,7 +2318,7 @@ class DateController extends Instance {
                     this.pinkportrait = 'spr_pinkspeaker_talk_happy';
                     this.first_text = S.stringsetloc("It's... because you think this body's CUTE, right!?", "obj_date_controller_slash_Step_0_gml_107_0");
                     snd_play('snd_pink_throw');
-                    S.snd_play_delayed(this, 723, 8, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
                     this.talktimer = 0;
                     this.pinkindex = 0;
                 }
@@ -2380,8 +2380,8 @@ class DateController extends Instance {
                     this.talktimer = 0;
                     snd_stop('snd_pink_mew');
                     snd_stop('snd_pink_throw');
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                     this.draw_box_timer = 111;
                 }
                 if (this.draw_box_timer > 126 && this.draw_box_timer < 171 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
@@ -2400,7 +2400,7 @@ class DateController extends Instance {
                     snd_stop('snd_pink_mew');
                     snd_stop('snd_pink_throw');
                     snd_play('snd_pink_throw');
-                    S.snd_play_delayed(this, 723, 8, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
                     this.draw_box_timer = 181;
                 }
                 if (this.draw_box_timer > 189 && this.draw_box_timer < 231 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
@@ -2418,7 +2418,7 @@ class DateController extends Instance {
                     snd_stop('snd_pink_mew');
                     snd_stop('snd_pink_throw');
                     snd_play('snd_pink_mew', 1, 1.1);
-                    S.snd_play_delayed(this, 71, 12, 1, 1.4);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 12, 1, 1.4);
                     this.draw_box_timer = 251;
                 }
                 if (this.draw_box_timer > 263 && this.draw_box_timer < 291 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
@@ -2436,7 +2436,7 @@ class DateController extends Instance {
                     snd_stop('snd_pink_mew');
                     snd_stop('snd_pink_throw');
                     snd_play('snd_pink_throw');
-                    S.snd_play_delayed(this, 723, 6, 1, 0.6);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 6, 1, 0.6);
                 }
                 if (this.draw_box_timer > 297 && this.draw_box_timer < 321 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 321;
@@ -2447,7 +2447,7 @@ class DateController extends Instance {
                     if (this.portrait_change_timer >= this.portrait_change_timer_max) {
                         this.talktimer = 10;
                         this.portrait1_talkspeed = 0.3333333333333333;
-                        if (this.pinkportrait != 1019) {
+                        if (this.pinkportrait != 'spr_pinkspeaker_angryblush') {
                             this.pinkportrait = 'spr_pinkspeaker_angryblush';
                             snd_stop('snd_pink_mew');
                             snd_stop('snd_pink_throw');
@@ -2526,7 +2526,7 @@ class DateController extends Instance {
                     this.talktimer = - 10;
                     this.portrait1_talkspeed = 0.2;
                     snd_play('snd_pink_gasp', 1, 1.2);
-                    S.snd_play_delayed(this, 723, 6, 1, 0.6);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 6, 1, 0.6);
                 }
                 if (this.draw_box_timer > 617 && this.draw_box_timer < 670 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 670;
@@ -2540,8 +2540,8 @@ class DateController extends Instance {
                     this.talktimer = 0;
                     snd_stop('snd_pink_mew');
                     snd_stop('snd_pink_throw');
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 685 && this.draw_box_timer < 730 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 730;
@@ -2559,7 +2559,7 @@ class DateController extends Instance {
                     snd_stop('snd_pink_mew');
                     snd_stop('snd_pink_throw');
                     snd_play('snd_pink_throw');
-                    S.snd_play_delayed(this, 723, 8, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
                     this.draw_box_timer = 768;
                 }
                 if (this.draw_box_timer > 776 && this.draw_box_timer < 821 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
@@ -2575,10 +2575,10 @@ class DateController extends Instance {
                     this.multi_color_text_con = 0x010000;
                     this.talktimer = - 20;
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                     snd_play('snd_pink_throw');
-                    S.snd_play_delayed(this, 723, 8, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
                 }
                 if (this.draw_box_timer > 821 && this.draw_box_timer < 911 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 911;
@@ -2779,8 +2779,8 @@ class DateController extends Instance {
                     this.talktimer = 0;
                     this.talktimer = - 20;
                     this.portraitshakecon2 = 1;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 47 && this.draw_box_timer < 133 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 133;
@@ -2796,8 +2796,8 @@ class DateController extends Instance {
                     this.talktimer = 0;
                     this.talktimer = - 20;
                     this.portraitshakecon2 = 1;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 137 && this.draw_box_timer < 223 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 223;
@@ -2812,8 +2812,8 @@ class DateController extends Instance {
                     this.talktimer = 0;
                     this.talktimer = - 20;
                     this.portraitshakecon2 = 1;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 227 && this.draw_box_timer < 313 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 313;
@@ -2828,8 +2828,8 @@ class DateController extends Instance {
                     this.talktimer = 0;
                     this.talktimer = - 20;
                     this.portraitshakecon2 = 1;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 318 && this.draw_box_timer < 403 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 403;
@@ -2851,7 +2851,7 @@ class DateController extends Instance {
                     this.second_text = S.stringsetloc("I was scared!", "obj_date_controller_slash_Step_0_gml_460_0");
                     this.talktimer = 0;
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
                 }
                 if (this.draw_box_timer > 5 && this.draw_box_timer < 90 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 90;
@@ -2863,8 +2863,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("After finally\n\"finding myself\"...", "obj_date_controller_slash_Step_0_gml_470_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 90 && this.draw_box_timer < 180 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 180;
@@ -2876,8 +2876,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("I felt like I was...\nLOSING myself.", "obj_date_controller_slash_Step_0_gml_479_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 0.8);
                 }
                 if (this.draw_box_timer > 180 && this.draw_box_timer < 270 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 270;
@@ -2889,8 +2889,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("I... I didn't want\nyou to be...", "obj_date_controller_slash_Other_11_gml_601_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 0.9);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 0.9);
                 }
                 if (this.draw_box_timer > 270 && this.draw_box_timer < 360 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 360;
@@ -2912,7 +2912,7 @@ class DateController extends Instance {
                     this.second_text = S.stringsetloc("I only wanted you\nto be mine! To be ME!", "obj_date_controller_slash_Step_0_gml_497_0");
                     this.talktimer = - 20;
                     snd_play('snd_pink_throw');
-                    S.snd_play_delayed(this, 723, 8, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_throw', 8, 1, 0.8);
                 }
                 if (this.draw_box_timer > 5 && this.draw_box_timer < 91 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 90;
@@ -2924,8 +2924,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("Because...\nI HATE me!", "obj_date_controller_slash_Step_0_gml_507_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.5);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.5);
                 }
                 if (this.draw_box_timer > 90 && this.draw_box_timer < 180 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 180;
@@ -2937,8 +2937,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("And If I became\nsomething I loved...", "obj_date_controller_slash_Step_0_gml_516_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 180 && this.draw_box_timer < 270 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 270;
@@ -2950,8 +2950,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("Wouldn't that\nFIX it!?", "obj_date_controller_slash_Step_0_gml_525_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 22, 1, 1.1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 22, 1, 1.1);
                 }
                 if (this.draw_box_timer > 270 && this.draw_box_timer < 360 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 360;
@@ -2963,8 +2963,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("But... just puppeting\nyou around...", "obj_date_controller_slash_Step_0_gml_534_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 360 && this.draw_box_timer < 450 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 450;
@@ -2976,8 +2976,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("That's... only hurting\nyou, isn't it?", "obj_date_controller_slash_Step_0_gml_543_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 0.8);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 0.8);
                 }
                 if (this.draw_box_timer > 450 && this.draw_box_timer < 540 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 540;
@@ -2989,8 +2989,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("If... I want us\nto be together...", "obj_date_controller_slash_Step_0_gml_552_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 0.9);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 0.9);
                 }
                 if (this.draw_box_timer > 540 && this.draw_box_timer < 630 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 630;
@@ -3002,8 +3002,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.second_text = S.stringsetloc("Then...\nI have to...", "obj_date_controller_slash_Other_11_gml_620_0");
                     this.talktimer2 = - 20;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 630 && this.draw_box_timer < 720 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 720;
@@ -3023,9 +3023,9 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.first_text = S.stringsetloc("I want to be with\nyou too, mew!", "obj_date_controller_slash_Step_0_gml_575_0");
                     this.talktimer = 0;
-                    S.snd_play_delayed(this, 71, 5, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.2);
-                    S.snd_play_delayed(this, 71, 25, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 5, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.2);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 25, 1);
                 }
                 if (this.draw_box_timer > 5 && this.draw_box_timer < 90 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 90;
@@ -3035,8 +3035,8 @@ class DateController extends Instance {
                     this.date_text2_char_number = 0;
                     this.first_text = S.stringsetloc("If we just listen\nto each other...", "obj_date_controller_slash_Step_0_gml_581_0");
                     this.talktimer = 0;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.3);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.3);
                 }
                 if (this.draw_box_timer > 90 && this.draw_box_timer < 180 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 180;
@@ -3048,8 +3048,8 @@ class DateController extends Instance {
                     this.first_text = S.stringsetloc("I know we can balance\nbeing together!", "obj_date_controller_slash_Step_0_gml_587_0");
                     this.second_text = "";
                     this.talktimer = 10;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.4);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.4);
                 }
                 if (this.draw_box_timer > 180 && this.draw_box_timer < 270 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 270;
@@ -3060,8 +3060,8 @@ class DateController extends Instance {
                     this.second_text = S.stringsetloc("Oh, me! Let's never\nbe apart again!", "obj_date_controller_slash_Step_0_gml_593_0");
                     this.talktimer = 10;
                     this.portraitshakecon2 = 1;
-                    S.snd_play_delayed(this, 71, 1, 1, 1);
-                    S.snd_play_delayed(this, 71, 15, 1, 1.4);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 1, 1, 1);
+                    S.snd_play_delayed(this, 'snd_pink_mew', 15, 1, 1.4);
                 }
                 if (this.draw_box_timer > 270 && this.draw_box_timer < 360 && (button1_h() || button3_h()) && this.can_skip_timer > 10) {
                     this.draw_box_timer = 360;
