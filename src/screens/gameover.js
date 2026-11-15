@@ -7,10 +7,10 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   withObj, button1_p, left_p, right_p, button2_h, draw_self, draw_sprite_ext, draw_set_color,
   draw_set_alpha, draw_set_font, draw_rectangle, draw_text, string_width, random, choose,
-} from '../runtime/gm.js?v=20261115223550';
-import { snd_play, snd_volume, snd_free_all, snd_init, mus_loop, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115223550';
-import { gotoRoom } from './common.js?v=20261115223550';
-import { startBattle } from '../battle/setup.js?v=20261115223550';
+} from '../runtime/gm.js?v=20261115230517';
+import { snd_play, snd_volume, snd_free_all, snd_init, mus_loop, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115230517';
+import { gotoRoom } from './common.js?v=20261115230517';
+import { startBattle } from '../battle/setup.js?v=20261115230517';
 
 // The battle as it looked when the party fell (sprite_create_from_surface).
 class Screenshot extends Instance {

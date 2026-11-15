@@ -42,14 +42,6 @@ def scaled(name, k, i=0):
     return w * k, h * k, scale_nearest(px, w, h, w * k, h * k)
 
 
-W, H = 1200, 630
-img = bytearray(W * H * 4)
-for y in range(H):
-    t = y / H
-    r, g, b = int(10 + 20 * t), int(8 + 6 * t), int(40 + 50 * t)
-    for x in range(W):
-        img[(y * W + x) * 4:(y * W + x) * 4 + 4] = bytes((r, g, b, 255))
-
 def text_image(s, font="fnt_mainbig"):
     meta = json.load(open(os.path.join(ROOT, "assets", "fonts.json")))[font]
     with open(os.path.join(ROOT, "assets", "fonts", font + ".png"), "rb") as f:
@@ -66,23 +58,31 @@ def text_image(s, font="fnt_mainbig"):
     return tw, th, out
 
 
-tw, th, title = text_image("GERSON FIGHT SIMULATOR")
+W, H = 1200, 630
+img = bytearray(W * H * 4)
+# A dark stage, purple at the top going to pink at the bottom.
+for y in range(H):
+    t = y / H
+    r, g, b = int(28 + 50 * t), int(6 + 8 * t), int(48 + 22 * t)
+    for x in range(W):
+        img[(y * W + x) * 4:(y * W + x) * 4 + 4] = bytes((r, g, b, 255))
+
+tw, th, title = text_image("PINK FIGHT SIMULATOR")
 k = 2
-paste(img, W, H, scale_nearest(title, tw, th, tw * k, th * k), tw * k, th * k, (W - tw * k) // 2, 50)
-sw, sh, sub = text_image("THE HAMMER OF JUSTICE")
-paste(img, W, H, sub, sw, sh, (W - sw) // 2, 125)
-# Gerson idle with his hair behind, as obj_hammer_of_justice_enemy draws them (hair at x+18, y+5-18).
-k = 5
-gw, gh, gerson = scaled("spr_gerson_idle", k, 0)
-rw, rh, hair = scaled("spr_gerson_hair", k, 0)
-gx, gy = (W - gw) // 2, 290
-paste(img, W, H, hair, rw, rh, gx + 18 * k, gy + (5 - 18) * k)
-paste(img, W, H, gerson, gw, gh, gx, gy)
-hw, hh, heart = scaled("spr_greenheart", 4)
-paste(img, W, H, heart, hw, hh, 200, 400)
-paste(img, W, H, heart, hw, hh, W - 200 - hw, 400)
+paste(img, W, H, scale_nearest(title, tw, th, tw * k, th * k), tw * k, th * k, (W - tw * k) // 2, 36)
+sw, sh, sub = text_image("DELTARUNE CHAPTER 5")
+paste(img, W, H, sub, sw, sh, (W - sw) // 2, 108)
+# Her MEWERS LIVE sign over Pink, as on her stage.
+mw, mh, sign = scaled("spr_pink_mewers_live", 2)
+paste(img, W, H, sign, mw, mh, (W - mw) // 2, 160)
+pw, ph, pink = scaled("spr_pink_idle", 6, 0)
+paste(img, W, H, pink, pw, ph, (W - pw) // 2, 300)
+# The purple SOUL of her FELINE WEB on both sides.
+hw, hh, heart = scaled("spr_purpleheart", 4)
+paste(img, W, H, heart, hw, hh, 220, 400)
+paste(img, W, H, heart, hw, hh, W - 220 - hw, 400)
 write_png(os.path.join(ROOT, "og.png"), W, H, img)
 
-fw, fh, fav = scaled("spr_greenheart", 2)
+fw, fh, fav = scaled("spr_purpleheart", 2)
 write_png(os.path.join(ROOT, "favicon.png"), fw, fh, fav)
 print("og.png and favicon.png written")

@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, d3d_set_fog, defineObject, draw_clear_alpha, draw_self, draw_set_alpha, draw_set_blend_mode, draw_set_color, draw_sprite_ext, draw_surface, draw_surface_ext, global, gpu_set_alphatestenable, instance_create, instance_create_depth, instance_destroy, irandom_range, lengthdir_x, lerp, random, random_range, snd_pitch, snd_play, snd_stop, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261115223550';
+} from '../rt.js?v=20261115230517';
 import {
   cameray, clamp01, i_ex, scr_dark_marker, scr_ease_in, scr_ease_inout, scr_ease_out, snd_play_x,
-} from '../common.js?v=20261115223550';
+} from '../common.js?v=20261115230517';
 import {
   EXIT, O, T, W,
-} from '../gml.js?v=20261115223550';
+} from '../gml.js?v=20261115230517';
 
 // obj_spell_revivesong (default sprite spr_ralsei_cherub, depth 0)
 class SpellRevivesong extends Instance {
