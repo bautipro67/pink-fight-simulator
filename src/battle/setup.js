@@ -4,11 +4,11 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, room_reset, objectExists,
   font_add_sprite_ext,
-} from '../runtime/gm.js?v=20261115042936';
-import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115042936';
-import { WEAPONS, ARMORS, BASE_STATS, getLoadout } from './equipment.js?v=20261115042936';
-import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115042936';
-import { registerBackground } from './misc.js?v=20261115042936';
+} from '../runtime/gm.js?v=20261115054137';
+import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115054137';
+import { WEAPONS, ARMORS, BASE_STATS, getLoadout } from './equipment.js?v=20261115054137';
+import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115054137';
+import { registerBackground } from './misc.js?v=20261115054137';
 
 function scr_gamestart() {
   global.chapter = 3;
@@ -152,9 +152,9 @@ defineScript('init_battle_globals', () => {
   global.hearty = 160;
   global.tempflag[93] = 1;
   global.flag[9] = 1;
-  global.batmusic[0] = snd_init('knight.ogg');
-  global.encounterno = 115;
-  global.flag[54] = 115;
+  global.batmusic[0] = snd_init('pink.ogg');
+  global.encounterno = 224;
+  global.flag[54] = 224;
   global.specialbattle = 0;
 });
 
@@ -329,20 +329,13 @@ defineScript('scr_encountersetup', (...a) => {
     g.heromakey[1] = yy + 180;
   }
   g.battlemsg[0] = '* It is known.';
-  if (enc == 115) {
-    g.heromakex[0] = xx + 126;
-    g.heromakey[0] = yy + 104;
-    g.heromakex[1] = xx + 80;
-    g.heromakey[1] = yy + 142;
-    g.heromakex[2] = xx + 58;
-    g.heromakey[2] = yy + 190;
-    g.monsterinstancetype[0] = G.knightEnemyObject || 'obj_knight_enemy';
-    g.monstertype[0] = 104;
-    g.monstermakex[0] = xx + 425;
-    g.monstermakey[0] = yy + 78;
-    g.monstertype[1] = 0;
-    g.monstertype[2] = 0;
-    g.battlemsg[0] = '* The Roaring Knight appeared.';
+  // Encounter 224 (Chapter 5, obj_dw_pink_encounter): Pink.
+  if (enc == 224) {
+    g.monsterinstancetype[0] = 'obj_pink_enemy';
+    g.monstertype[0] = 118;
+    g.monstermakex[0] = xx + 470;
+    g.monstermakey[0] = yy + 131;
+    g.battlemsg[0] = '* TP MAX reduced by TEA!&Gather HEARTS to recover MAX TP!';
   }
 });
 
@@ -419,28 +412,37 @@ defineScript('scr_monstersetup', (inst) => {
   const g = global;
   const m = inst.myself;
   S.scr_monster_actreset(m);
-  if (g.monstertype[m] == 104) {
-    g.monstername[m] = '';
-    g.monstermaxhp[m] = 7300;
-    g.monsterhp[m] = 7300;
-    g.monsterat[m] = 40;
+  // Pink (scr_monstersetup 118, Chapter 5).
+  if (g.monstertype[m] == 118) {
+    g.monstername[m] = 'Pink';
+    g.monstermaxhp[m] = 7000;
+    g.monsterhp[m] = 7000;
+    g.monsterat[m] = 16;
     g.monsterdf[m] = 0;
     g.monsterexp[m] = 0;
     g.monstergold[m] = 0;
     g.sparepoint[m] = 0;
     g.mercymod[m] = 0;
     g.mercymax[m] = 100;
-    g.canact[m][0] = 1;
-    g.actname[m][0] = 'Check';
-    g.actdesc[m][0] = 'Useless#analysis';
-    g.canact[m][1] = 1;
-    g.actname[m][1] = 'HoldBreath';
-    g.canactsus[m][0] = 1;
-    g.actnamesus[m][0] = 'S-Action';
-    g.actsimulsus[m][0] = 0;
-    g.canactral[m][0] = 1;
-    g.actnameral[m][0] = 'R-Action';
-    g.actsimulral[m][0] = 0;
+    const act = (who, i, name, desc, cost, simul, actor) => {
+      g['canact' + who][m][i] = 1;
+      g['actname' + who][m][i] = name;
+      if (desc) g['actdesc' + who][m][i] = desc;
+      if (cost) g['actcost' + who][m][i] = cost;
+      if (simul) g['actsimul' + who][m][i] = 1;
+      if (actor) g['actactor' + who][m][i] = actor;
+    };
+    act('', 0, 'Check');
+    act('', 1, 'Flirt', 'Doki+1', 20, true);
+    act('', 2, 'MegaFlirt', 'Doki+5', 150, true);
+    act('', 3, 'MegaFlirtX', 'Doki+5', 100, false, 4);
+    act('', 4, 'GigaFlirt', 'Doki+10', 200, false, 4);
+    act('sus', 0, 'Flirt', 'Doki +1', 20, true);
+    act('sus', 1, 'MegaFlirt', 'Doki +5', 150, true);
+    act('sus', 2, 'ShareFood', 'Item in#Exchange#For doki');
+    act('ral', 0, 'Flirt', 'Doki +1', 20, true);
+    act('ral', 1, 'MegaFlirt', 'Doki +5', 150, true);
+    act('ral', 2, 'LovelyBoy', 'Max TP#14% UP');
   }
 });
 

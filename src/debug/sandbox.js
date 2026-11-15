@@ -8,13 +8,13 @@ import {
   instancesOf, event_user, choose, keyboard_check, keyboard_check_pressed, random_set_seed, round, S,
   draw_set_font, draw_set_halign, draw_set_color, draw_set_alpha, draw_rectangle, draw_text, draw_sprite_ext,
   fa_left, fa_center, merge_color, button1_p, vk, draw_self,
-} from '../runtime/gm.js?v=20261115042936';
-import { snd_play, snd_init, mus_loop_ext, mus_stop, snd_stop } from '../runtime/audio.js?v=20261115042936';
-import { audioReady, assets } from '../runtime/assets.js?v=20261115042936';
-import { gotoRoom } from '../screens/common.js?v=20261115042936';
-import { getBest, saveBest } from '../settings.js?v=20261115042936';
-import { drawSoulHat } from '../hats.js?v=20261115042936';
-import { tagParent } from '../knight/common.js?v=20261115042936';
+} from '../runtime/gm.js?v=20261115054137';
+import { snd_play, snd_init, mus_loop_ext, mus_stop, snd_stop } from '../runtime/audio.js?v=20261115054137';
+import { audioReady, assets } from '../runtime/assets.js?v=20261115054137';
+import { gotoRoom } from '../screens/common.js?v=20261115054137';
+import { getBest, saveBest } from '../settings.js?v=20261115054137';
+import { drawSoulHat } from '../hats.js?v=20261115054137';
+import { tagParent } from '../pink/common.js?v=20261115054137';
 
 // The Knight's turns in fight order: [myattackchoice, difficulty, name, object the attack needs].
 // Only the attacks whose objects are ported are listed (ATTACKS).
@@ -390,7 +390,7 @@ class SandboxController extends tagParent('obj_battlecontroller') {
       mus_stop(this.music);
       this.music = null;
     } else {
-      this.music = snd_init('knight.ogg');
+      this.music = snd_init('pink.ogg');
       mus_loop_ext(this.music, 0.7, 1);
     }
   }
@@ -603,7 +603,7 @@ defineObject('obj_practicecontroller', PracticeController);
 export function startPractice({ start = 0, hp = 90 } = {}) {
   G.lastPractice = { start, hp };
   gotoRoom();
-  ensureMusic('knight.ogg');
+  ensureMusic('pink.ogg');
   const first = Math.max(0, Math.min(PRACTICE_COUNT - 1, start));
   const ctl = setupArena('obj_practicecontroller', first);
   ctl.poolMax = ctl.pool = hp;
@@ -655,7 +655,7 @@ function setupArena(controllerName, attackIndex) {
   return ctl;
 }
 
-// knight.ogg is loaded on demand when the battle modules did not list it.
+// pink.ogg is loaded on demand when the battle modules did not list it.
 function ensureMusic(file) {
   if (!audioReady.music[file]) {
     audioReady.music[file] = fetch(new URL('../../assets/music/' + file, import.meta.url)).then(r => r.arrayBuffer())
@@ -665,7 +665,7 @@ function ensureMusic(file) {
 
 export function startSandbox(params) {
   if (params.has('seed')) random_set_seed(Number(params.get('seed')) || 0);
-  ensureMusic('knight.ogg');
+  ensureMusic('pink.ogg');
   const want = Number(params.get('attack') ?? 0);
   const ctl = setupArena('obj_sandboxcontroller', want >= 0 && want < ATTACKS.length ? want : 0);
   if (params.has('god')) ctl.god = true;

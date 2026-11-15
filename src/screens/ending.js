@@ -5,10 +5,10 @@
 import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_exists, draw_sprite_ext,
   draw_set_color, draw_set_font, draw_set_alpha, draw_rectangle,
-} from '../runtime/gm.js?v=20261115042936';
-import { snd_init, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115042936';
-import { startBattle } from '../battle/setup.js?v=20261115042936';
-import { gotoRoom, scr_darkbox, fadeOut, centerText } from './common.js?v=20261115042936';
+} from '../runtime/gm.js?v=20261115054137';
+import { snd_init, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115054137';
+import { startBattle } from '../battle/setup.js?v=20261115054137';
+import { gotoRoom, scr_darkbox, fadeOut, centerText } from './common.js?v=20261115054137';
 
 const BS = String.fromCharCode(92);
 const LINES = {
@@ -43,7 +43,7 @@ class Ending extends Instance {
     this.cur_jewel = 0;
     this.titlealpha = 0;
     this.afterScene = false;
-    this.music = snd_init('wind_highplace.ogg');
+    this.music = snd_init('pink_theme.ogg');
     mus_loop_ext(this.music, 0, 0.5);
     mus_volume(this.music, 1, 60);
   }

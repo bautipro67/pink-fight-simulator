@@ -1,7 +1,8 @@
-"""Extract the assets the Roaring Knight simulator needs from a DELTARUNE install into assets/.
+"""Extract the assets the Pink (Chapter 5) simulator needs from a DELTARUNE install into assets/.
 
-Usage: python -I tools/extract_assets.py --game "D:/Steam/steamapps/common/DELTARUNE" --out assets [--chapter 3]
-More names can be listed in tools/extra_assets_*.txt (see load_extra_lists).
+Usage: python -I tools/extract_assets.py --game "D:/Steam/steamapps/common/DELTARUNE" --out assets [--chapter 5]
+More names can be listed in tools/extra_assets_*.txt (see load_extra_lists), and every 'spr_*' / 'bg_*' /
+'snd_*' string written in src/ is extracted too (see load_names_from_source).
 """
 import argparse, json, os, re, shutil, sys
 
@@ -9,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from datawin import DataWin, write_png, blit  # noqa: E402
 
 SPRITE_PATTERNS = [
-    r"^spr_roaringknight", r"^spr_rk_", r"^spr_knight_", r"^spr_bullet_knight",
+    r"^spr_pink",
     r"^spr_(krisb|susieb|ralseib)_", r"^spr_head(kris|susie|ralsei)$", r"^spr_bname(kris|susie|ralsei)$",
     r"^spr_bt(fight|act|tech|item|spare|defend)$",
     r"^spr_(heart|dodgeheart|heartoutline|heartoutline2|heartbreak|heartshards|heartsmall|heart_centered)$",
@@ -22,15 +23,13 @@ SPRITE_PATTERNS = [
 ]
 FONTS = ["fnt_main", "fnt_mainbig", "fnt_small", "fnt_dotumche", "fnt_tinynoelle"]
 SOUND_PATTERNS = [
-    r"^snd_knight[a-z0-9_]*$",
     r"^snd_(applause|awkward|badexplosion|bomb|bombfall|boost|break1|break2|bump|carhonk|criticalswing|damage|defeatrun"
     r"|graze|hurt1|hypnosis|impact|laz_c|menumove|phone|pirouette|power|rudebuster_hit|rudebuster_swing|rumble"
     r"|screenshake|scytheburst|select|spare|spearappear|swing|text|toilet|txtjok|txtral|txtsus|weirdeffect"
     r"|heal_c|spellcast|boost|item|great_shine|cancel|equip|won|levelup|dtrans_lw|wing|noise)$",
 ]
-MUSIC = ["knight.ogg", "knight_appears.ogg", "AUDIO_DEFEAT.ogg", "mus_knightthought.ogg", "AUDIO_DRONE.ogg", "wind_highplace.ogg",
-         "creepychase.ogg", "berdly_audience.ogg"]  # the last two: the scenes (src/knight/scenes.js)
-TEXT_KEY_PATTERNS = [r"knight", r"^obj_battlecontroller", r"^scr_", r"^obj_spell", r"^obj_heal", r"^obj_pacify",
+MUSIC = ["pink.ogg", "pink_theme.ogg", "pink_theme_mad.ogg", "AUDIO_DEFEAT.ogg", "AUDIO_DRONE.ogg"]
+TEXT_KEY_PATTERNS = [r"pink", r"^obj_battlecontroller", r"^scr_", r"^obj_spell", r"^obj_heal", r"^obj_pacify",
                      r"^obj_gameover", r"^obj_writer", r"^DEVICE_"]
 
 
@@ -67,6 +66,26 @@ def load_extra_lists():
                     FONTS.append(val)
                 elif kind == "text":
                     TEXT_KEY_PATTERNS.append(val)
+
+
+QUOTED = set()
+
+
+def load_names_from_source():
+    """Every sprite / sound name the ported code writes as a string literal."""
+    src = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
+    for root, _, files in os.walk(src):
+        for fn in files:
+            if not fn.endswith(".js"):
+                continue
+            with open(os.path.join(root, fn), encoding="utf-8") as f:
+                text = f.read()
+            for name in set(re.findall(r"'((?:spr|bg)_[A-Za-z0-9_]+)'", text)):
+                SPRITE_PATTERNS.append("^%s$" % name)
+            for name in set(re.findall(r"'(snd_[A-Za-z0-9_]+)'", text)):
+                SOUND_PATTERNS.append("^%s$" % name)
+            # sounds without the snd_ prefix (motor_swing_down...): any quoted name, kept if it is a sound
+            QUOTED.update(re.findall(r"'([a-z][A-Za-z0-9_]+)'", text))
 
 
 ATLAS_WIDTH = 2048
@@ -118,9 +137,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--game", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--chapter", type=int, default=3)
+    ap.add_argument("--chapter", type=int, default=5)
     a = ap.parse_args()
     load_extra_lists()
+    load_names_from_source()
     chdir = os.path.join(a.game, "chapter%d_windows" % a.chapter)
     dw = DataWin(os.path.join(chdir, "data.win"))
     for sub in ("fonts", "music", "text"):
@@ -163,7 +183,7 @@ def main():
     # Sound effects are concatenated into one bundle; sounds.json holds each one's offset and length.
     sounds, bundle = {}, bytearray()
     for s in dw.sounds:
-        if not any(re.search(p, s["name"]) for p in SOUND_PATTERNS):
+        if not any(re.search(p, s["name"]) for p in SOUND_PATTERNS) and s["name"] not in QUOTED:
             continue
         data, ext = dw.sound_bytes(s)
         sounds[s["name"]] = {"o": len(bundle), "l": len(data), "type": ext[1:], "volume": s["volume"]}
