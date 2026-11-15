@@ -5,17 +5,17 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, objectExists,
   draw_sprite_ext, draw_set_color, draw_set_font, draw_set_alpha, draw_rectangle, draw_text, controls,
   draw_set_halign, draw_text_transformed, fa_center, fa_left,
-} from '../runtime/gm.js?v=20261115213228';
-import { snd_init, snd_play, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115213228';
-import { startBattle } from '../battle/setup.js?v=20261115213228';
-import * as SB from '../debug/sandbox.js?v=20261115213228';
-import { gotoRoom, fadeOut, centerText, whenSoundsReady } from './common.js?v=20261115213228';
-import { saveSettings, applyVolume, getBest } from '../settings.js?v=20261115213228';
-import { HATS, currentHat, drawHat } from '../hats.js?v=20261115213228';
-import { openEquipment } from './equipment.js?v=20261115213228';
-import { openControls, keyName } from './controls.js?v=20261115213228';
-import './gameover.js?v=20261115213228';
-import './ending.js?v=20261115213228';
+} from '../runtime/gm.js?v=20261115223550';
+import { snd_init, snd_play, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115223550';
+import { startBattle } from '../battle/setup.js?v=20261115223550';
+import * as SB from '../debug/sandbox.js?v=20261115223550';
+import { gotoRoom, fadeOut, centerText, whenSoundsReady } from './common.js?v=20261115223550';
+import { saveSettings, applyVolume, getBest, BOMB_MODES, bombMode } from '../settings.js?v=20261115223550';
+import { HATS, currentHat, drawHat } from '../hats.js?v=20261115223550';
+import { openEquipment } from './equipment.js?v=20261115223550';
+import { openControls, keyName } from './controls.js?v=20261115223550';
+import './gameover.js?v=20261115223550';
+import './ending.js?v=20261115223550';
 
 // Dark panel over the title art, behind the OPTIONS and CONTROLS lists.
 class Panel extends Instance {
@@ -35,8 +35,8 @@ class Panel extends Instance {
     centerText(320, 34, this.title);
     // The SOUL wearing the chosen hat, next to the SOUL HAT option.
     if (this.hatPreview) {
-      draw_sprite_ext('spr_dodgeheart', 0, 520, 170, 3, 3, 0, 0xffffff, this.alpha / 0.9);
-      drawHat(550, 170, 3);
+      draw_sprite_ext('spr_dodgeheart', 0, 520, 118, 3, 3, 0, 0xffffff, this.alpha / 0.9);
+      drawHat(550, 118, 3);
     }
   }
 }
@@ -161,6 +161,13 @@ function setHat(dir) {
   snd_play('snd_select');
 }
 
+// Pink's difficulty, as her bomb sets it in the game: INTENDED, NICE (easier) or MEAN (harder).
+function setBombs(dir) {
+  G.settings.bombs = (bombMode() + dir + 3) % 3;
+  saveSettings();
+  snd_play('snd_select');
+}
+
 // EQUIPMENT: weapons, armors and items for the fight (src/screens/equipment.js).
 function equipmentMenu(music) {
   const panel = instance_create(0, 0, 'obj_sim_panel');
@@ -187,17 +194,18 @@ function optionsMenu(music, cur = 0, panel = null) {
     () => 'VOLUME: < ' + Math.round(G.settings.volume * 100) + '% >',
     () => 'SOUL HAT: < ' + currentHat().name + ' >',
     () => 'EASY MODE: ' + (G.settings.easy ? 'ON' : 'OFF'),
+    () => "PINK'S BOMBS: < " + BOMB_MODES[bombMode()] + ' >',
     () => 'INTRO: ' + (G.settings.intro ? 'ON' : 'OFF'),
     () => 'SIMPLIFY VFX: ' + (G.settings.simplify ? 'ON' : 'OFF'),
     'CONTROLS',
     'BACK',
   ], (i, m) => {
-    if (i == 6) return back(m);
-    if (i == 5) {
+    if (i == 7) return back(m);
+    if (i == 6) {
       instance_destroy(m);
       panel.title = 'CONTROLS';
       panel.hatPreview = false;
-      openControls(() => optionsMenu(music, 5, panel));
+      openControls(() => optionsMenu(music, 6, panel));
       return;
     }
     m.done = false;
@@ -205,18 +213,20 @@ function optionsMenu(music, cur = 0, panel = null) {
     if (i == 0) setVolume(G.settings.volume >= 1 ? 0 : G.settings.volume + 0.1);
     if (i == 1) setHat(1);
     if (i == 2) G.settings.easy = !G.settings.easy;
-    if (i == 3) G.settings.intro = !G.settings.intro;
-    if (i == 4) {
+    if (i == 3) setBombs(1);
+    if (i == 4) G.settings.intro = !G.settings.intro;
+    if (i == 5) {
       G.settings.simplify = !G.settings.simplify;
       global.flag[8] = G.settings.simplify ? 1 : 0;
     }
     saveSettings();
-  }, 'fnt_mainbig', 36);
+  }, 'fnt_mainbig', 32);
   menu.cur = cur;
   menu.onBack = back;
   menu.onAdjust = (i, dir) => {
     if (i == 0) setVolume(G.settings.volume + dir * 0.1);
     if (i == 1) setHat(dir);
+    if (i == 3) setBombs(dir);
   };
 }
 defineScript('startTitle', startTitle);

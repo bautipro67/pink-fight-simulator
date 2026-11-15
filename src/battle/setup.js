@@ -4,11 +4,11 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, room_reset, objectExists,
   font_add_sprite_ext,
-} from '../runtime/gm.js?v=20261115213228';
-import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115213228';
-import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261115213228';
-import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115213228';
-import { registerBackground } from './misc.js?v=20261115213228';
+} from '../runtime/gm.js?v=20261115223550';
+import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115223550';
+import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261115223550';
+import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115223550';
+import { registerBackground } from './misc.js?v=20261115223550';
 
 function scr_gamestart() {
   global.chapter = 3;
@@ -124,6 +124,8 @@ defineScript('init_battle_globals', () => {
   global.char = [1, 2, 3];
   global.darkzone = 1;
   global.plot = 320;
+  // Pink's difficulty (OPTIONS, PINK'S BOMBS): 0 intended, 1 NICE, 2 MEAN.
+  global.flag[1914] = (G.settings?.bombs | 0) % 3;
   // scr_gamestart_chapter_override (Chapter 5): Ralsei learns ReviveSong and Susie Scythemare.
   global.spell[2][2] = 13;
   global.spell[3][2] = 12;

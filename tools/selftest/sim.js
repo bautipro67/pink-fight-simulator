@@ -38,6 +38,11 @@ export function scenarios({ S, sandbox, has, first, shared }) {
       }
       if (p && p.datecount < lastCount) { lost = true; marks.push(`date lost at ${frame}`); }
       if (p) lastCount = p.datecount;
+      // The runner refills HP every frame but a hero knocked DOWN in between stays out (cannot be
+      // targeted); with everyone out, a hit goes to the whole party at once and ends the fight. On
+      // MEAN that happens: each hit makes the bullet that landed it 21% stronger (scr_damage), and the
+      // 3D tunnel's bullets keep hitting. So the downed get up again, as a heal would do.
+      for (let i = 0; i < 3; i++) if (g.char?.[i] && g.hp[g.char[i]] > 0 && g.charcantarget?.[i] == 0) S.scr_revive(i);
       if (d) {
         const pickWrong = loseFirst && dates === 1;
         const want = (d.choiceiscorrect || []).findIndex((c, k) => (c == 1) !== pickWrong && k < d.boxcount);
@@ -69,6 +74,12 @@ export function scenarios({ S, sandbox, has, first, shared }) {
     { name: "the whole fight: Pink's intro, every phase and date (the maze too), her BODY and ghost, the final date and the win",
       settings: { intro: true }, start: ({ setup }) => setup.startBattle({ intro: true }),
       input: play(), until: ending, status: where, end: 'the result screen', frames: 30000, sounds: true },
+    // Pink's own difficulty (OPTIONS, PINK'S BOMBS): NICE and MEAN change her bombs and attacks.
+    ...[[1, 'NICE'], [2, 'MEAN']].map(([bombs, label]) => ({
+      name: `the whole fight with Pink's bombs ${label}`, settings: { intro: false, bombs },
+      start: ({ setup }) => setup.startBattle({ intro: false }), input: play(), until: ending, status: where,
+      end: 'the result screen', frames: 30000,
+    })),
     { name: 'the first date lost (every answer wrong), then won on the second try', settings: { intro: false },
       start: ({ setup }) => setup.startBattle({ intro: false }), input: play({ loseFirst: true }),
       until: ({ global: g }) => lost && pink()?.datecount >= 1 && !date() && g.myfight === 0 && g.mnfight === 0,
