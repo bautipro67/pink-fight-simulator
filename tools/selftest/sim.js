@@ -70,7 +70,21 @@ export function scenarios({ S, sandbox, has, first, shared }) {
       return false;
     };
   };
+  // What the fight leaves for the scene after it when that scene is played on its own.
+  const afterFight = { party: [[126, 76], [96, 103], [120, 150]], pink: [320, 108], pinkSprite: 'spr_pink_angle',
+    orange: [-200, 166], orangeSprite: 'spr_orange_surprised', orangeVisible: false };
   const list = [
+    { name: "story: Pink's encounter (Orange, PINK!, the 7 flowers), the whole fight, the scene after it and the end",
+      settings: { scenes: true, intro: true }, start: () => S.startPinkScene(),
+      input: play(), until: ending, status: where, end: 'the result screen', frames: 40000, sounds: true },
+    { name: 'a retry with SCENES on: Pink drops in yelling, then the fight', settings: { scenes: true },
+      start: () => S.startPinkScene({ retry: true }), until: () => has(/^obj_battlecontroller$/), end: 'the battle', frames: 3000 },
+    // The scene after the win ends differently for each of her bombs' settings.
+    ...[[0, 'INTENDED'], [1, 'NICE'], [2, 'MEAN']].map(([bombs, label]) => ({
+      name: `the scene after the win, Pink's bombs ${label}`, settings: { scenes: true, bombs },
+      start: ({ G }) => { G.pinkScene = { ...afterFight }; return S.startPinkAfterScene(); },
+      until: ending, end: 'the result screen', frames: 6000,
+    })),
     { name: "the whole fight: Pink's intro, every phase and date (the maze too), her BODY and ghost, the final date and the win",
       settings: { intro: true }, start: ({ setup }) => setup.startBattle({ intro: true }),
       input: play(), until: ending, status: where, end: 'the result screen', frames: 30000, sounds: true },

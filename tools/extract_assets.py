@@ -28,7 +28,7 @@ SOUND_PATTERNS = [
     r"|screenshake|scytheburst|select|spare|spearappear|swing|text|toilet|txtjok|txtral|txtsus|weirdeffect"
     r"|heal_c|spellcast|boost|item|great_shine|cancel|equip|won|levelup|dtrans_lw|wing|noise)$",
 ]
-MUSIC = ["pink.ogg", "pink_theme.ogg", "pink_theme_mad.ogg", "AUDIO_DEFEAT.ogg", "AUDIO_DRONE.ogg", "mus_confession.ogg"]
+MUSIC = ["pink.ogg", "pink_theme.ogg", "pink_theme_mad.ogg", "AUDIO_DEFEAT.ogg", "AUDIO_DRONE.ogg", "mus_confession.ogg", "noelle_normal.ogg"]
 TEXT_KEY_PATTERNS = [r"pink", r"^obj_battlecontroller", r"^scr_", r"^obj_spell", r"^obj_heal", r"^obj_pacify",
                      r"^obj_gameover", r"^obj_writer", r"^DEVICE_"]
 

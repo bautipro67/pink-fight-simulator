@@ -14,6 +14,7 @@ SOURCES = [  # (import path from src/pink/gen, file)
     ('../common.js', ['src/pink/common.js']),
     ('../gml.js', ['src/pink/gml.js']),
     ('../lib5.js', ['src/pink/lib5.js']),
+    ('../scene.js', ['src/pink/scene.js']),
 ]
 
 

@@ -7,10 +7,10 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   withObj, button1_p, left_p, right_p, button2_h, draw_self, draw_sprite_ext, draw_set_color,
   draw_set_alpha, draw_set_font, draw_rectangle, draw_text, string_width, random, choose,
-} from '../runtime/gm.js?v=20261115230517';
-import { snd_play, snd_volume, snd_free_all, snd_init, mus_loop, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115230517';
-import { gotoRoom } from './common.js?v=20261115230517';
-import { startBattle } from '../battle/setup.js?v=20261115230517';
+} from '../runtime/gm.js?v=20261116000937';
+import { snd_play, snd_volume, snd_free_all, snd_init, mus_loop, mus_volume, mus_stop } from '../runtime/audio.js?v=20261116000937';
+import { gotoRoom } from './common.js?v=20261116000937';
+import { startBattle } from '../battle/setup.js?v=20261116000937';
 
 // The battle as it looked when the party fell (sprite_create_from_surface).
 class Screenshot extends Instance {
@@ -83,7 +83,8 @@ class GameoverInit extends Instance {
 }
 defineObject('obj_gameover_init', GameoverInit);
 
-const retry = () => startBattle({ intro: G.settings?.intro !== false });
+// (with SCENES on, the short version of Pink's encounter: she drops in and the fight starts)
+const retry = () => (G.settings?.scenes !== false && S.startPinkScene ? S.startPinkScene({ retry: true }) : startBattle({ intro: G.settings?.intro !== false }));
 
 defineScript('startGameover', (p) => {
   // The party stays known through the room changes (DEVICE_FAILURE has the one in it speak).

@@ -4,10 +4,10 @@
 import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_exists, draw_sprite_ext,
   draw_set_color, draw_set_font, draw_set_alpha, draw_rectangle,
-} from '../runtime/gm.js?v=20261115230517';
-import { snd_init, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261115230517';
-import { startBattle } from '../battle/setup.js?v=20261115230517';
-import { gotoRoom, scr_darkbox, fadeOut, centerText } from './common.js?v=20261115230517';
+} from '../runtime/gm.js?v=20261116000937';
+import { snd_init, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261116000937';
+import { startBattle } from '../battle/setup.js?v=20261116000937';
+import { gotoRoom, scr_darkbox, fadeOut, centerText } from './common.js?v=20261116000937';
 
 const BS = String.fromCharCode(92);
 const LINES = {
@@ -67,7 +67,10 @@ class Ending extends Instance {
         mus_volume(this.music, 0, 20);
         fadeOut(20, () => {
           mus_stop(this.music);
-          if (i == 0) startBattle({ intro: G.settings?.intro !== false });
+          if (i == 0) {
+            if (G.settings?.scenes !== false && S.startPinkScene) S.startPinkScene({ retry: this.kind === 'lose' });
+            else startBattle({ intro: G.settings?.intro !== false });
+          }
           else S.startTitle();
         });
       }, 'fnt_mainbig', 32);

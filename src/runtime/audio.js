@@ -1,5 +1,5 @@
 // WebAudio playback with the Deltarune snd_* / mus_* wrapper semantics.
-import { assets, audioReady, loadMusic } from './assets.js?v=20261115230517';
+import { assets, audioReady, loadMusic } from './assets.js?v=20261116000937';
 
 let ctx = null;
 let master = null;
@@ -70,8 +70,9 @@ class Voice {
       this.src.playbackRate.value = this.paused ? 0 : this.pitch;
       this.src.connect(this.gain);
       this.src.onended = () => this.cleanup();
-      this.src.start();
-      this.mark(0);
+      const at = Math.min(this.startAt ?? 0, Math.max(0, buf.duration - 0.01));
+      this.src.start(0, at);
+      this.mark(at);
     }).catch(e => console.warn(e));
     if (!playing.has(key)) playing.set(key, new Set());
     playing.get(key).add(this);
@@ -113,6 +114,24 @@ class Voice {
   mark(pos) {
     this.posAt = pos;
     this.timeAt = ctx.currentTime;
+  }
+  // audio_sound_set_track_position: plays on from `t` seconds (a new source; the old one stops).
+  seek(t) {
+    this.startAt = t;
+    const old = this.src;
+    if (!old || this.stopped) return;
+    const buf = old.buffer;
+    old.onended = null;
+    try { old.stop(); } catch (e) { /* already stopped */ }
+    this.src = ctx.createBufferSource();
+    this.src.buffer = buf;
+    this.src.loop = old.loop;
+    this.src.playbackRate.value = this.paused ? 0 : this.pitch;
+    this.src.connect(this.gain);
+    this.src.onended = () => this.cleanup();
+    const at = Math.min(t, Math.max(0, buf.duration - 0.01));
+    this.src.start(0, at);
+    this.mark(at);
   }
   position() {
     if (!this.src || this.timeAt === undefined) return 0;
@@ -216,6 +235,9 @@ export function mus_stop(stream) {
   }
 }
 
+export function audio_sound_set_track_position(s, t) {
+  voiceOf(s)?.seek(t);
+}
 export function audio_sound_get_track_position(s) {
   return voiceOf(s)?.position() ?? 0;
 }

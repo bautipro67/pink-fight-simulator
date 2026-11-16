@@ -38,7 +38,7 @@ CALLER_FIRST = [
     'scr_oflash', 'scr_spareanim', 'scr_battletext_default', 'scr_enemyblcon', 'scr_blconskip', 'scr_simultext',
     'scr_rememberxy', 'scr_move_to_rememberxy', 'position_meeting', 'scr_monster_setup_default',
     'scr_move_to_point_over_time', 'scr_shakescreen', 'snd_play_delayed', 'draw_self_surfacespace', 'snd_play_echo',
-    'scr_dmgwriter_selfchar',
+    'scr_dmgwriter_selfchar', 'scr_maincharacters_actors', 'scr_cutscene_make',
 ]
 for name in CALLER_FIRST:
     # (the translator already passes `this` to some of them)
@@ -111,6 +111,16 @@ _snd = lambda n: "'%s'" % _names['sounds'][int(n)]
 t = re.sub(r'\b(snd_\w+)\(choose\(([\d, ]+)\)', lambda m: '%s(choose(%s)' % (m.group(1), ', '.join(_snd(n) for n in m.group(2).split(','))), t)
 t = re.sub(r'\b(S\.snd_play_delayed\(this, )(\d+),', lambda m: m.group(1) + _snd(m.group(2)) + ',', t)
 t = re.sub(r'\b(snd_(?:play|play_x|loop|stop|volume|pitch|play_pitch)\()(\d+)([,)])', lambda m: m.group(1) + _snd(m.group(2)) + m.group(3), t)
+
+# Pink's encounter scene (obj_dw_pink_encounter): sprites and sounds the cutscene commands take as bare
+# numbers, and its anonymous functions (hand-ported in src/pink/scene.js, by their code offset).
+_spr = lambda n: "'%s'" % _names['sprites'][int(n)]
+t = re.sub(r'\b(S\.c_(?:sprite|spritenext|spriteimage)\()(\d+)([,)])', lambda m: m.group(1) + _spr(m.group(2)) + m.group(3), t)
+t = re.sub(r'\b(S\.c_(?:sel_sprite|sel_spriteimage|sel_spritenext)\(this\.\w+, )(\d+)([,)])', lambda m: m.group(1) + _spr(m.group(2)) + m.group(3), t)
+t = re.sub(r'\b(S\.c_msgcmd\("sprite", )(\d+)\)', lambda m: m.group(1) + _spr(m.group(2)) + ')', t)
+t = re.sub(r'\b(S\.c_(?:sound_play|snd_play|sndplay|sndplay_x|snd_play_x)\()(\d+)([,)])', lambda m: m.group(1) + _snd(m.group(2)) + m.group(3), t)
+t = re.sub(r'S\.method\(- ?1, this\.anon_gml_Object_obj_dw_pink_encounter_Step_0_(\d+)_gml_Object_obj_dw_pink_encounter_Step_0\)',
+           r'S.pinkSceneFn(this, \1)', t)
 
 # obj_pinknode Create: fnc_make_node = method(self, ...): a child node at dir * 90 degrees, dist away.
 t = re.sub(r"this\.fnc_make_node = S\.method\([^;]*\);",

@@ -4,12 +4,12 @@ import {
   global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instance_number, withObj, random, button1_p, button2_h, string_length, string_char_at,
   string_insert, string_delete, draw_set_font, draw_set_color, draw_get_color, draw_set_alpha, draw_text,
-  draw_text_transformed, draw_text_color, draw_rectangle, draw_sprite_ext, draw_self, button3_h, instancesOf,
-} from '../runtime/gm.js?v=20261115230517';
-import { snd_play, snd_stop, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261115230517';
+  draw_text_transformed, draw_text_color, draw_rectangle, draw_sprite_ext, draw_self, button3_h, instancesOf, bgr,
+} from '../runtime/gm.js?v=20261116000937';
+import { snd_play, snd_stop, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261116000937';
 
 const sin = Math.sin;
-import { fontName, splitCaller, view_x, view_y } from './common.js?v=20261115230517';
+import { fontName, splitCaller, view_x, view_y } from './common.js?v=20261116000937';
 
 // Text sounds that exist in this build; the others are silent.
 const TEXTSND = {
@@ -18,7 +18,7 @@ const TEXTSND = {
 };
 // Tenna's voice: one of nine takes at a random pitch (scr_textsound, Chapter 3).
 const TV_VOICES = ['snd_tv_voice_short', ...[2, 3, 4, 5, 6, 7, 8, 9].map(n => 'snd_tv_voice_short_' + n)];
-import { G } from '../runtime/gm.js?v=20261115230517';
+import { G } from '../runtime/gm.js?v=20261116000937';
 const tsnd = n => TEXTSND[n] ?? null;
 
 // scr_textsetup(font, color, x, y, charline, shake, rate, sound, hspace, vspace, special)
@@ -49,6 +49,8 @@ function scr_texttype(w) {
     case 4: set(F('mainbig'), W, y, 33, 0, 1, 'snd_text', 16, 28, 1); break;
     case 5: set(F('main'), W, y, 33, 0, 1, 'snd_text', 8, 18, 0); break;
     case 6: set(F('mainbig'), W, y, 33, 0, 1, 'snd_text', 16, 36, 1); break;
+    case 93: set(F('mainbig'), bgr(8891647), y, 33, 0, 1, 'snd_text', 16, 36, 1); break; // Orange
+    case 97: set(F('mainbig'), W, y, 33, 0, 1, 'snd_text', 16, 36, 1); break; // Pink
     case 7: case 8: set(F('main'), W, y, 33, 0, global.typer == 8 ? 2 : 1, 'snd_txttor', 8, 18, 0); break;
     case 10: case 11: set(F('main'), W, y, 33, 0, 1, 'snd_txtsus', 8, 18, 0); break;
     case 12: set(F('main'), W, y, 33, 0, 1, 'snd_txtnoe', 8, 18, 0); break;
@@ -161,7 +163,9 @@ const feOf = c => {
   return null;
 };
 const FC = { 0: 0, S: 1, R: 2, N: 3, T: 4, L: 5, A: 10, a: 11, B: 12, r: 15, u: 18, K: 20 };
-const XCOLOR = { R: 0xff0000, B: 0x0000ff, Y: 0xffff00, G: 0x00ff00, W: 0xffffff, X: 0x000000 };
+// (Chapter 5 adds P, M, a, y, g, o, p, b: the game's BGR values converted)
+const XCOLOR = { R: 0xff0000, B: 0x0000ff, Y: 0xffff00, G: 0x00ff00, W: 0xffffff, X: 0x000000,
+  P: bgr(8388736), M: bgr(128), a: bgr(16775556), y: bgr(10615039), g: bgr(12386222), o: bgr(8891647), p: 0xff8a90, b: bgr(16754566) };
 
 export class Writer extends Instance {
   create() {
@@ -314,6 +318,8 @@ export class Writer extends Instance {
       if (skip == 0) {
         if (thischar == ' ') { remspace = i; remchar = charpos; }
         if (thischar == '*') this.aster = 1;
+        // Chapter 5: Pink's lines (typer 97) stop short of her portrait.
+        if (global.typer == 97) this.charline = 23;
         if (charpos >= this.charline) {
           if (remspace > 2) {
             this.mystring = string_delete(this.mystring, remspace, 1);
@@ -372,6 +378,7 @@ export class Writer extends Instance {
       this.alarm[0] = -1;
       this.alarm[1] = -1;
     }
+    let drawaster = 1;
     for (let n = 1; n < this.pos; n++) {
       let accept = 1;
       const mychar = string_char_at(this.mystring, n);
@@ -407,6 +414,12 @@ export class Writer extends Instance {
           }
         }
         if (nextchar == 'T') this.typerCode(nextchar2);
+        // \m<n> (Chapter 5): a mini face (global.writerimg[n]) left of the line, talking while it types.
+        if (nextchar == 'm' && global.writerimg?.[nextchar2]) {
+          drawaster = 0; // (the line's "*" is not drawn next to a mini face)
+          const talking = this.pos <= this.length && this.halt == 0;
+          draw_sprite_ext(global.writerimg[nextchar2], talking ? Math.floor(this.siner / 4) : 0, this.writingx - 8, wy - 4, 2, 2, 0, this.mycolor, 1);
+        }
         if (nextchar == 's') {
           if (nextchar2 == '0') this.skippable = 0;
           if (nextchar2 == '1') this.skippable = 1;
@@ -431,7 +444,7 @@ export class Writer extends Instance {
         accept = 0;
         n += 2;
       }
-      if (accept == 1) this.drawChar(mychar, wx, wy, n);
+      if (accept == 1 && !(drawaster === 0 && mychar == '*')) this.drawChar(mychar, wx, wy, n);
       if (accept == 1) wx += this.hspace;
     }
     if (this.halt != 0 && button1 == 1 && this.siner > 0) {
@@ -506,12 +519,13 @@ export class Writer extends Instance {
       0: () => (global.darkzone == 1 ? (global.fighting == 1 ? 4 : 6) : 5), 1: 2, A: 18, a: 20, N: 12, n: 23, B: 13,
       S: () => (global.darkzone == 1 ? (global.fighting == 1 ? 47 : 30) : 10),
       R: () => (global.flag[30] == 1 ? 6 : global.fighting == 1 ? 45 : 31),
-      L: () => (global.fighting == 1 ? 46 : 32), X: 40, r: 55, T: 7, J: 35,
+      L: () => (global.fighting == 1 ? 46 : 32), X: 40, r: 55, T: 7, J: 35, P: 97, 7: 93,
       K: () => (global.fighting == 1 ? 48 : global.plot < 235 ? 36 : 33),
     };
     if (!(c in T)) return;
     const v = T[c];
     global.typer = typeof v === 'function' ? v() : v;
+    if (c == 'P') global.fe = 0;
     scr_texttype(this);
     if (this.dialoguer == 1) {
       if (global.fc == 0) this.charline = this.originalcharline;
@@ -717,6 +731,9 @@ defineScript('scr_speaker', (name) => {
     global.typer = global.fighting == 1 ? 45 : 31;
   }
   if (name == 'tenna') global.typer = global.fighting == 1 ? 81 : 80;
+  // Chapter 5: Pink (her own portrait, obj_pinkspeaker, shows her face) and Orange (a mini face).
+  if (name == 'pink') { global.typer = 97; global.fe = 0; }
+  if (name == 'orange') global.typer = 93;
   if (name == 'undyne' || name == 'und') {
     global.typer = 17;
     global.fc = 9;
@@ -733,6 +750,8 @@ defineScript('scr_anyface', (speaker, no, emotion) => {
   if (sp == 'susie' || sp == 'sus') global.msg[no] = BS + 'TX ' + BS + 'F0 ' + BS + 'E' + e + ' ' + BS + 'FS ' + BS + 'TS %';
   if (sp == 'ralsei' || sp == 'ral') global.msg[no] = BS + 'TX ' + BS + 'F0 ' + BS + 'E' + e + ' ' + BS + 'FR ' + BS + 'TR %';
   if (sp == 'none' || sp == 'x' || sp == 'no name' || sp == 'no_name') global.msg[no] = BS + 'TX ' + BS + 'F0 ' + BS + 'T0 %';
+  if (sp == 'pink') global.msg[no] = BS + 'TX ' + BS + 'F0 ' + BS + 'TP %';
+  if (sp == 'orange') global.msg[no] = BS + 'TX ' + BS + 'F0 ' + BS + 'T7 %';
 });
 defineScript('scr_anyface_next', (speaker, emotion) => {
   global.msgno = (global.msgno ?? 0) + 1;

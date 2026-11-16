@@ -1,7 +1,8 @@
-"""Render the room the Gerson scenes take place in (tile layers, asset sprites and background
+"""Render the room Pink's encounter scene takes place in (tile layers, asset sprites and background
 layers, as GameMaker draws them at room start) to PNGs in assets/rooms/.
 
-Usage: python -I tools/render_rooms.py --game "D:/Steam/steamapps/common/DELTARUNE" --out assets [--chapter 4]
+Usage: python -I tools/render_rooms.py --game "D:/Steam/steamapps/common/DELTARUNE" --out assets [--chapter 5]
+The CUT_ and DEBUG_ layers (scene markers the room hides at start) are left out.
 """
 import argparse, os, struct, sys
 
@@ -9,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from datawin import DataWin, write_png, scale_nearest  # noqa: E402
 
 # room name -> rendered height (the scenes never move the camera below it)
-ROOMS = {"room_dw_church_arena": 480}
+ROOMS = {"room_dw_pink_encounter": 480}
 
 TILE_INDEX, TILE_MIRROR, TILE_FLIP, TILE_ROTATE = 0x7FFFF, 0x10000000, 0x20000000, 0x40000000
 
@@ -101,6 +102,8 @@ def render(d, room_index, height):
     for lp in d.ptrlist(d.u32(p + 88)):
         if not d.u32(lp + 32):  # invisible
             continue
+        if d.str(d.u32(lp)).startswith(("CUT", "DEBUG")):  # turnofflayers("CUT") / ("DEBUG")
+            continue
         layers.append((d.i32(lp + 12), lp))
     for _depth, lp in sorted(layers, key=lambda t: -t[0]):  # far (high depth) first
         typ, q = d.u32(lp + 8), lp + 48
@@ -149,7 +152,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--game", required=True)
     ap.add_argument("--out", default="assets")
-    ap.add_argument("--chapter", default="4")
+    ap.add_argument("--chapter", default="5")
     a = ap.parse_args()
     d = DataWin(os.path.join(a.game, "chapter%s_windows" % a.chapter, "data.win"))
     names = [d.str(d.u32(p)) for p in d.chunk_list("ROOM")]

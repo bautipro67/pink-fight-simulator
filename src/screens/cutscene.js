@@ -2,19 +2,66 @@
 // and its c_* commands (scr_cutscene_commands, including c_wait_if, c_wait_box, c_delaycmd,
 // c_animate and c_script_instance), obj_actor, the movers (obj_move_actor, obj_move_to_point), the
 // camera (obj_panner), obj_dialoguer, obj_animator, obj_cutscene_delaycmd and Kris (obj_mainchara).
-// Ported from the Spamton NEO simulator's copy (Chapter 2) and checked against Chapter 3.
+// Ported from the Spamton NEO simulator's copy (Chapter 2) and checked against Chapter 3; the Gerson
+// scenes add the Chapter 4 obj_jump_to_point (with its sprites), scr_emote, c_shake, c_facenext,
+// c_panobj, c_customfunc and the rooms (pre-rendered by tools/render_rooms.py). Pink's encounter
+// (Chapter 5) adds c_msgstay (obj_writer_stay), the message commands (c_msgcmd, c_spritenext...: run
+// when the dialogue reaches their message, obj_cutscene_messagecmd), c_autofacing, c_shaketarget and
+// c_step_func.
 import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists, instancesOf,
   draw_sprite_ext, draw_set_color, draw_rectangle, lerp, point_distance, point_direction, lengthdir_x, lengthdir_y,
   clamp, left_h, right_h, up_h, down_h, button2_h, sprite_get_width, sprite_get_height, sprite_get_xoffset,
-  sprite_get_yoffset,
-} from '../runtime/gm.js?v=20261115230517';
+  sprite_get_yoffset, sprite_get_number, button1_p, withObj, draw_set_font, draw_text, string_width,
+  string_hash_to_newline,
+} from '../runtime/gm.js?v=20261116000937';
 import {
   snd_play, snd_pitch, snd_volume, snd_init, snd_loop, snd_stop, snd_free_all, mus_loop_ext, mus_volume, mus_stop,
   mus_pause, mus_resume,
-} from '../runtime/audio.js?v=20261115230517';
-import { scr_darkbox } from './common.js?v=20261115230517';
-import { scr_lerpvar_instance, scr_shakeobj, scr_script_repeat } from '../pink/common.js?v=20261115230517';
+} from '../runtime/audio.js?v=20261116000937';
+import { assets } from '../runtime/assets.js?v=20261116000937';
+import { scr_darkbox } from './common.js?v=20261116000937';
+import { scr_lerpvar_instance, scr_shakeobj, scr_script_repeat } from '../pink/common.js?v=20261116000937';
+
+// ---------------------------------------------------------------- rooms
+
+const VERSION = new URL(import.meta.url).search;
+const ROOMS_URL = new URL('../../assets/rooms/', import.meta.url).href;
+
+// Each room is one picture (its tile, asset and background layers); it is registered as a sprite.
+// A failed download is not remembered: it is tried again (once here, and on the next call).
+const roomLoads = {};
+export function loadRoom(name, tries = 2) {
+  roomLoads[name] ??= new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      assets.sprites['room:' + name] = { name: 'room:' + name, w: img.width, h: img.height, n: 1, c: 1, img, ox: 0, oy: 0, sp: 0 };
+      resolve(img);
+    };
+    img.onerror = () => reject(new Error('failed to load room ' + name));
+    img.src = ROOMS_URL + name + '.png' + VERSION;
+  }).catch(e => {
+    delete roomLoads[name];
+    if (tries > 1) return new Promise(r => setTimeout(r, 500)).then(() => loadRoom(name, tries - 1));
+    throw e;
+  });
+  return roomLoads[name];
+}
+
+class RoomBg extends Instance {
+  create() { this.depth = 1000000; this.room = ''; }
+  draw() { draw_sprite_ext('room:' + this.room, 0, 0, 0, 1, 1, 0, 0xffffff, 1); }
+}
+defineObject('obj_sim_roombg', RoomBg);
+
+// The room the scene plays in: its size (for the camera) and its picture behind everything.
+export function enterRoom(name, w, h) {
+  G.roomW = w;
+  G.roomH = h;
+  const r = instance_create(0, 0, 'obj_sim_roombg');
+  r.room = name;
+  return r;
+}
 
 // ---------------------------------------------------------------- helpers
 
@@ -40,11 +87,15 @@ export function scr_flip(inst, axis) {
 const FACING = {
   kris: ['spr_krisu_dark', 'spr_krisr_dark', 'spr_krisd_dark', 'spr_krisl_dark'],
   susie: ['spr_susie_walk_up_dw', 'spr_susie_walk_right_dw', 'spr_susie_walk_down_dw', 'spr_susie_walk_left_dw'], // "susiedarkeyes"
+  susiedarkeyes: ['spr_susie_walk_up_dw', 'spr_susie_walk_right_dw', 'spr_susie_walk_down_dw', 'spr_susie_walk_left_dw'],
   susieunhappy: ['spr_susie_walk_up_dw', 'spr_susie_walk_right_dw_unhappy', 'spr_susie_walk_down_dw_unhappy', 'spr_susie_walk_left_dw_unhappy'],
   ralsei: ['spr_ralsei_walk_up', 'spr_ralsei_walk_right', 'spr_ralsei_walk_down', 'spr_ralsei_walk_left'],
   ralseiunhappy: ['spr_ralsei_walk_up', 'spr_ralsei_walk_right_unhappy', 'spr_ralsei_walk_down_unhappy', 'spr_ralsei_walk_left_unhappy'],
+  // Chapter 5 (Pink's encounter)
+  orange: ['spr_enemy_orange_walk_up', 'spr_enemy_orange_walk_right', 'spr_enemy_orange_walk_down', 'spr_enemy_orange_walk_left'],
+  pink: ['spr_pink_walk_up', 'spr_pink_walk_right', 'spr_pink_walk_down', 'spr_pink_walk_left'],
 };
-const NAME_OF = { susieunhappy: 'susie', ralseiunhappy: 'ralsei' };
+const NAME_OF = { susieunhappy: 'susie', susiedarkeyes: 'susie', ralseiunhappy: 'ralsei' };
 export function setFacingSprites(a, name) {
   const s = FACING[name];
   if (!s) return;
@@ -90,6 +141,8 @@ export class Actor extends Instance {
       if (Math.abs(vh) > Math.abs(vv) && vh < -0.05) this.sprite_index = this.lsprite;
     }
     if (this.auto_depth === 1) { scr_depth(this); this.depth += this.depthbonus; }
+    // Chapter 5: c_step_func (runs as the actor)
+    if (typeof this.step_func === 'function') this.step_func.call(this);
   }
   draw() {
     draw_sprite_ext(this.sprite_index, this.image_index, this.x + this.sinerx + this.shakex, this.y + this.sinery + this.shakey,
@@ -146,6 +199,113 @@ export function moveToPoint(target, x, y, time) {
   const m = instance_create(target.x, target.y, 'obj_move_to_point');
   Object.assign(m, { target, movex: x, movey: y, movemax: time });
   return m;
+}
+
+// c_jump / scr_jump_to_point(_sprite) (obj_jump_to_point, Chapter 4): an arc from where the target
+// is to (endx, endy). The target hides while a marker does the jump; with sprites, the marker shows
+// the landing sprite for 5 frames, jumps with the jump sprite, then lands for 5 more.
+class JumpToPoint extends Instance {
+  create() {
+    Object.assign(this, {
+      target: null, body: null, init: 0, jumptime: 30, jumpspeed: 0, jumpy: 0, timer: 0, con: 0, usesprites: 0,
+      jumpsprite: 0, landsprite: 0, usespritestimer: 0, ignoredepth: 0,
+    });
+    this.startx = this.endx = this.x;
+    this.starty = this.endy = this.y;
+  }
+  step() {
+    const t = this.target;
+    if (!t || !t.alive) { instance_destroy(this); return; }
+    if (this.init === 0) {
+      this.init = 1;
+      this.fakegravity = this.jumpspeed / (this.jumptime * 0.5);
+      const b = S.scr_dark_marker(t.x, t.y, t.sprite_index);
+      Object.assign(b, { image_index: t.image_index, image_speed: t.image_speed, image_xscale: t.image_xscale, image_yscale: t.image_yscale, depth: t.depth });
+      this.body = b;
+      const rem = b.depth;
+      scr_depth(b);
+      if (rem !== b.depth) this.ignoredepth = 1;
+      b.depth = rem;
+      t.visible = false;
+      if (this.usesprites === 1) {
+        this.usespritestimer = 0;
+        if (this.landsprite) Object.assign(b, { sprite_index: this.landsprite, image_speed: 0, image_index: 0 });
+        this.con = 1;
+      } else this.con = 2;
+    }
+    const b = this.body;
+    if (this.con === 1) {
+      this.usespritestimer += 1;
+      if (this.usespritestimer >= 5) {
+        b.sprite_index = this.jumpsprite;
+        b.image_speed = 0.25;
+        this.con = 2;
+      }
+    }
+    if (this.con === 2) {
+      this.timer += 1;
+      this.jumpspeed -= this.fakegravity;
+      this.jumpy -= this.jumpspeed;
+      this.x = lerp(this.startx, this.endx, this.timer / this.jumptime);
+      this.y = lerp(this.starty, this.endy, this.timer / this.jumptime);
+      t.x = this.x;
+      t.y = this.y;
+      b.x = this.x;
+      b.y = this.y + this.jumpy;
+      if (this.ignoredepth === 0) {
+        scr_depth(this);
+        this.depth -= 5000;
+        b.depth = this.depth;
+      }
+      if (this.timer >= this.jumptime) {
+        b.x = t.x = this.endx;
+        b.y = t.y = this.endy;
+        this.con = 3;
+        this.usespritestimer = 0;
+      }
+    }
+    if (this.con === 3) {
+      if (this.usesprites === 1) {
+        b.sprite_index = this.landsprite;
+        this.usespritestimer += 1;
+      } else this.usespritestimer = 10;
+      if (this.usespritestimer >= 5) {
+        t.visible = true;
+        instance_destroy(b);
+        instance_destroy(this);
+      }
+    }
+  }
+  draw() {}
+}
+defineObject('obj_jump_to_point', JumpToPoint);
+
+// scr_jump_to_point_sprite(x, y, speed, time, jumpsprite, landsprite) on `inst`.
+export function scr_jump_to_point_sprite(inst, x, y, jumpspeed, jumptime, jumpsprite, landsprite) {
+  const j = instance_create(inst.x, inst.y, 'obj_jump_to_point');
+  Object.assign(j, { target: inst, endx: x, endy: y, jumpspeed, jumptime, jumpsprite, landsprite, usesprites: jumpsprite ? 1 : 0 });
+  return j;
+}
+
+// scr_emote(kind, time, xoff, yoff): a bubble over the actor's head for `time` frames (Chapter 4).
+class ExcBlcon extends Instance {
+  alarm0() { instance_destroy(this); }
+}
+defineObject('obj_excblcon', ExcBlcon);
+export function scr_emote(a, kind = '!', time = 30, xoff, yoff = 0) {
+  const d = 2; // 1 + global.darkzone
+  const b = instance_create(a.x, a.y - 15, 'obj_excblcon');
+  b.alarm[0] = time;
+  b.image_xscale = b.image_yscale = d;
+  b.image_speed = 0;
+  b.sprite_index = { '!': 'spr_exc', '?': 'spr_emote_questionmark', '...': 'spr_emote_ellipsis' }[kind] ?? 'spr_exc';
+  b.y = a.y - 10 * d + yoff;
+  const xo = xoff === undefined || xoff === 0 ? 10 * d : xoff;
+  const anchor = sprite_get_xoffset(a.sprite_index), sw = a.sprite_width, bw = b.sprite_width;
+  if (a.image_xscale > 0) b.x = a.x - anchor * a.image_xscale + sw / 2 - bw / 2 + xo;
+  else b.x = a.x + anchor * a.image_xscale - sw / 2 * -1 - bw / 2 + xo;
+  b.depth = a.depth - 10;
+  return b;
 }
 
 // scr_animate (obj_animator): plays target frames initframe..endframe at fake_image_speed.
@@ -211,13 +371,16 @@ class Dialoguer extends Instance {
     this.face = null;
     this.cur_jewel = 0;
     this.zurasu = 0;
+    this.stay = 0;
     this.remx = G.camX;
     this.remy = G.camY;
     const k = first('obj_mainchara');
     if (k && k.y > G.camY + 250) this.side = 0;
     this.alarm[0] = 1;
   }
-  alarm0() {
+  alarm0() { this.user0(); }
+  // Other_10: a new writer and face for global.msg (also after a choice, from obj_choicer_neo).
+  user0() {
     this.active = 1;
     const xx = Math.round(38 + G.camX), yy = Math.round(40 + G.camY);
     const w = instance_create(xx + 20, this.side === 0 ? yy - 10 : yy + 300, 'obj_writer');
@@ -256,11 +419,169 @@ class Dialoguer extends Instance {
       draw_rectangle(x + 38, y + 326, x + 602, y + 464, false);
       scr_darkbox(this, x + 24, y + 312, x + 616, y + 478);
     }
-    if (!this.writer || !this.writer.alive) instance_destroy(this);
+    if (!this.writer || !this.writer.alive) {
+      // c_msgstay: the empty box stays a few frames (obj_writer_stay).
+      if (this.stay > 0) Object.assign(instance_create(0, 0, 'obj_writer_stay'), { side: this.side, doom: this.stay, depth: this.depth + 1 });
+      instance_destroy(this);
+    }
   }
 }
 defineObject('obj_dialoguer', Dialoguer);
+
+// obj_writer_stay: the dialogue box without text, for `doom` frames after it closes.
+class WriterStay extends Instance {
+  create() { this.side = 1; this.doom = 1; this.cur_jewel = 0; }
+  step() { if (--this.doom <= 0) instance_destroy(this); }
+  draw() {
+    const x = G.camX, y = G.camY;
+    draw_set_color(0);
+    if (this.side === 0) {
+      draw_rectangle(x + 38, y + 16, x + 602, y + 154, false);
+      scr_darkbox(this, x + 24, y + 2, x + 616, y + 168);
+    } else {
+      draw_rectangle(x + 38, y + 326, x + 602, y + 464, false);
+      scr_darkbox(this, x + 24, y + 312, x + 616, y + 478);
+    }
+  }
+}
+defineObject('obj_writer_stay', WriterStay);
 export const d_ex = () => instance_exists('obj_dialoguer');
+
+// scr_text(global.msc): the game's numbered conversations. Only the ones the scenes reach are
+// registered (registerText), under the game's numbers.
+const TEXTS = new Map();
+export function registerText(n, fn) { TEXTS.set(n, fn); }
+defineScript('scr_text', n => { TEXTS.get(n)?.(); });
+
+// ---------------------------------------------------------------- obj_choicer_neo
+
+// The choice box a writer opens with \C2 - \C4 (the dark world's style): up to four options from
+// global.choicemsg (0 left, 1 right, 2 up, 3 down), the small SOUL beside the one picked. Confirming
+// sets global.choice, and the dialoguer goes on with scr_text(global.msc + 1).
+class ChoicerNeo extends Instance {
+  create() {
+    this.alarm[1] = 3;
+    this.canchoose = 0;
+    this.dar = (global.darkzone ?? 1) + 1;
+    global.flag[33] = 0;
+    this.fighting = global.fighting == 1 && instance_exists('obj_battlecontroller') ? 1 : 0;
+    this.image_xscale = this.image_yscale = this.dar;
+    this.remfc = global.fc;
+    global.fc = 0;
+    this.xx = G.camX;
+    this.yy = G.camY;
+    const dl = first('obj_dialoguer');
+    let d = dl ? dl.side : -1;
+    if (this.fighting == 1) d = 1;
+    this.d_add = 0;
+    if (d == -1) {
+      const k = first('obj_mainchara');
+      if (k && k.y <= G.camY + 130 * this.dar) this.d_add = 155;
+    } else if (d != 0) this.d_add = 155;
+    // (depth 0 in the game, where it draws over the box because it is created after it)
+    this.depth = dl ? dl.depth - 5 : -600;
+    this.chx = 140 * this.dar + this.xx;
+    this.chy = (36 + this.d_add) * this.dar + this.yy + this.fighting * 30;
+    this.hx = this.chx;
+    this.hy = this.chy;
+    this.mychoice = -1;
+    global.choice = -1;
+    this.choiced = 0;
+    this.choicetotal = 3;
+    this.textposx = [0, 0, 0, 0];
+    this.textposy = [0, 0, 0, 0];
+    this.heartposx = [0, 0, 0, 0];
+    this.heartposy = [0, 0, 0, 0];
+    this.heartSprite = 'spr_heartsmall';
+  }
+  alarm1() {
+    this.canchoose = 1;
+    if (global.darkzone == 1 && this.choicetotal == 2) {
+      this.hy += 39;
+      this.hx += 31;
+    }
+  }
+  step() {
+    global.flag[33] = (global.flag[33] ?? 0) + 1;
+    if (!this.textinit) {
+      if (this.choicetotal == 1) this.yy -= global.darkzone == 1 ? 3 : 2;
+      this.textinit = 1;
+    }
+    if (this.canchoose == 1) {
+      if (this.mychoice >= 0 && button1_p()) this.user0();
+      if (this.choiced == 0) {
+        if (left_h()) this.mychoice = 0;
+        if (this.choicetotal >= 1 && right_h()) this.mychoice = 1;
+        if (this.choicetotal >= 2 && up_h()) this.mychoice = 2;
+        if (this.choicetotal >= 3 && down_h()) this.mychoice = 3;
+      }
+    }
+    draw_set_font(this.dar == 1 ? 'fnt_main' : 'fnt_mainbig');
+    const dar = this.dar, xx = this.xx, yy = this.yy, row = this.d_add, fy = this.fighting * 30;
+    const msg = i => string_hash_to_newline(global.choicemsg?.[i] ?? '');
+    const hx = this.heartposx, hy = this.heartposy, tx = this.textposx, ty = this.textposy;
+    hx[0] = xx + 30 * dar;
+    hy[0] = yy + (34 + row) * dar + fy;
+    tx[0] = hx[0] + 16 * dar;
+    ty[0] = yy + (13 + row) * dar + fy;
+    if (this.choicetotal >= 1) {
+      hx[1] = xx + 276 * dar - string_width(msg(1));
+      hy[1] = yy + (34 + row) * dar + fy;
+      tx[1] = hx[1] + 16 * dar;
+      ty[1] = yy + (13 + row) * dar + fy;
+    }
+    if (this.choicetotal >= 2) {
+      const msg0right = hx[0] + 16 * dar + string_width(msg(0)), msg1left = hx[1];
+      let msg2width = string_width(msg(2)) + 16 * dar;
+      if (this.choicetotal == 3) msg2width = Math.max(msg2width, string_width(msg(3)) + 16 * dar);
+      hx[2] = msg0right + (msg1left - msg0right) / 2 - msg2width / 2;
+      hy[2] = yy + (16 + row) * dar + fy;
+      tx[2] = hx[2] + 16 * dar;
+      ty[2] = yy + (13 + row) * dar + fy;
+    }
+    if (this.choicetotal >= 3) {
+      hx[3] = hx[2];
+      hy[3] = yy + (60 + row) * dar + fy;
+      tx[3] = hx[3] + 16 * dar;
+      ty[3] = yy + (56 + row) * dar + fy;
+    }
+    if (this.mychoice >= 0) {
+      this.hx = hx[this.mychoice];
+      this.hy = hy[this.mychoice];
+    }
+  }
+  // Other_10
+  user0() {
+    if (this.canchoose == 1 && this.choiced == 0) {
+      this.choiced = 1;
+      global.choice = this.mychoice;
+      this.alarm[0] = 1;
+    }
+  }
+  alarm0() {
+    const dl = first('obj_dialoguer');
+    if (dl) {
+      withObj('obj_face', f => instance_destroy(f));
+      if (dl.writer && dl.writer.alive) instance_destroy(dl.writer);
+      global.fc = this.remfc;
+      global.msc = (global.msc ?? 0) + 1;
+      S.scr_text(global.msc);
+      dl.user0();
+    }
+    if (this.fighting == 1) withObj('obj_writer', w => instance_destroy(w));
+    instance_destroy(this);
+  }
+  draw() {
+    if (this.canchoose != 1) return;
+    draw_set_font(this.dar == 1 ? 'fnt_main' : 'fnt_mainbig');
+    for (let i = 0; i < this.choicetotal + 1; i++) {
+      draw_set_color(this.mychoice == i ? 0xffff00 : 0xffffff);
+      draw_text(this.textposx[i], this.textposy[i], string_hash_to_newline(global.choicemsg?.[i] ?? ''));
+    }
+    draw_sprite_ext(this.heartSprite, 0, this.hx, this.hy, this.image_xscale, this.image_yscale, 0, 0xffffff, 1);
+  }
+}
+defineObject('obj_choicer_neo', ChoicerNeo);
 
 // ---------------------------------------------------------------- obj_mainchara
 
@@ -332,7 +653,7 @@ class CutsceneMaster extends Instance {
     Object.assign(this, {
       cmd: [], current: 0, waiting: 0, wait_timer: 0, wait_amount: 0, wait_dialogue: 0, wait_custom: 0,
       wait_box: -1, wait_if: null, actor_id: [], actor_name: [], actor_selected_id: null, msgside: -1, zurasu: 0,
-      mydialoguer: null, master_object: null, terminate: 0, kill_actors: 0, breakme: 0, mysound: null,
+      mydialoguer: null, master_object: null, terminate: 0, kill_actors: 0, breakme: 0, mysound: null, stay: 0, msgcmd: null,
     });
     this.visible = false;
   }
@@ -378,7 +699,7 @@ class CutsceneMaster extends Instance {
       case 'delaycmd': {
         const d = instance_create(0, 0, 'obj_cutscene_delaycmd');
         d.alarm[0] = a1;
-        d.c = { name: a2, args: [a3, a4, a5, a6], actor };
+        d.c = { name: a2, args: [a3, a4, a5, a6 ?? 0, 0, 0], actor };
         break;
       }
       case 'walk': {
@@ -400,7 +721,22 @@ class CutsceneMaster extends Instance {
         this.mydialoguer = instance_create(0, 0, 'obj_dialoguer');
         if (this.msgside >= 0) this.mydialoguer.side = this.msgside;
         this.mydialoguer.zurasu = this.zurasu;
+        if (this.stay) this.mydialoguer.stay = this.stay;
+        this.stay = 0;
         break;
+      case 'msgstay': this.stay = a1; break;
+      // c_msgcmd and the *next commands: run when the dialogue reaches the message set before them.
+      case 'msgcmd': {
+        let mc = this.msgcmd;
+        if (!mc || !mc.alive) mc = this.msgcmd = instance_create(0, 0, 'obj_cutscene_messagecmd');
+        mc.master = this;
+        mc.list.push({ num: global.msgno ?? 0, c: { name: a1, args: [a2, a3, a4, a5, 0, 0], actor } });
+        break;
+      }
+      case 'autofacing': actor.auto_facing = a1; break;
+      case 'shaketarget': if (a1 && a1.alive) scr_shakeobj(a1); break;
+      // c_step_func: a function the actor runs every step (obj_actor / obj_marker step_func).
+      case 'stepfunc': if (actor) actor.step_func = a1; break;
       case 'msgside':
         if (a1 === 'any') this.msgside = -1;
         if (a1 === 'top') this.msgside = 0;
@@ -482,7 +818,25 @@ class CutsceneMaster extends Instance {
         } else if (a3 === 0) a2(a1, ...(a4 === undefined ? [] : [a4]));
         else scr_script_repeat(a1, a2, -1, a3, ...(a4 === undefined ? [] : [a4]));
         break;
-      case 'call': a1(...(a2 ?? [])); break; // the simulator's own hook (no GML command)
+      case 'call': a1(...(a2 ?? [])); break; // the simulator's own hook (no GML command); also c_customfunc
+      case 'emote': if (actor) scr_emote(actor, a1, a2, a3 === 0 ? undefined : a3, a4 === 0 ? undefined : a4); break;
+      case 'jump': {
+        const j = instance_create(actor.x, actor.y, 'obj_jump_to_point');
+        Object.assign(j, { target: actor, endx: a1, endy: a2, jumpspeed: a3, jumptime: a4 });
+        break;
+      }
+      case 'shake': instance_create(0, 0, 'obj_shake'); break;
+      case 'msgfacenext': S.scr_anyface_next(a1, a2); break;
+      // c_panobj (scr_pan_to_obj): centre the view on the object over `time` frames.
+      case 'panobj': {
+        const o = a1;
+        if (!o || !o.alive) break;
+        const px = clamp(o.x - Math.floor(320 - o.sprite_width / 2), 0, (G.roomW ?? 640) - 640);
+        const py = clamp(o.y - Math.floor(240 - o.sprite_height / 2), 0, (G.roomH ?? 480) - 480);
+        const p = instance_create(px, py, 'obj_panner');
+        Object.assign(p, { finalx: px, finaly: py, panmax: a2, type: 1 });
+        break;
+      }
       case 'waitcustom':
         if (this.master_object) this.master_object.customcon = 1;
         this.wait_custom = 1;
@@ -518,6 +872,22 @@ class CutsceneMaster extends Instance {
   }
 }
 defineObject('obj_cutscene_master', CutsceneMaster);
+
+// obj_cutscene_messagecmd: commands waiting for a message number of the running dialogue.
+class MessageCmd extends Instance {
+  create() { this.list = []; this.i = 0; this.visible = false; this.master = null; this.actor_id = []; this.actor_name = []; }
+  step() {
+    const dl = this.master?.mydialoguer;
+    const w = dl && dl.alive && dl.active === 1 ? dl.writer : null;
+    if (!w || !w.alive) return;
+    while (this.i < this.list.length && this.list[this.i].num === w.msgno) {
+      const e = this.list[this.i++];
+      if (!e.c.actor || e.c.actor.alive) CutsceneMaster.prototype.run.call(this, e.c);
+    }
+    if (this.i >= this.list.length) instance_destroy(this);
+  }
+}
+defineObject('obj_cutscene_messagecmd', MessageCmd);
 
 // obj_cutscene_delaycmd: one command, run on its own after a delay (c_delaycmd, c_delayfacing).
 class DelayCmd extends Instance {
@@ -598,11 +968,58 @@ export const c = {
   actortocaterpillar: () => cmd('actortocaterpillar'),
   terminatekillactors: () => cmd('terminatekillactors'),
   call: (fn, ...args) => cmd('call', fn, args),
+  customfunc: fn => cmd('call', fn, []),
+  jump: (x, y, sp, t) => cmd('jump', x, y, sp, t),
+  shake: () => cmd('shake'),
+  emote: (k = '!', t = 30, xo = 0, yo = 0) => cmd('emote', k, t, xo, yo),
+  facenext: (who, e) => cmd('msgfacenext', who, e),
+  panobj: (o, t) => cmd('panobj', o, t),
+  // c_delaycmd4(time, command, a, b, c)
+  delaycmd4: (t, name, a, b = 0, d = 0) => cmd('delaycmd', t, name, a, b, d, 0),
+  // Chapter 5
+  msgstay: n => cmd('msgstay', n),
+  msgcmd: (name, a = 0, b = 0, d = 0, e = 0) => cmd('msgcmd', name, a, b, d, e),
+  autofacing: v => cmd('autofacing', v),
+  shaketarget: o => cmd('shaketarget', o),
+  step_func: fn => cmd('stepfunc', fn),
+  sel_sprite: (n, s) => { cmd('select', n); cmd('sprite', s); },
+  sel_facing: (n, f) => { cmd('select', n); cmd('facing', f); },
+  spriteimage: (s, i, sp = -999) => {
+    cmd('sprite', s);
+    cmd('imageindex', i);
+    if (sp !== -999) { cmd('imagespeed', sp); if (sp === 0) cmd('autowalk', false); }
+  },
+  sel_spriteimage: (n, s, i, sp = -9999, aw = false) => {
+    cmd('select', n);
+    cmd('sprite', s);
+    cmd('imageindex', i);
+    if (sp !== -9999) { cmd('imagespeed', sp); if (!aw) cmd('autowalk', aw); }
+  },
+  spritenext: (s, i = -9999, sp = -9999) => {
+    cmd('msgcmd', 'sprite', s);
+    if (i !== -9999) cmd('msgcmd', 'imageindex', i);
+    if (sp !== -9999) cmd('msgcmd', 'imagespeed', sp);
+  },
+  sel_spritenext: (n, s, i = -9999, sp = -9999, aw = -1) => {
+    cmd('select', n);
+    c.spritenext(s, i, sp);
+    if (aw >= 0) cmd('msgcmd', 'autowalk', aw);
+  },
+  imagenext: i => cmd('msgcmd', 'imageindex', i),
+  msgvar_instance: (inst, v, val) => cmd('msgcmd', 'var', inst, v, val),
+  // c_msgsetsubloc(n, format, sub1, sub2..., id) / c_msgnextsubloc(format, subs..., id): ~1, ~2...
+  msgsetsubloc: (n, f, ...rest) => cmd('msgset', n, rest.slice(0, -1).reduce((t, v, k) => t.split('~' + (k + 1)).join(String(v)), String(f))),
+  msgnextsubloc: (f, ...rest) => cmd('msgnext', rest.slice(0, -1).reduce((t, v, k) => t.split('~' + (k + 1)).join(String(v)), String(f))),
 };
 // The c_* sound commands are all c_soundplay.
 c.sound_play = c.snd_play = c.soundplay;
 c.sound_play_x = c.snd_play_x = c.soundplay_x;
-c.lerp_var_instance = c.var_lerp_instance;
+c.lerp_var_instance = c.lerpvar_instance = c.var_lerp_instance;
+c.sndplay = c.soundplay;
+c.sndplay_x = c.soundplay_x;
+c.talkwait = c.talk_wait;
+c.waittalk = c.wait_talk;
+c.image_speed = c.imagespeed;
 
 // c_waitcustom_end: lets the commands after a c_waitcustom run.
 export function c_waitcustom_end() {

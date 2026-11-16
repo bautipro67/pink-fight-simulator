@@ -7,10 +7,11 @@ Play the Pink boss fight from **DELTARUNE Chapter 5** for free in your browser, 
 - Kris, Susie and Ralsei against Pink on her stage: FIGHT, ACT (Flirt, MegaFlirt, GigaFlirt, ShareFood, LovelyBoy), MAGIC (Chapter 5's spells, ReviveSong and Scythemare included), ITEM and DEFEND.
 - The **purple SOUL** on Pink's FELINE WEB, and every attack of hers: cats, bombs, her song, the rotating box, the 3D tunnel.
 - The **DOKI meter** and the **dates**, the GHOST and BODY split, and her final date.
+- **The scenes around the fight**: Kris, Susie and Ralsei checking on Orange, "PINK!", the 7 flowers that don't add up, and after the win her confession and goodbye (a different one for each setting of her bombs). A retry is the short version. SCENES in OPTIONS turns them off.
 - The battle logic is machine-translated from the original game's code, so it plays like the real fight.
 - **EQUIPMENT**: pick each character's weapon and armors from Chapter 5's gear (the TrueTie and a few others soften Pink's cat attacks) and the items you bring into the fight.
 - **Codes**: type a secret code in the Codes box under the game to unlock extras.
-- **OPTIONS**: volume, easy mode (half damage), **Pink's bombs** (the game's own difficulty: INTENDED, NICE for easier attacks, MEAN for harder ones), **SOUL hats** and **CONTROLS** to remap every button on keyboard and gamepad. Options are remembered in the browser.
+- **OPTIONS**: volume, easy mode (half damage), **scenes** on or off, **Pink's bombs** (the game's own difficulty: INTENDED, NICE for easier attacks, MEAN for harder ones), **SOUL hats** and **CONTROLS** to remap every button on keyboard and gamepad. Options are remembered in the browser.
 - **Pause** with Esc / P (Start on a gamepad): continue, restart, volume, quit to title.
 - Touch controls on phones and tablets, fullscreen button.
 

@@ -4,11 +4,11 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, room_reset, objectExists,
   font_add_sprite_ext,
-} from '../runtime/gm.js?v=20261115230517';
-import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261115230517';
-import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261115230517';
-import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261115230517';
-import { registerBackground } from './misc.js?v=20261115230517';
+} from '../runtime/gm.js?v=20261116000937';
+import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261116000937';
+import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261116000937';
+import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261116000937';
+import { registerBackground } from './misc.js?v=20261116000937';
 
 function scr_gamestart() {
   global.chapter = 3;
@@ -490,6 +490,8 @@ const KNIGHT_MARKER = { x: 440, y: 100, ystart: 100, index: 4, timer: 6 };
 
 // Starts a fresh Knight fight: opts.intro = false skips the encounter transition.
 export function startBattle(opts = {}) {
+  // Only a fight Pink's encounter started goes back to it after the win (src/pink/scene.js).
+  if (!opts.fromScene) G.pinkScene = null;
   const tempflag = global.tempflag ? global.tempflag.slice() : null;
   audio_stop_all();
   room_reset();
@@ -505,6 +507,8 @@ export function startBattle(opts = {}) {
   }
   instance_create(0, 0, 'obj_time');
   if (G.settings?.simplify) global.flag[8] = 1;
+  // From Pink's encounter scene (src/pink/scene.js): her room behind the encounter transition.
+  opts.onStart?.();
   // From the scene before the fight (src/knight/scenes.js): the party jumps from where they stood.
   const start = opts.introStart ?? INTRO_START;
   global.introx = start.map(p => p[0]);
