@@ -5,11 +5,11 @@ import {
   instance_number, withObj, random, button1_p, button2_h, string_length, string_char_at,
   string_insert, string_delete, draw_set_font, draw_set_color, draw_get_color, draw_set_alpha, draw_text,
   draw_text_transformed, draw_text_color, draw_rectangle, draw_sprite_ext, draw_self, button3_h, instancesOf, bgr,
-} from '../runtime/gm.js?v=20261116121953';
-import { snd_play, snd_stop, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261116121953';
+} from '../runtime/gm.js?v=20261116134227';
+import { snd_play, snd_stop, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261116134227';
 
 const sin = Math.sin;
-import { fontName, splitCaller, view_x, view_y } from './common.js?v=20261116121953';
+import { fontName, splitCaller, view_x, view_y } from './common.js?v=20261116134227';
 
 // Text sounds that exist in this build; the others are silent.
 const TEXTSND = {
@@ -18,7 +18,7 @@ const TEXTSND = {
 };
 // Tenna's voice: one of nine takes at a random pitch (scr_textsound, Chapter 3).
 const TV_VOICES = ['snd_tv_voice_short', ...[2, 3, 4, 5, 6, 7, 8, 9].map(n => 'snd_tv_voice_short_' + n)];
-import { G } from '../runtime/gm.js?v=20261116121953';
+import { G } from '../runtime/gm.js?v=20261116134227';
 const tsnd = n => TEXTSND[n] ?? null;
 
 // scr_textsetup(font, color, x, y, charline, shake, rate, sound, hspace, vspace, special)
@@ -122,6 +122,7 @@ function scr_textsound(w) {
         w.sound_timer = 3;
       } else snd_play(w.textsound);
       withObj('obj_face_parent', f => { f.mouthmove = 1; });
+      w.miniface_pos = (w.miniface_pos ?? 0) + 1; // (Chapter 5: a \m mini face moves with the text sounds)
     }
   }
 }
@@ -139,6 +140,8 @@ function scr_nextmsg(w) {
   w.formatted = 0;
   w.wxskip = 0;
   w.sound_played = 0;
+  w.miniface_pos = 0;
+  w.miniface_current_pos = -1;
   if (w.rate < 3) {
     w.firstnoise = 0;
     w.alarm[2] = 1;
@@ -416,11 +419,16 @@ export class Writer extends Instance {
           }
         }
         if (nextchar == 'T') this.typerCode(nextchar2);
-        // \m<n> (Chapter 5): a mini face (global.writerimg[n]) left of the line, talking while it types.
+        // \m<n> (Chapter 5): a mini face (global.writerimg[n]) left of the line; it moves one frame every
+        // four text sounds (miniface_pos, scr_textsound) and keeps the last one when the text stops.
         if (nextchar == 'm' && global.writerimg?.[nextchar2]) {
           drawaster = 0; // (the line's "*" is not drawn next to a mini face)
-          const talking = this.pos <= this.length && this.halt == 0;
-          draw_sprite_ext(global.writerimg[nextchar2], talking ? Math.floor(this.siner / 4) : 0, this.writingx - 8, wy - 4, 2, 2, 0, this.mycolor, 1);
+          let img = 0;
+          if (n >= (this.miniface_current_pos ?? -1)) {
+            img = (this.miniface_pos ?? 0) / 4;
+            this.miniface_current_pos = n;
+          }
+          draw_sprite_ext(global.writerimg[nextchar2], Math.floor(img), this.writingx - 8, wy - 4, 2, 2, 0, this.mycolor, 1);
         }
         if (nextchar == 's') {
           if (nextchar2 == '0') this.skippable = 0;

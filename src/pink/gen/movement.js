@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_circle, collision_point, defineObject, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, lerp, point_direction, random, sign, snd_play, snd_stop,
-} from '../rt.js?v=20261116121953';
+} from '../rt.js?v=20261116134227';
 import {
   i_ex, scr_approach, scr_get_box,
-} from '../common.js?v=20261116121953';
+} from '../common.js?v=20261116134227';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116121953';
+} from '../gml.js?v=20261116134227';
 
 // obj_pink_battlemovement (default sprite spr_pink_ball, depth 0)
 class PinkBattlemovement extends Instance {

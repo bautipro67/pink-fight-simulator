@@ -12,16 +12,16 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instancesOf, draw_sprite_ext, draw_sprite, lengthdir_x, lengthdir_y, sprite_get_xoffset, sprite_get_yoffset,
   sprite_get_width, sprite_get_height, sprite_get_number, choose, irandom, random,
-} from '../runtime/gm.js?v=20261116121953';
-import { snd_volume, snd_stop, audio_sound_set_track_position } from '../runtime/audio.js?v=20261116121953';
-import { loadMusic } from '../runtime/assets.js?v=20261116121953';
+} from '../runtime/gm.js?v=20261116134227';
+import { snd_volume, snd_stop, audio_sound_set_track_position } from '../runtime/audio.js?v=20261116134227';
+import { loadMusic } from '../runtime/assets.js?v=20261116134227';
 import {
   c, c_waitcustom_end, scr_cutscene_make, scr_actor_setup, scr_depth, loadRoom, enterRoom,
   scr_jump_to_point_sprite,
-} from '../screens/cutscene.js?v=20261116121953';
-import { scr_dark_marker, scr_marker, scr_lerpvar_instance, scr_var_delayed } from './common.js?v=20261116121953';
-import { startBattle } from '../battle/setup.js?v=20261116121953';
-import { gotoRoom } from '../screens/common.js?v=20261116121953';
+} from '../screens/cutscene.js?v=20261116134227';
+import { scr_dark_marker, scr_marker, scr_lerpvar_instance, scr_var_delayed } from './common.js?v=20261116134227';
+import { startBattle } from '../battle/setup.js?v=20261116134227';
+import { gotoRoom } from '../screens/common.js?v=20261116134227';
 
 export { scr_depth };
 
@@ -93,56 +93,83 @@ defineScript('snd_free', (s) => snd_stop(s));
 
 // ---------------------------------------------------------------- floor reflections
 
-// obj_castlereflect / obj_castlereflect_manager: the actors mirrored on the shiny floor. The game
-// renders them through a shader (fading with height) and adds them in two floor zones; here they are
-// a faint added mirror image in the same zones.
+// obj_castlereflect / obj_castlereflect_manager: the actors (and the flowerpots, add_reflection) mirrored
+// on the shiny floor, in the two obj_castlereflect zones. As the game draws them: each one upside down at
+// the manager's spot (with add_sprite_offset / substitute_sprite: Orange's yells sit lower, Pink's poses
+// have their own *_reflect sprites), through shd_castlereflect, which fades it out from 52 to 80 pixels
+// below pos_y (a little above the feet) at 0.6 of its alpha, then added to the floor by
+// shd_castlereflect_layerblend at 0.75 of that, with bm_add (0.75 again).
 const ZONES = [[80, 80, 480, 200], [0, 120, 80, 120]]; // obj_castlereflect at 80,80 (12x5) and 0,120 (2x3), spr_swordarea 40x40
+const FALLOFF = 160; // shadow_falloff
 class CastleReflect extends Instance {
-  create() { this.depth = 999990; this.extra = new Set(); this.cv = null; }
+  create() { this.depth = 999990; this.extra = new Set(); this.offsets = new Map(); this.subs = new Map(); this.cv = null; }
   draw() {
     const main = G.ctx;
     if (!main || typeof document === 'undefined') return;
     if (!this.cv) {
-      this.cv = document.createElement('canvas');
-      this.cv.width = 640;
-      this.cv.height = 480;
+      const make = () => { const c = document.createElement('canvas'); c.width = 640; c.height = 480; return c; };
+      this.cv = make();
       this.cx = this.cv.getContext('2d');
+      this.one = make();
+      this.ox = this.one.getContext('2d');
     }
-    const ctx = this.cx;
+    const ctx = this.cx, one = this.ox;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, 640, 480);
-    ctx.translate(-G.camX, -G.camY);
-    const list = [...instancesOf('obj_actor'), ...[...this.extra].filter(i => i.alive)];
-    G.ctx = ctx;
-    try {
-      for (const a of list) {
-        if (!a.visible || !a.sprite_index || a.image_alpha <= 0) continue;
-        const h = sprite_get_height(a.sprite_index), oy = sprite_get_yoffset(a.sprite_index);
-        if (!h) continue;
-        const ys = a.image_yscale ?? 2;
-        const y = a.y + 2 * (h - oy) * ys - 10 + (a.reflect_jump_y ?? 0);
-        draw_sprite_ext(a.sprite_index, a.image_index, a.x, y, a.image_xscale, -ys, 0, 0xffffff, 1);
+    // (back to front: the game's render queue takes the deepest first, and nearer ones cover them)
+    const list = [...instancesOf('obj_actor'), ...[...this.extra].filter(i => i.alive)]
+      .filter(a => a.visible && a.sprite_index && a.image_alpha > 0 && sprite_get_height(a.sprite_index))
+      .sort((a, b) => b.depth - a.depth);
+    for (const a of list) {
+      const xs = a.image_xscale ?? 1, ys = a.image_yscale ?? 1;
+      const sh = sprite_get_height(a.sprite_index) * ys, yoff = ys * sprite_get_yoffset(a.sprite_index);
+      let yOffset = a.y + sh * 2 - G.camY - yoff - 2, xOffset = 0, refl = a.reflect_jump_y ?? 0;
+      const off = this.offsets.get(a.sprite_index);
+      if (off) {
+        refl += off[0] * ys;
+        yOffset += off[1] * ys;
+        xOffset += off[2] * xs;
       }
-    } finally {
-      G.ctx = main;
+      const posY = yOffset + 8 - sh - 30;
+      one.setTransform(1, 0, 0, 1, 0, 0);
+      one.globalCompositeOperation = 'source-over';
+      one.clearRect(0, 0, 640, 480);
+      G.ctx = one;
+      try {
+        draw_sprite_ext(this.subs.get(a.sprite_index) ?? a.sprite_index, a.image_index, a.x - G.camX + xOffset,
+          yOffset + refl - 2 * yoff - 8, -xs, ys, 180 + (a.image_angle ?? 0), a.image_blend ?? 0xffffff, 1);
+      } finally {
+        G.ctx = main;
+      }
+      // alpha * (1 - clamp((y - pos_y) / (falloff / 2), 0.65, 1))
+      const g = one.createLinearGradient(0, posY + FALLOFF / 2 * 0.65, 0, posY + FALLOFF / 2);
+      g.addColorStop(0, 'rgba(0,0,0,0.35)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      one.globalCompositeOperation = 'destination-in';
+      one.fillStyle = g;
+      one.fillRect(0, 0, 640, 480);
+      ctx.drawImage(this.one, 0, 0);
     }
     main.save();
     main.beginPath();
     for (const [x, y, w, h] of ZONES) main.rect(x, y, w, h);
     main.clip();
     main.globalCompositeOperation = 'lighter';
-    main.globalAlpha = 0.22;
+    main.globalAlpha = 0.6 * 0.75 * 0.75;
     main.drawImage(this.cv, G.camX, G.camY);
     main.restore();
   }
 }
 defineObject('obj_castlereflect_manager', CastleReflect);
+const managers = () => instancesOf('obj_castlereflect_manager');
 defineScript('add_reflection', (inst) => {
   const o = typeof inst === 'number' ? G.instances.find(i => i.id === inst) : inst;
-  for (const m of instancesOf('obj_castlereflect_manager')) if (o) m.extra.add(o);
+  for (const m of managers()) if (o) m.extra.add(o);
 });
-defineScript('add_sprite_offset', () => {});
-defineScript('substitute_sprite', () => {});
+// add_sprite_offset(sprite, reflection y, y, x) / substitute_sprite(sprite, reflection sprite): sprite names
+// (tools/postfix.py names the numbers the scene passes).
+defineScript('add_sprite_offset', (spr, a, b, x = 0) => { for (const m of managers()) m.offsets.set(spr, [a, b, x ?? 0]); });
+defineScript('substitute_sprite', (spr, sub) => { for (const m of managers()) m.subs.set(spr, sub); });
 
 // ---------------------------------------------------------------- falling petals
 

@@ -2,19 +2,19 @@
 /* eslint-disable */
 import {
   Instance, S, defineObject, global, instance_create, instance_create_depth, irandom_range, keyboard_check, make_color_rgb, merge_color, random, random_range, snd_loop, snd_stop, snd_volume,
-} from '../rt.js?v=20261116121953';
+} from '../rt.js?v=20261116134227';
 import {
   camerax, cameray, i_ex, room_height, room_width, scr_dark_marker, scr_marker, scr_var_delayed,
-} from '../common.js?v=20261116121953';
+} from '../common.js?v=20261116134227';
 import {
   EXIT, LOOP, T, W,
-} from '../gml.js?v=20261116121953';
+} from '../gml.js?v=20261116134227';
 import {
   array_length,
-} from '../lib5.js?v=20261116121953';
+} from '../lib5.js?v=20261116134227';
 import {
   scr_depth,
-} from '../scene.js?v=20261116121953';
+} from '../scene.js?v=20261116134227';
 
 // obj_dw_pink_encounter (default sprite spr_eventsmall, depth 0)
 class DwPinkEncounter extends Instance {
@@ -107,18 +107,18 @@ class DwPinkEncounter extends Instance {
         this.init = 1;
         S.scr_miniface_init_flowers();
         if (W('obj_castlereflect_manager', function (other) {
-            S.add_sprite_offset(3610, 8, 0);
-            S.add_sprite_offset(8248, 8, 0);
-            S.add_sprite_offset(6065, 1, 0);
-            S.add_sprite_offset(7589, 1, 0);
-            S.add_sprite_offset(4110, 0, - 4);
-            S.substitute_sprite(4110, 6376);
-            S.add_sprite_offset(2942, 0, - 4);
-            S.substitute_sprite(2942, 8033);
-            S.add_sprite_offset(8394, 0, - 4);
-            S.substitute_sprite(8394, 2211);
-            S.add_sprite_offset(2581, 0, - 4);
-            S.substitute_sprite(2581, 5897);
+            S.add_sprite_offset('spr_orange_yell_left', 8, 0);
+            S.add_sprite_offset('spr_orange_cry_yell_right', 8, 0);
+            S.add_sprite_offset('spr_orange_lookup_r', 1, 0);
+            S.add_sprite_offset('spr_orange_stick_tongue_out', 1, 0);
+            S.add_sprite_offset('spr_pink_angle', 0, - 4);
+            S.substitute_sprite('spr_pink_angle', 'spr_pink_angle_reflect');
+            S.add_sprite_offset('spr_pink_wistful', 0, - 4);
+            S.substitute_sprite('spr_pink_wistful', 'spr_pink_wistful_reflect');
+            S.add_sprite_offset('spr_pink_yelling', 0, - 4);
+            S.substitute_sprite('spr_pink_yelling', 'spr_pink_yelling_reflect');
+            S.add_sprite_offset('spr_pink_yelling_r', 0, - 4);
+            S.substitute_sprite('spr_pink_yelling_r', 'spr_pink_yelling_r_reflect');
         }, this) === EXIT) return;
     }
     if (this.con == 0) {

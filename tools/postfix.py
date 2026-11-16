@@ -119,6 +119,9 @@ t = re.sub(r'\b(S\.c_(?:sprite|spritenext|spriteimage)\()(\d+)([,)])', lambda m:
 t = re.sub(r'\b(S\.c_(?:sel_sprite|sel_spriteimage|sel_spritenext)\(this\.\w+, )(\d+)([,)])', lambda m: m.group(1) + _spr(m.group(2)) + m.group(3), t)
 t = re.sub(r'\b(S\.c_msgcmd\("sprite", )(\d+)\)', lambda m: m.group(1) + _spr(m.group(2)) + ')', t)
 t = re.sub(r'\b(S\.c_(?:sound_play|snd_play|sndplay|sndplay_x|snd_play_x)\()(\d+)([,)])', lambda m: m.group(1) + _snd(m.group(2)) + m.group(3), t)
+# (the floor reflections' sprite offsets and substitute sprites, given as sprite numbers)
+t = re.sub(r'\b(S\.add_sprite_offset\()(\d+),', lambda m: m.group(1) + _spr(m.group(2)) + ',', t)
+t = re.sub(r'\b(S\.substitute_sprite\()(\d+), (\d+)\)', lambda m: '%s%s, %s)' % (m.group(1), _spr(m.group(2)), _spr(m.group(3))), t)
 t = re.sub(r'S\.method\(- ?1, this\.anon_gml_Object_obj_dw_pink_encounter_Step_0_(\d+)_gml_Object_obj_dw_pink_encounter_Step_0\)',
            r'S.pinkSceneFn(this, \1)', t)
 
