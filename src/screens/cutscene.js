@@ -14,14 +14,14 @@ import {
   clamp, left_h, right_h, up_h, down_h, button2_h, sprite_get_width, sprite_get_height, sprite_get_xoffset,
   sprite_get_yoffset, sprite_get_number, button1_p, withObj, draw_set_font, draw_text, string_width,
   string_hash_to_newline,
-} from '../runtime/gm.js?v=20261116000937';
+} from '../runtime/gm.js?v=20261116013041';
 import {
   snd_play, snd_pitch, snd_volume, snd_init, snd_loop, snd_stop, snd_free_all, mus_loop_ext, mus_volume, mus_stop,
   mus_pause, mus_resume,
-} from '../runtime/audio.js?v=20261116000937';
-import { assets } from '../runtime/assets.js?v=20261116000937';
-import { scr_darkbox } from './common.js?v=20261116000937';
-import { scr_lerpvar_instance, scr_shakeobj, scr_script_repeat } from '../pink/common.js?v=20261116000937';
+} from '../runtime/audio.js?v=20261116013041';
+import { assets } from '../runtime/assets.js?v=20261116013041';
+import { scr_darkbox } from './common.js?v=20261116013041';
+import { scr_lerpvar_instance, scr_shakeobj, scr_script_repeat } from '../pink/common.js?v=20261116013041';
 
 // ---------------------------------------------------------------- rooms
 
@@ -702,17 +702,22 @@ class CutsceneMaster extends Instance {
         d.c = { name: a2, args: [a3, a4, a5, a6 ?? 0, 0, 0], actor };
         break;
       }
+      // (GameMaker runs an instance made during the step event in that same step, so the movers count this
+      // frame too: c_walk(dir, sp, 15); c_wait(15); c_walk(...) then starts the second walk the frame the
+      // first one ends. Stepped a frame later, the first one would stop the second.)
       case 'walk': {
         const m = instance_create(0, 0, 'obj_move_actor');
         m.target = actor;
         m.time = a3;
         actor.speed = a2;
         actor.direction = { l: 180, d: 270, r: 0, u: 90 }[a1] ?? 0;
+        m.step();
         break;
       }
       case 'walkdirect': {
         const m = instance_create(0, 0, 'obj_move_to_point');
         Object.assign(m, { target: actor, movex: a1 === 0 ? actor.x : a1, movey: a2 === 0 ? actor.y : a2, movemax: a3 });
+        m.step();
         break;
       }
       case 'msgset': S.msgset(a1, a2); break;

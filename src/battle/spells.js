@@ -3,9 +3,9 @@ import {
   global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instance_find, withObj, event_user, random, ceil, round, merge_color, point_direction, point_distance,
   angle_difference, button1_p, draw_self, draw_sprite_ext, d3d_set_fog, instance_create_depth, instancesOf,
-} from '../runtime/gm.js?v=20261116000937';
-import { snd_play, snd_stop } from '../runtime/audio.js?v=20261116000937';
-import { withInst, subst } from './common.js?v=20261116000937';
+} from '../runtime/gm.js?v=20261116013041';
+import { snd_play, snd_stop } from '../runtime/audio.js?v=20261116013041';
+import { withInst, subst } from './common.js?v=20261116013041';
 
 const g = global;
 

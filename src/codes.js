@@ -1,5 +1,5 @@
 // The Codes box under the game (index.html #codeform): unlocks extras such as the TooHardSword.
-import { redeemCode } from './battle/equipment.js?v=20261116000937';
+import { redeemCode } from './battle/equipment.js?v=20261116013041';
 
 const form = document.getElementById('codeform');
 if (form) {

@@ -3,8 +3,8 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   draw_sprite_ext, d3d_set_fog, objectExists, lerp, make_color_hsv, merge_color, instancesOf,
-} from '../runtime/gm.js?v=20261116000937';
-import { splitCaller, draw_sprite_tiled_ext, knightEnemy } from './common.js?v=20261116000937';
+} from '../runtime/gm.js?v=20261116013041';
+import { splitCaller, draw_sprite_tiled_ext, knightEnemy } from './common.js?v=20261116013041';
 
 // Generic effect objects the Knight modules may also register (their Chapter 3 versions win).
 const shared = (name, cls) => { if (!objectExists(name)) defineObject(name, cls); };
