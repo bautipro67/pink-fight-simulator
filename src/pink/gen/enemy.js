@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   S, button3_p, choose, d3d_set_fog, defineObject, draw_set_alpha, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, keyboard_check_pressed, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, mus_loop_ext, mus_volume, random, random_range, snd_init, snd_loop, snd_play, snd_stop,
-} from '../rt.js?v=20261116145317';
+} from '../rt.js?v=20261116220235';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, scr_afterimage, scr_lerpvar, scr_script_delayed, scr_shakeobj, scr_shakescreen, scr_var, snd_play_x,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 
 // obj_pink_enemy (default sprite spr_pink_idle, depth 0, parent obj_monsterparent)
 class PinkEnemy extends P('obj_monsterparent') {
@@ -181,7 +181,7 @@ class PinkEnemy extends P('obj_monsterparent') {
     this.firstphaseturn = 0;
     this.teamdamage = 100;
     this.teamdamageproportional = false;
-    for (let _r755 = 0, _n755 = (12); _r755 < _n755; _r755++) {
+    for (let _r755 = 0, _n755 = Math.trunc(12); _r755 < _n755; _r755++) {
         this.questionsave ??= []; this.questionsave[this.rr] = this.rr + 1;
         this.rr = this.rr + 1;
     }
@@ -2912,7 +2912,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                     this.actreadysprite = 'spr_ralsei_actready';
                     this.actsprite = 'spr_ralsei_act';
                 }, this) === EXIT) return;
-                for (let _r12454 = 0, _n12454 = (26); _r12454 < _n12454; _r12454++) {
+                for (let _r12454 = 0, _n12454 = Math.trunc(26); _r12454 < _n12454; _r12454++) {
                     this.puff = instance_create(O('obj_heroralsei').x + 50 - 60 + irandom(80), O('obj_heroralsei').y - 90 + 90 + irandom(100), 'obj_animation');
                     this.puff.depth = O('obj_heroralsei').depth - 1;
                     this.puff.sprite_index = 'spr_susiezilla_houseexplosion';
@@ -3278,7 +3278,7 @@ class PinkEnemy extends P('obj_monsterparent') {
         this.pink_spotlight_pink.image_alpha = 0;
         instance_create_depth(camerax() + camerawidth() / 2, cameray() - 120, this.depth - 1, 'obj_mewers_live');
         __a = 0;
-        for (let _r14893 = 0, _n14893 = (16); _r14893 < _n14893; _r14893++) {
+        for (let _r14893 = 0, _n14893 = Math.trunc(16); _r14893 < _n14893; _r14893++) {
             this.dummyinst = instance_create_depth(camerax() + __a * 51, cameray() - 62, this.depth + 1000, 'obj_pink_dummy');
             this.dummyinst.sprite_index = 'spr_pink_bg_dummy';
             this.dummyinst.image_xscale = 2;
@@ -3289,7 +3289,7 @@ class PinkEnemy extends P('obj_monsterparent') {
             __a = __a + 1;
         }
         __a = 0;
-        for (let _r14974 = 0, _n14974 = (8); _r14974 < _n14974; _r14974++) {
+        for (let _r14974 = 0, _n14974 = Math.trunc(8); _r14974 < _n14974; _r14974++) {
             this.dummyinst = instance_create_depth(camerax() + __a * 121, cameray() + 480 + 140, O('obj_battlecontroller').depth + 1, 'obj_pink_dummy');
             this.dummyinst.sprite_index = 'spr_pink_fg_dummy';
             this.dummyinst.image_xscale = 2;

@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, audio_sound_get_track_position, d3d_set_fog, defineObject, draw_clear_alpha, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_set_halign, draw_set_valign, draw_sprite, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_text, draw_text_color, draw_text_ext, draw_text_ext_transformed, draw_text_transformed, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, random, snd_loop, snd_play, snd_stop, snd_volume, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261116145317';
+} from '../rt.js?v=20261116220235';
 import {
   camerawidth, camerax, cameray, i_ex, scr_shakeobj, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 
 // obj_date_ui (default sprite spr_dokibar_blush, depth 0)
 class DateUi extends Instance {
@@ -62,7 +62,7 @@ class DateUi extends Instance {
     this.blushcon = 0;
     this.blushtimer = 0;
     _rep = 0;
-    for (let _r196 = 0, _n196 = (7); _r196 < _n196; _r196++) {
+    for (let _r196 = 0, _n196 = Math.trunc(7); _r196 < _n196; _r196++) {
         this.populationx ??= []; this.populationx[_rep] = 0 + _rep * 6;
         this.populationx2 ??= []; this.populationx2[_rep] = 6 + _rep * 6;
         if (_rep == 0) {
@@ -156,7 +156,7 @@ class DateUi extends Instance {
             draw_text_ext_transformed(_x + 440 + _pop_x, _y + 61 + _pop_y, _populationstring, 9999, 9999, 1, 1, _pop_angle);
             S.d_rectangle(_x + _pop_x + 450, _y + _pop_y + 80, _x + _pop_x + 484, _y + _pop_y + 114, true);
             _popu_rep = 0;
-            for (let _r610 = 0, _n610 = (5); _r610 < _n610; _r610++) {
+            for (let _r610 = 0, _n610 = Math.trunc(5); _r610 < _n610; _r610++) {
                 S.d_line_width_color(_x + _pop_x + 440 + this.populationx[_popu_rep], _y + 61 + _pop_y + this.populationy[_popu_rep], _x + 440 + _pop_x + this.populationx2[_popu_rep], _y + 61 + _pop_y + this.populationy2[_popu_rep], 1, 0xffa040, 0xffa040);
                 this.populationx ??= []; this.populationx[_popu_rep] = this.populationx[_popu_rep] - 1;
                 this.populationx2 ??= []; this.populationx2[_popu_rep] = this.populationx2[_popu_rep] - 1;
@@ -669,7 +669,7 @@ class Lovelyboy extends Instance {
     this.spotlightmarker2.image_alpha = 0.6 * alphaset;
     if (this.timer == 50) {
         snd_play('snd_audience_aww');
-        for (let _r234 = 0, _n234 = (26); _r234 < _n234; _r234++) {
+        for (let _r234 = 0, _n234 = Math.trunc(26); _r234 < _n234; _r234++) {
             this.puff = instance_create(this.ralseix - 60 + irandom(80), this.ralseiy + 90 + irandom(100), 'obj_animation');
             this.puff.depth = this.depth - 1;
             this.puff.sprite_index = 'spr_susiezilla_houseexplosion';
@@ -748,7 +748,7 @@ class SharefoodAct extends Instance {
         }
         this.image_index = 0;
     }
-    for (let _r35 = 0, _n35 = (this.spd); _r35 < _n35; _r35++) {
+    for (let _r35 = 0, _n35 = Math.trunc(this.spd); _r35 < _n35; _r35++) {
         this.x = this.x + lengthdir_x(1, this.direction);
         this.y = this.y + lengthdir_y(1, this.direction);
         this.inst = instance_create_depth(this.x + 1, this.y + 1, this.depth + 1, 'obj_sharefood_act_particle');
@@ -1125,7 +1125,7 @@ class PurpleTea extends Instance {
     this.visible = true;
   }
   step() {
-    for (let _r4 = 0, _n4 = (2); _r4 < _n4; _r4++) {
+    for (let _r4 = 0, _n4 = Math.trunc(2); _r4 < _n4; _r4++) {
         if (this.image_xscale < 1) {
             this.image_xscale = this.image_xscale + 0.05;
         }

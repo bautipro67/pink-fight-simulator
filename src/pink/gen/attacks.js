@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_point, collision_rectangle, defineObject, draw_primitive_begin, draw_primitive_end, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_sprite, draw_sprite_ext, draw_vertex, frac, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_find, instance_number, instance_place, irandom, lengthdir_x, lengthdir_y, lerp, merge_color, place_meeting, point_direction, point_distance, random, sign, snd_is_playing, snd_play, snd_stop, sprite_get_height, surface_create, surface_free,
-} from '../rt.js?v=20261116145317';
+} from '../rt.js?v=20261116220235';
 import {
   camerax, cameray, i_ex, scr_afterimage, scr_approach, scr_doom, scr_draw_outline, scr_draw_outline_ext, scr_get_box, scr_lerpvar, scr_script_delayed, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 import {
   array_length,
-} from '../lib5.js?v=20261116145317';
+} from '../lib5.js?v=20261116220235';
 
 // obj_bullet_healing (default sprite None, depth 0)
 class BulletHealing extends Instance {
@@ -139,7 +139,7 @@ class BulletHealing extends Instance {
         }
     }
     if (this.timer >= 25 || this.sprite_index != 'spr_swatchling_platter_candy') {
-        for (let _r519 = 0, _n519 = (_repeat); _r519 < _n519; _r519++) {
+        for (let _r519 = 0, _n519 = Math.trunc(_repeat); _r519 < _n519; _r519++) {
             if (this.sprite_index == 'spr_swatchling_platter_candy') {
                 this.y = this.y + 1;
             }
@@ -808,7 +808,7 @@ class Pinktimeoutzap extends P('obj_regularbullet') {
     this.radius = 128;
     this.dir_add = 12;
     i = Math.ceil(360 / this.dir_add);
-    for (let _r78 = 0, _n78 = (Math.ceil(360 / this.dir_add)); _r78 < _n78; _r78++) {
+    for (let _r78 = 0, _n78 = Math.trunc(Math.ceil(360 / this.dir_add)); _r78 < _n78; _r78++) {
         i = i - 1;
         this.array_frame ??= []; this.array_frame[i] = irandom(1);
     }
@@ -855,7 +855,7 @@ class Pinktimeoutzap extends P('obj_regularbullet') {
         _dir = 90;
         _moving = - 1;
         _dir_add = - 10;
-        for (let _r161 = 0, _n161 = (36); _r161 < _n161; _r161++) {
+        for (let _r161 = 0, _n161 = Math.trunc(36); _r161 < _n161; _r161++) {
             _zap = instance_create_depth(scr_get_box(4) + lengthdir_x(this.radius, _dir), scr_get_box(5) + lengthdir_y(this.radius, _dir), - 5, 'obj_pinkzap');
             if (W(_zap, function (other) {
                 this.direction = S.scr_wrap(_dir - 90, 0, 360);
@@ -993,7 +993,7 @@ class Pink3durgenter extends P('obj_regularbullet') {
     this.radius = 128;
     this.dir_add = 12;
     i = Math.ceil(360 / this.dir_add);
-    for (let _r78 = 0, _n78 = (Math.ceil(360 / this.dir_add)); _r78 < _n78; _r78++) {
+    for (let _r78 = 0, _n78 = Math.trunc(Math.ceil(360 / this.dir_add)); _r78 < _n78; _r78++) {
         i = i - 1;
         this.array_frame ??= []; this.array_frame[i] = irandom(1);
     }
@@ -1147,7 +1147,7 @@ class Pinkmeteor extends Instance {
     this.mother = - 4;
     _dir = random(360);
     i = 5;
-    for (let _r64 = 0, _n64 = (5); _r64 < _n64; _r64++) {
+    for (let _r64 = 0, _n64 = Math.trunc(5); _r64 < _n64; _r64++) {
         i = i - 1;
         this.lightray_dir ??= []; this.lightray_dir[i] = _dir;
         this.lightray_dist ??= []; this.lightray_dist[i] = 0;
@@ -1189,7 +1189,7 @@ class Pinkmeteor extends Instance {
         draw_set_alpha(0.6666666666666666);
         _yy = this.y - 30 * this.image_yscale;
         i = 0;
-        for (let _r194 = 0, _n194 = (5); _r194 < _n194; _r194++) {
+        for (let _r194 = 0, _n194 = Math.trunc(5); _r194 < _n194; _r194++) {
             _dir = this.lightray_dir[i];
             _dist = this.lightray_dist[i];
             draw_primitive_begin(5);
@@ -1202,7 +1202,7 @@ class Pinkmeteor extends Instance {
         }
         draw_set_alpha(0.3333333333333333);
         i = 0;
-        for (let _r336 = 0, _n336 = (5); _r336 < _n336; _r336++) {
+        for (let _r336 = 0, _n336 = Math.trunc(5); _r336 < _n336; _r336++) {
             _dir = this.lightray_dir[i];
             _dist = this.lightray_dist[i];
             draw_primitive_begin(5);
@@ -1251,7 +1251,7 @@ class Pinkmeteor extends Instance {
             _pre_boom_frames = 15;
             _speedoflight = (_pre_boom_frames + 2 - this.life_time) / (_pre_boom_frames + 2) * 2.5;
             i = 0;
-            for (let _r73 = 0, _n73 = (5); _r73 < _n73; _r73++) {
+            for (let _r73 = 0, _n73 = Math.trunc(5); _r73 < _n73; _r73++) {
                 this.lightray_dir ??= []; this.lightray_dir[i] = this.lightray_dir[i] + (3 + i) * (1 - 2 * (i % 2)) * _speedoflight * 2;
                 this.lightray_dist ??= []; this.lightray_dist[i] = this.lightray_dist[i] + (7 + i) * _speedoflight * 2;
                 i = i + 1;
@@ -1269,7 +1269,7 @@ class Pinkmeteor extends Instance {
                 this.heat_alpha = this.heat_alpha + 0.1;
                 _dir = 55;
                 _spd = 7 + random(15);
-                for (let _r202 = 0, _n202 = (16); _r202 < _n202; _r202++) {
+                for (let _r202 = 0, _n202 = Math.trunc(16); _r202 < _n202; _r202++) {
                     _boombit = instance_create_depth(this.x, this.y - 48, this.depth + 3, 'obj_explosion_flamingbit');
                     _boombit.direction = _dir - 1 + random(2);
                     _boombit.speed = _spd;
@@ -1448,7 +1448,7 @@ class HugeAnimeFace extends P('obj_regularbullet') {
                 }
             }
             i = 0;
-            for (let _r203 = 0, _n203 = (_hastening); _r203 < _n203; _r203++) {
+            for (let _r203 = 0, _n203 = Math.trunc(_hastening); _r203 < _n203; _r203++) {
                 if (i >= 1) {
                     this.life_time = this.life_time + 1;
                 }
@@ -1890,7 +1890,7 @@ class Fusebomb extends P('obj_regularbullet') {
                 _box_y = scr_get_box(5);
             }
             _way = choose(0, 1);
-            for (let _r171 = 0, _n171 = (2); _r171 < _n171; _r171++) {
+            for (let _r171 = 0, _n171 = Math.trunc(2); _r171 < _n171; _r171++) {
                 _xx = this.grid_x;
                 _yy = this.grid_y;
                 switch (_way) {
@@ -1934,7 +1934,7 @@ class Fusebomb extends P('obj_regularbullet') {
             }
             if (T(_overlap)) {
                 _way = choose(0, 1);
-                for (let _r374 = 0, _n374 = (2); _r374 < _n374; _r374++) {
+                for (let _r374 = 0, _n374 = Math.trunc(2); _r374 < _n374; _r374++) {
                     _xx = this.grid_x;
                     _yy = this.grid_y;
                     switch (_way) {
@@ -2186,7 +2186,7 @@ class Fusebomb extends P('obj_regularbullet') {
         _boom.image_xscale = _boom.image_xscale * this.grow;
         _boom.image_yscale = _boom.image_yscale * this.grow;
         _dir = 0;
-        for (let _r1678 = 0, _n1678 = (4); _r1678 < _n1678; _r1678++) {
+        for (let _r1678 = 0, _n1678 = Math.trunc(4); _r1678 < _n1678; _r1678++) {
             _xx = this.x;
             _yy = this.y;
             do {
@@ -2573,7 +2573,7 @@ class FusebombBig extends P('obj_regularbullet') {
         _boom.image_yscale = _boom.image_yscale * _scaling;
         _boom.friendlyfire = this.friendlyfire;
         _dir = 0;
-        for (let _r1058 = 0, _n1058 = (4); _r1058 < _n1058; _r1058++) {
+        for (let _r1058 = 0, _n1058 = Math.trunc(4); _r1058 < _n1058; _r1058++) {
             _xx = this.x;
             _yy = this.y;
             do {
@@ -2604,7 +2604,7 @@ class FusebombBig extends P('obj_regularbullet') {
             if (T(this.has_heart)) {
                 _randomlist = S.ds_list_create();
                 _randomcycle = irandom(3);
-                for (let _r1317 = 0, _n1317 = (2); _r1317 < _n1317; _r1317++) {
+                for (let _r1317 = 0, _n1317 = Math.trunc(2); _r1317 < _n1317; _r1317++) {
                     switch (_randomcycle) {
                       case 0:
                         S.ds_list_add(_randomlist, 2);
@@ -2638,7 +2638,7 @@ class FusebombBig extends P('obj_regularbullet') {
                     }
                 }
                 _dir = 0;
-                for (let _r1542 = 0, _n1542 = (4); _r1542 < _n1542; _r1542++) {
+                for (let _r1542 = 0, _n1542 = Math.trunc(4); _r1542 < _n1542; _r1542++) {
                     _xx = scr_get_box(4) - _lane_distance * 1.5 + this.grid_x * _lane_distance;
                     _yy = scr_get_box(5) - _lane_distance * 1.5 + this.grid_y * _lane_distance;
                     i = 0;
@@ -2848,7 +2848,7 @@ class Pinkcirclestar extends P('obj_regularbullet') {
     this.angle_speed ??= []; this.angle_speed[1] = 4;
     this.angle_speed ??= []; this.angle_speed[0] = 6;
     i = 3;
-    for (let _r64 = 0, _n64 = (3); _r64 < _n64; _r64++) {
+    for (let _r64 = 0, _n64 = Math.trunc(3); _r64 < _n64; _r64++) {
         i = i - 1;
         this.trail_x ??= []; this.trail_x[i] = this.x;
         this.trail_y ??= []; this.trail_y[i] = this.y;
@@ -2863,7 +2863,7 @@ class Pinkcirclestar extends P('obj_regularbullet') {
   draw() {
     let i;
     i = 0;
-    for (let _r8 = 0, _n8 = (3); _r8 < _n8; _r8++) {
+    for (let _r8 = 0, _n8 = Math.trunc(3); _r8 < _n8; _r8++) {
         draw_sprite_ext(this.sprite_index, 0, this.trail_x[i], this.trail_y[i], this.image_xscale * (1 - i * 0.15), this.image_yscale * (1 - i * 0.15), this.angle[0], this.image_blend, this.image_alpha * (0.5 - i * 0.1));
         i = i + 1;
     }
@@ -2876,7 +2876,7 @@ class Pinkcirclestar extends P('obj_regularbullet') {
     super.step?.();
     this.life_time = this.life_time + 1;
     i = 0;
-    for (let _r18 = 0, _n18 = (2); _r18 < _n18; _r18++) {
+    for (let _r18 = 0, _n18 = Math.trunc(2); _r18 < _n18; _r18++) {
         this.angle ??= []; this.angle[i] = S.scr_wrap(this.angle[i] + this.angle_speed[i], 0, 360);
         i = i + 1;
     }
@@ -3140,7 +3140,7 @@ class Roundbellbullet extends P('obj_regularbullet') {
             this.speed = 0;
             this.gravity = 0;
             _dir = 0;
-            for (let _r279 = 0, _n279 = (12); _r279 < _n279; _r279++) {
+            for (let _r279 = 0, _n279 = Math.trunc(12); _r279 < _n279; _r279++) {
                 _s = instance_create_depth(this.x, this.y, 1, 'obj_fx_pinksparkle');
                 _s.direction = _dir;
                 _s.speed = 8;
@@ -3481,7 +3481,7 @@ class Audiencehater extends P('obj_regularbullet') {
         if (this.pattern_time == this.launch_time - 9) {
             _scalepush = (1 - this.image_yscale) * sprite_get_height(this.sprite_index) * 0.75;
             i = 0;
-            for (let _r262 = 0, _n262 = (4); _r262 < _n262; _r262++) {
+            for (let _r262 = 0, _n262 = Math.trunc(4); _r262 < _n262; _r262++) {
                 _trail = instance_create_depth(this.x + lengthdir_x(_scalepush, this.image_angle + 270), this.y + lengthdir_y(_scalepush, this.image_angle + 270), 0, 'obj_pinktrail');
                 _trail.visible = 1;
                 _trail.sprite_index = this.sprite_index;

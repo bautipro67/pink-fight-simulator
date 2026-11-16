@@ -44,7 +44,7 @@ scr_inverselerp scr_remapvalue clamp01 instance_nearest point_in_rectangle sqr f
 gt_minx gt_miny keyboard_check draw_text_color draw_line_width gpu_set_blendmode_ext variable_instance_exists
 sprite_create_from_surface sprite_exists sprite_delete draw_rectangle_color draw_triangle_color'''.split())
 MATH = {'sin': 'Math.sin', 'cos': 'Math.cos', 'abs': 'Math.abs', 'floor': 'Math.floor', 'ceil': 'Math.ceil',
-        'round': 'Math.round', 'sqrt': 'Math.sqrt', 'power': 'Math.pow', 'min': 'Math.min', 'max': 'Math.max',
+        'round': 'round', 'sqrt': 'Math.sqrt', 'power': 'Math.pow', 'min': 'Math.min', 'max': 'Math.max',
         'arctan2': 'Math.atan2', 'exp': 'Math.exp', 'ln': 'Math.log', 'sqr': 'sqr', 'frac': 'frac',
         'string': 'String', 'real': 'Number', 'is_string': 'is_string', 'audio_is_playing': 'snd_is_playing',
         'audio_stop_sound': 'snd_stop', 'debug_message': 'void', 'show_debug_message': 'void'}
@@ -254,7 +254,9 @@ class Translator:
             self.take()
             n = self.paren_expr()
             k = self.i
-            return pad + 'for (let _r%d = 0, _n%d = (%s); _r%d < _n%d; _r%d++) %s' % (k, k, n, k, k, k, self.loop_body(ind))
+            # (GameMaker takes the count as an integer, dropping the fraction: repeat (frac(1.1) * 10), which is
+            # 1.0000000000000009, runs once, where `_r < _n` would run twice)
+            return pad + 'for (let _r%d = 0, _n%d = Math.trunc(%s); _r%d < _n%d; _r%d++) %s' % (k, k, n, k, k, k, self.loop_body(ind))
         if tok == 'for':
             self.take()
             self.take('(')

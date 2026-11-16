@@ -1,14 +1,14 @@
 // The DATE at DOKI MAX (obj_date_controller) and its hearts and smoke (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
 /* eslint-disable */
 import {
-  Instance, S, button1_h, button3_h, choose, defineObject, draw_clear, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text, draw_text_ext, draw_text_ext_transformed, draw_text_transformed_color, draw_vertex_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, left_h, lengthdir_x, lerp, make_color_hsv, make_color_rgb, merge_color, mus_loop, mus_volume, random, right_h, snd_free_all, snd_init, snd_loop, snd_play, snd_stop, snd_volume, sprite_set_offset, string_char_at, string_copy, string_length, string_width, surface_create, surface_exists, surface_free, surface_get_height, surface_get_width, surface_reset_target, surface_set_target, up_h,
-} from '../rt.js?v=20261116145317';
+  Instance, S, button1_h, button3_h, choose, defineObject, draw_clear, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text, draw_text_ext, draw_text_ext_transformed, draw_text_transformed_color, draw_vertex_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, left_h, lengthdir_x, lerp, make_color_hsv, make_color_rgb, merge_color, mus_loop, mus_volume, random, right_h, round, snd_free_all, snd_init, snd_loop, snd_play, snd_stop, snd_volume, sprite_set_offset, string_char_at, string_copy, string_length, string_width, surface_create, surface_exists, surface_free, surface_get_height, surface_get_width, surface_reset_target, surface_set_target, up_h,
+} from '../rt.js?v=20261116220235';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, room_height, room_width, scr_approach, scr_lerpvar, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   EXIT, LOOP, O, T, VIEW_WPORT, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 
 // obj_date_controller (default sprite None, depth 0)
 class DateController extends Instance {
@@ -97,7 +97,7 @@ class DateController extends Instance {
     this.portraittextscale = 1;
     this.drawn_box_x ??= []; this.drawn_box_x[20] = 0;
     ___r = 0;
-    for (let _r185 = 0, _n185 = (20); _r185 < _n185; _r185++) {
+    for (let _r185 = 0, _n185 = Math.trunc(20); _r185 < _n185; _r185++) {
         this.drawn_box_y ??= []; this.drawn_box_y[___r] = cameray() + 285;
         ___r = ___r + 1;
     }
@@ -1018,7 +1018,7 @@ class DateController extends Instance {
                 this.choicetextxscale ??= []; this.choicetextxscale[2] = lerp(3, 0, Number(string_width(this.choicetext[2])) / 200);
             }
             __rr = 0;
-            for (let _r5495 = 0, _n5495 = (10); _r5495 < _n5495; _r5495++) {
+            for (let _r5495 = 0, _n5495 = Math.trunc(10); _r5495 < _n5495; _r5495++) {
                 if (this.choicetextxscale[__rr] > 3) {
                     this.choicetextxscale ??= []; this.choicetextxscale[__rr] = 3;
                 }
@@ -1027,7 +1027,7 @@ class DateController extends Instance {
         }
         _w = 2;
         _scale_adjust = 1;
-        for (let _r5534 = 0, _n5534 = (7); _r5534 < _n5534; _r5534++) {
+        for (let _r5534 = 0, _n5534 = Math.trunc(7); _r5534 < _n5534; _r5534++) {
             _draw_box_selected = this.draw_box_selected - 3;
             if (_draw_box_selected == - 1) {
                 _draw_box_selected = this.boxcount - 1;
@@ -1577,22 +1577,22 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[4] = 3;
             this.choicetextxscale ??= []; this.choicetextxscale[5] = 3;
             if (string_width(this.choicetext[0]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = Math.round(70 / string_width(this.choicetext[0]));
+                this.choicetextxscale ??= []; this.choicetextxscale[0] = round(70 / string_width(this.choicetext[0]));
             }
             if (string_width(this.choicetext[1]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = Math.round(70 / string_width(this.choicetext[1]));
+                this.choicetextxscale ??= []; this.choicetextxscale[1] = round(70 / string_width(this.choicetext[1]));
             }
             if (string_width(this.choicetext[2]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = Math.round(70 / string_width(this.choicetext[2]));
+                this.choicetextxscale ??= []; this.choicetextxscale[2] = round(70 / string_width(this.choicetext[2]));
             }
             if (string_width(this.choicetext[3]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[3] = Math.round(70 / string_width(this.choicetext[3]));
+                this.choicetextxscale ??= []; this.choicetextxscale[3] = round(70 / string_width(this.choicetext[3]));
             }
             if (string_width(this.choicetext[4]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[4] = Math.round(70 / string_width(this.choicetext[4]));
+                this.choicetextxscale ??= []; this.choicetextxscale[4] = round(70 / string_width(this.choicetext[4]));
             }
             if (string_width(this.choicetext[5]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[5] = Math.round(70 / string_width(this.choicetext[5]));
+                this.choicetextxscale ??= []; this.choicetextxscale[5] = round(70 / string_width(this.choicetext[5]));
             }
             if (global.lang == "ja") {
                 this.choicetextxscale ??= []; this.choicetextxscale[0] = 3;
@@ -2129,7 +2129,7 @@ class DateController extends Instance {
     this.drawn_box_text ??= []; this.drawn_box_text[8] = this.choicetext[8];
     this.drawn_box_text ??= []; this.drawn_box_text[9] = this.choicetext[9];
     _rr = 0;
-    for (let _r5132 = 0, _n5132 = (10); _r5132 < _n5132; _r5132++) {
+    for (let _r5132 = 0, _n5132 = Math.trunc(10); _r5132 < _n5132; _r5132++) {
         if (this.choicetextxscale[_rr] > 3) {
             this.choicetextxscale ??= []; this.choicetextxscale[_rr] = 3;
         }
@@ -3177,7 +3177,7 @@ class DateController extends Instance {
                 this.draw_box_con = 5;
             }
         }
-        for (let _r6190 = 0, _n6190 = (3); _r6190 < _n6190; _r6190++) {
+        for (let _r6190 = 0, _n6190 = Math.trunc(3); _r6190 < _n6190; _r6190++) {
             if (this.draw_box_con == 4) {
                 this.draw_box_timer = this.draw_box_timer + 1;
                 this.drawn_box_x_offset = lerp(0, - 200, this.draw_box_timer / 30);
@@ -3641,16 +3641,16 @@ class DateController extends Instance {
                 } else {
                     if (i_ex('obj_pink_enemy')) {
                         if (O('obj_pink_enemy').datecount == 0) {
-                            S.scr_tensionheal(Math.round(lerp(0, 125, this.questioncorrectcount / 15)));
+                            S.scr_tensionheal(round(lerp(0, 125, this.questioncorrectcount / 15)));
                         }
                         if (O('obj_pink_enemy').datecount == 1) {
-                            S.scr_tensionheal(Math.round(lerp(0, 125, this.questioncorrectcount / 13)));
+                            S.scr_tensionheal(round(lerp(0, 125, this.questioncorrectcount / 13)));
                         }
                         if (O('obj_pink_enemy').datecount == 2) {
-                            S.scr_tensionheal(Math.round(lerp(0, 125, this.questioncorrectcount / 15)));
+                            S.scr_tensionheal(round(lerp(0, 125, this.questioncorrectcount / 15)));
                         }
                         if (O('obj_pink_enemy').datecount == 3) {
-                            S.scr_tensionheal(Math.round(lerp(0, 125, this.questioncorrectcount / 10)));
+                            S.scr_tensionheal(round(lerp(0, 125, this.questioncorrectcount / 10)));
                         }
                     }
                     if (W('obj_pink_enemy', function (other) {

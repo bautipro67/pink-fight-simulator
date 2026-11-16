@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_circle, collision_point, defineObject, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, lerp, point_direction, random, sign, snd_play, snd_stop,
-} from '../rt.js?v=20261116145317';
+} from '../rt.js?v=20261116220235';
 import {
   i_ex, scr_approach, scr_get_box,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 
 // obj_pink_battlemovement (default sprite spr_pink_ball, depth 0)
 class PinkBattlemovement extends Instance {
@@ -94,9 +94,9 @@ class PinkBattlemovement extends Instance {
         draw_sprite_ext(this.sprite_index, this.image_index, _xx + this.shake_x, _yy + this.shake_y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.image_alpha);
         draw_set_color(0xffffff);
         _gy = 0;
-        for (let _r158 = 0, _n158 = (6); _r158 < _n158; _r158++) {
+        for (let _r158 = 0, _n158 = Math.trunc(6); _r158 < _n158; _r158++) {
             _gx = 0;
-            for (let _r167 = 0, _n167 = (4); _r167 < _n167; _r167++) {
+            for (let _r167 = 0, _n167 = Math.trunc(4); _r167 < _n167; _r167++) {
                 if (S.ds_list_find_value(this.list_burnt, _gy * 4 + _gx) == 1) {
                     draw_sprite_part_ext('spr_pink_front_burnt', 0, 2 + _gx * 8, - 2 + _gy * 8, 16, 16, this.x + (- 2 + _gx) * 16, this.y + 4 + (- 3 + _gy) * 16, this.image_xscale, this.image_yscale, this.image_blend, this.image_alpha);
                 }
@@ -381,7 +381,7 @@ class PinkBattlemovement extends Instance {
                 this.image_index = this.image_index + 1;
                 if (this.image_index >= 15) {
                     _bulk = 1;
-                    for (let _r1181 = 0, _n1181 = (_bulk); _r1181 < _n1181; _r1181++) {
+                    for (let _r1181 = 0, _n1181 = Math.trunc(_bulk); _r1181 < _n1181; _r1181++) {
                         this.ammo = this.ammo - 1;
                         this.shots = this.shots + 1;
                         this.shots_total = this.shots_total + 1;
@@ -535,7 +535,7 @@ class PinkBattlemovement extends Instance {
                     this.pattern_variant = irandom(3);
                 }
                 i = 0;
-                for (let _r1905 = 0, _n1905 = (S.ds_list_size(this.list_bomb)); _r1905 < _n1905; _r1905++) {
+                for (let _r1905 = 0, _n1905 = Math.trunc(S.ds_list_size(this.list_bomb)); _r1905 < _n1905; _r1905++) {
                     if (S.ds_list_find_value(this.list_bomb, i) == 0) {
                         this.ammo_b = 0;
                     } else {
@@ -570,7 +570,7 @@ class PinkBattlemovement extends Instance {
                         S.ds_list_add(_list_random, 0, 1, 2, 3);
                         S.ds_list_shuffle(_list_random);
                         i = 0;
-                        for (let _r2059 = 0, _n2059 = (4); _r2059 < _n2059; _r2059++) {
+                        for (let _r2059 = 0, _n2059 = Math.trunc(4); _r2059 < _n2059; _r2059++) {
                             switch (S.ds_list_find_value(_list_random, i)) {
                               case 0:
                                 S.ds_list_insert(this.list_bomb_xy, i * 2, this.grid_x);
@@ -593,7 +593,7 @@ class PinkBattlemovement extends Instance {
                         S.ds_list_destroy(_list_random);
                     } else {
                         i = 0;
-                        for (let _r2210 = 0, _n2210 = (S.ds_list_size(this.list_bomb)); _r2210 < _n2210; _r2210++) {
+                        for (let _r2210 = 0, _n2210 = Math.trunc(S.ds_list_size(this.list_bomb)); _r2210 < _n2210; _r2210++) {
                             if (this.ammo_max <= 3) {
                                 S.ds_list_insert(this.list_bomb_xy, i * 2, this.grid_x);
                                 S.ds_list_insert(this.list_bomb_xy, i * 2 + 1, this.grid_y);
@@ -675,7 +675,7 @@ class PinkBattlemovement extends Instance {
                                     snd_play('snd_spellcast', 0.25, 0.3333333333333333);
                                 }
                                 if (this.image_index < 4.33) {
-                                    for (let _r2630 = 0, _n2630 = (3); _r2630 < _n2630; _r2630++) {
+                                    for (let _r2630 = 0, _n2630 = Math.trunc(3); _r2630 < _n2630; _r2630++) {
                                         instance_create_depth(this.x, this.y - 100, this.depth - 1, 'obj_pinkchargeball');
                                     }
                                 }
@@ -1210,9 +1210,9 @@ class PinkBattlemovement extends Instance {
     }
     if (instance_exists('obj_pinkbombexplosion')) {
         _gy = 0;
-        for (let _r5543 = 0, _n5543 = (6); _r5543 < _n5543; _r5543++) {
+        for (let _r5543 = 0, _n5543 = Math.trunc(6); _r5543 < _n5543; _r5543++) {
             _gx = 0;
-            for (let _r5552 = 0, _n5552 = (4); _r5552 < _n5552; _r5552++) {
+            for (let _r5552 = 0, _n5552 = Math.trunc(4); _r5552 < _n5552; _r5552++) {
                 _burn = collision_point(this.x + (- 2 + _gx) * 16 + 8, this.y + 4 + (- 3 + _gy) * 16 + 8, 'obj_pinkbombexplosion', 1, 1);
                 if (_burn != null) {
                     if (_burn.friendlyfire == 1) {

@@ -8,8 +8,8 @@ import {
   draw_ellipse, snd_play, snd_loop, point_distance, sprite_get_width, sprite_get_height, sprite_get_xoffset, sprite_get_yoffset,
   draw_circle_color, draw_get_color, draw_set_color, draw_text_transformed, keyboard_check_pressed, mus_volume,
   draw_set_alpha, Instance, defineObject, instance_destroy, shader_saturation,
-} from './rt.js?v=20261116145317';
-import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261116145317';
+} from './rt.js?v=20261116220235';
+import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261116220235';
 
 // The date's scripts (obj_date_controller).
 defineScript('d_circle_color', (x, y, r, c1, c2, outline) => draw_circle_color(x, y, r, c1, c2, outline));
@@ -40,17 +40,19 @@ defineScript('path_set_closed', () => {});
 defineScript('path_add_point', (p, x, y, s) => { p?.points?.push([x, y, s]); });
 
 // ---------------------------------------------------------------- GML built-ins the Chapter 5 objects use
-// ds_list_*: lists are arrays (a destroyed one is flagged for ds_exists).
+// ds_list_*: lists are arrays (a destroyed one is flagged for ds_exists). Positions are whole numbers, as
+// GameMaker takes them (the fraction dropped).
 export const array_length = a => a?.length ?? 0;
+const at = i => Math.trunc(i);
 defineScript('ds_list_create', () => []);
 defineScript('ds_list_add', (l, ...v) => { l.push(...v); });
 defineScript('ds_list_size', l => l?.length ?? 0);
-defineScript('ds_list_find_value', (l, i) => l?.[i]);
+defineScript('ds_list_find_value', (l, i) => l?.[at(i)]);
 defineScript('ds_list_find_index', (l, v) => l.indexOf(v));
-defineScript('ds_list_delete', (l, i) => { if (i >= 0 && i < l.length) l.splice(i, 1); });
-defineScript('ds_list_insert', (l, i, v) => { l.splice(i, 0, v); });
-defineScript('ds_list_replace', (l, i, v) => { l[i] = v; });
-defineScript('ds_list_set', (l, i, v) => { l[i] = v; });
+defineScript('ds_list_delete', (l, i) => { i = at(i); if (i >= 0 && i < l.length) l.splice(i, 1); });
+defineScript('ds_list_insert', (l, i, v) => { l.splice(at(i), 0, v); });
+defineScript('ds_list_replace', (l, i, v) => { l[at(i)] = v; });
+defineScript('ds_list_set', (l, i, v) => { l[at(i)] = v; });
 defineScript('ds_list_clear', l => { if (l) l.length = 0; });
 defineScript('ds_list_destroy', l => { if (l) { l.length = 0; l.destroyed = true; } });
 defineScript('ds_exists', l => Array.isArray(l) && !l.destroyed);
@@ -104,8 +106,8 @@ defineScript('scr_draw_sprite_tiled_area', (spr, img, xx, yy, x1, y1, x2, y2, xs
   ctx.restore();
 });
 void point_distance;
-import { moveToPoint } from '../screens/cutscene.js?v=20261116145317';
-import { subst } from '../battle/common.js?v=20261116145317';
+import { moveToPoint } from '../screens/cutscene.js?v=20261116220235';
+import { subst } from '../battle/common.js?v=20261116220235';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")

@@ -1,14 +1,14 @@
 // obj_dbulletcontroller's attack types 200-210 (Pink) (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
 /* eslint-disable */
 import {
-  S, choose, frac, global, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, objectClass, snd_play,
-} from '../rt.js?v=20261116145317';
+  S, choose, frac, global, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, objectClass, round, snd_play,
+} from '../rt.js?v=20261116220235';
 import {
   i_ex, scr_fire_bullet, scr_get_box,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 
 // !!! gml_Object_obj_dbulletcontroller_Alarm_2.gml has a decompiler WARNING: check the asm
 // !!! gml_Object_obj_dbulletcontroller_Alarm_4.gml has a decompiler WARNING: check the asm
@@ -69,7 +69,7 @@ class PinkTypes {
                 _d_conga = 0.667;
                 _s_conga = 1.1;
                 i = 0;
-                for (let _r1826 = 0, _n1826 = (3); _r1826 < _n1826; _r1826++) {
+                for (let _r1826 = 0, _n1826 = Math.trunc(3); _r1826 < _n1826; _r1826++) {
                     if (i < 2) {
                         _d_conga_last = _d_conga * 1.3333333333333333;
                     } else {
@@ -121,8 +121,8 @@ class PinkTypes {
             }
             global.turntimer = 70;
             i = 0;
-            for (let _r4063 = 0, _n4063 = (Math.floor(S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) / 4)); _r4063 < _n4063; _r4063++) {
-                global.turntimer = global.turntimer + Math.round(0.5 + 13 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 2 + i) / _bullet_interval_modifier);
+            for (let _r4063 = 0, _n4063 = Math.trunc(Math.floor(S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) / 4)); _r4063 < _n4063; _r4063++) {
+                global.turntimer = global.turntimer + round(0.5 + 13 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 2 + i) / _bullet_interval_modifier);
                 i = i + 4;
             }
         }
@@ -137,7 +137,7 @@ class PinkTypes {
                 do {
                     if (this.btimer >= this.btimer_start + 15) {
                         if (S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) > 0) {
-                            this.btimer = this.btimer - Math.round(0.5 + 13 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 2) / _bullet_interval_modifier);
+                            this.btimer = this.btimer - round(0.5 + 13 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 2) / _bullet_interval_modifier);
                             if (S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0) < 3) {
                                 _side = S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 1);
                                 _bul = scr_fire_bullet(this, _box_x + _side * 416, _box_y + Math.floor(S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0) - 1) * 56, 'obj_pinkcatbullet', 90 + _side * 90, 8 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 3) * _bullet_speed_modifier);
@@ -145,7 +145,7 @@ class PinkTypes {
                                     _bul.spin_radius = 1.5;
                                 }
                                 i = 0;
-                                for (let _r4331 = 0, _n4331 = (frac(S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0)) * 10); _r4331 < _n4331; _r4331++) {
+                                for (let _r4331 = 0, _n4331 = Math.trunc(frac(S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0)) * 10); _r4331 < _n4331; _r4331++) {
                                     i = i + 1;
                                     _bul = scr_fire_bullet(this, _box_x + _side * (416 - i * 72 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 3)), _box_y + Math.floor(S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0) - 1) * 56, 'obj_dokiheart', 90 + _side * 90, 8 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 3) * _bullet_speed_modifier);
                                     _bul.tension_value = this.tension_value;
@@ -795,7 +795,7 @@ class PinkTypes {
             }
             global.turntimer = 50;
             i = 0;
-            for (let _r859 = 0, _n859 = (Math.floor(S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) / 2)); _r859 < _n859; _r859++) {
+            for (let _r859 = 0, _n859 = Math.trunc(Math.floor(S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) / 2)); _r859 < _n859; _r859++) {
                 _the_value = S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, i);
                 if (_the_value >= 10) {
                     if (global.flag[1914] == 1) {
@@ -809,8 +809,8 @@ class PinkTypes {
                 i = i + 2;
             }
             i = 0;
-            for (let _r957 = 0, _n957 = (Math.floor(S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) / 2)); _r957 < _n957; _r957++) {
-                _timeadd = Math.round(0.5 + 45 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 1 + i) / _bullet_interval_modifier);
+            for (let _r957 = 0, _n957 = Math.trunc(Math.floor(S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) / 2)); _r957 < _n957; _r957++) {
+                _timeadd = round(0.5 + 45 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 1 + i) / _bullet_interval_modifier);
                 global.turntimer = global.turntimer + _timeadd;
                 if (S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0 + i) == 0) {
                     if (global.flag[1914] == 1 && _timeadd > 1) {
@@ -834,7 +834,7 @@ class PinkTypes {
                     do {
                         if (this.btimer >= this.btimer_start + _startdelay) {
                             if (S.ds_list_size(O('obj_purplecontrols').ds_bullet_list) > 0) {
-                                _timeadd = Math.round(0.5 + 45 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 1) / _bullet_interval_modifier);
+                                _timeadd = round(0.5 + 45 * S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 1) / _bullet_interval_modifier);
                                 this.btimer = this.btimer - _timeadd;
                                 void("_timeadd: " + String(_timeadd) + ", btimer: " + String(this.btimer));
                                 if (S.ds_list_find_value(O('obj_purplecontrols').ds_bullet_list, 0) == 0) {

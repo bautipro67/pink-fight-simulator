@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, button2_h, choose, clamp, collision_rectangle, defineObject, down_h, down_p, draw_clear, draw_clear_alpha, draw_line_width, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text_transformed, draw_vertex_color, global, gpu_set_blendmode, gpu_set_blendmode_ext, gpu_set_colorwriteenable, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_place, irandom, left_h, left_p, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, point_direction, point_distance, random, right_h, right_p, sign, snd_play, snd_stop, string_width, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target, up_h, up_p,
-} from '../rt.js?v=20261116145317';
+} from '../rt.js?v=20261116220235';
 import {
   camerax, cameray, i_ex, scr_approach, scr_fire_bullet, scr_get_box, scr_shakescreen,
-} from '../common.js?v=20261116145317';
+} from '../common.js?v=20261116220235';
 import {
   BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116145317';
+} from '../gml.js?v=20261116220235';
 import {
   array_length,
-} from '../lib5.js?v=20261116145317';
+} from '../lib5.js?v=20261116220235';
 
 // !!! gml_Object_obj_purplecontrols_Step_0.gml has a decompiler WARNING: check the asm
 // obj_purplecontrols (default sprite spr_purpleheart, depth 0)
@@ -30,7 +30,7 @@ class Purplecontrols extends Instance {
         if (this.made == 1) {
             S.ds_list_destroy(this.maze_destination);
             i = 0;
-            for (let _r43 = 0, _n43 = (3); _r43 < _n43; _r43++) {
+            for (let _r43 = 0, _n43 = Math.trunc(3); _r43 < _n43; _r43++) {
                 S.ds_list_destroy(this.maze_distance[i]);
                 S.ds_list_destroy(this.maze_direction[i]);
                 i = i + 1;
@@ -75,7 +75,7 @@ class Purplecontrols extends Instance {
     this.tunnel_lifetime = 0;
     this.tunnel_timer = 0;
     i = 8;
-    for (let _r120 = 0, _n120 = (8); _r120 < _n120; _r120++) {
+    for (let _r120 = 0, _n120 = Math.trunc(8); _r120 < _n120; _r120++) {
         i = i - 1;
         this.tunnel_radius ??= []; this.tunnel_radius[i] = 0;
     }
@@ -208,7 +208,7 @@ class Purplecontrols extends Instance {
         draw_surface_ext(this.surface_effect, _xx - 70, _yy + _arrows_height - _arrow_pokethrough * 2 + 2, 1, 1, 0, 0xffffff, 1);
         _ly = - _lane_distance;
         draw_set_color(_prpl_light);
-        for (let _r411 = 0, _n411 = (3); _r411 < _n411; _r411++) {
+        for (let _r411 = 0, _n411 = Math.trunc(3); _r411 < _n411; _r411++) {
             S.d_rectangle(_xx - 70 + _cntr, _yy + _ly + _cntr, _xx + 71 + _cntr, _yy + _ly + _cntr + 1, false);
             _ly = _ly + _lane_distance;
         }
@@ -236,11 +236,11 @@ class Purplecontrols extends Instance {
         _ly = - _lane_distance * 1.5;
         gpu_set_blendmode(3);
         gpu_set_colorwriteenable(0, 0, 0, 1);
-        for (let _r613 = 0, _n613 = (4); _r613 < _n613; _r613++) {
+        for (let _r613 = 0, _n613 = Math.trunc(4); _r613 < _n613; _r613++) {
             S.d_rectangle(_xx + _lx + _cntr, _yy - _lane_distance * 1.5 + _cntr, _xx + _lx + _cntr + 1, _yy + _lane_distance * 1.5 + _cntr, false);
             _lx = _lx + _lane_distance;
         }
-        for (let _r660 = 0, _n660 = (4); _r660 < _n660; _r660++) {
+        for (let _r660 = 0, _n660 = Math.trunc(4); _r660 < _n660; _r660++) {
             S.d_rectangle(_xx - _lane_distance * 1.5 + _cntr, _yy + _ly + _cntr, _xx + _lane_distance * 1.5 + _cntr, _yy + _ly + _cntr + 1, false);
             _ly = _ly + _lane_distance;
         }
@@ -251,9 +251,9 @@ class Purplecontrols extends Instance {
         gpu_set_blendmode(0);
         _ly = - _lane_distance * 1.5;
         draw_set_color(_prpl_light);
-        for (let _r768 = 0, _n768 = (4); _r768 < _n768; _r768++) {
+        for (let _r768 = 0, _n768 = Math.trunc(4); _r768 < _n768; _r768++) {
             _lx = - _lane_distance * 1.5;
-            for (let _r780 = 0, _n780 = (4); _r780 < _n780; _r780++) {
+            for (let _r780 = 0, _n780 = Math.trunc(4); _r780 < _n780; _r780++) {
                 S.d_circle(_xx + _lx, _yy + _ly, 4, false);
                 _lx = _lx + _lane_distance;
             }
@@ -281,18 +281,18 @@ class Purplecontrols extends Instance {
         _lane_distance = 56 * _scale;
         draw_set_color(_prpl_darker);
         _xx = - 0.5 * _scale;
-        for (let _r996 = 0, _n996 = (3); _r996 < _n996; _r996++) {
+        for (let _r996 = 0, _n996 = Math.trunc(3); _r996 < _n996; _r996++) {
             S.d_line(this.x + _cntr + lengthdir_x(_lane_distance, _dir) + lengthdir_x(_xx, _dir + 90) + this.x_shake, this.y + _cntr + lengthdir_y(_lane_distance, _dir) + lengthdir_y(_xx, _dir + 90), this.x + _cntr + lengthdir_x(_lane_distance, _dir + 180) + lengthdir_x(_xx, _dir + 90) + this.x_shake, this.y + _cntr + lengthdir_y(_lane_distance, _dir + 180) + lengthdir_y(_xx, _dir + 90));
             _xx = _xx + 0.5 * _scale;
         }
         _dir = _dir + 90;
         _xx = - 0.5 * _scale;
-        for (let _r1114 = 0, _n1114 = (3); _r1114 < _n1114; _r1114++) {
+        for (let _r1114 = 0, _n1114 = Math.trunc(3); _r1114 < _n1114; _r1114++) {
             S.d_line(this.x + _cntr + lengthdir_x(_lane_distance, _dir) + lengthdir_x(_xx, _dir + 90) + this.x_shake, this.y + _cntr + lengthdir_y(_lane_distance, _dir) + lengthdir_y(_xx, _dir + 90), this.x + _cntr + lengthdir_x(_lane_distance, _dir + 180) + lengthdir_x(_xx, _dir + 90) + this.x_shake, this.y + _cntr + lengthdir_y(_lane_distance, _dir + 180) + lengthdir_y(_xx, _dir + 90));
             _xx = _xx + 0.5 * _scale;
         }
         draw_set_color(_prpl_light);
-        for (let _r1224 = 0, _n1224 = (4); _r1224 < _n1224; _r1224++) {
+        for (let _r1224 = 0, _n1224 = Math.trunc(4); _r1224 < _n1224; _r1224++) {
             S.d_circle(this.x + lengthdir_x(_lane_distance, _dir) + this.x_shake, this.y + lengthdir_y(_lane_distance, _dir), 4 * _scale, false);
             _dir = _dir + 90;
         }
@@ -319,14 +319,14 @@ class Purplecontrols extends Instance {
         _heart_move_limit = 35 * _growtanglescale;
         _layer_movelimit = 0;
         _layer_last = 0;
-        for (let _r1441 = 0, _n1441 = (6); _r1441 < _n1441; _r1441++) {
+        for (let _r1441 = 0, _n1441 = Math.trunc(6); _r1441 < _n1441; _r1441++) {
             if (this.tunnel_radius[_layer_movelimit + 1] < _heart_move_limit && this.tunnel_radius[_layer_movelimit + 1] > 0 || this.tunnel_lane_layer > _layer_movelimit) {
                 _layer_movelimit = _layer_movelimit + 1;
                 continue;
             }
             break;
         }
-        for (let _r1483 = 0, _n1483 = (6); _r1483 < _n1483; _r1483++) {
+        for (let _r1483 = 0, _n1483 = Math.trunc(6); _r1483 < _n1483; _r1483++) {
             if (this.tunnel_radius[_layer_last + 1] > 0) {
                 _layer_last = _layer_last + 1;
                 continue;
@@ -339,7 +339,7 @@ class Purplecontrols extends Instance {
         draw_clear_alpha(0x000000, 0);
         draw_set_color(_prpl_backdrop);
         i = 0;
-        for (let _r1544 = 0, _n1544 = (array_length(this.array_stars_x)); _r1544 < _n1544; _r1544++) {
+        for (let _r1544 = 0, _n1544 = Math.trunc(array_length(this.array_stars_x)); _r1544 < _n1544; _r1544++) {
             _dir = point_direction(0, 0, this.array_stars_x[i], this.array_stars_y[i]);
             _dist = point_distance(0, 0, this.array_stars_x[i], this.array_stars_y[i]);
             _scale = 1 + (this.tunnel_speed_base - 1.5) * 0.3 + _dist / 200;
@@ -348,7 +348,7 @@ class Purplecontrols extends Instance {
         }
         draw_set_color(_prpl_darker);
         i = 0;
-        for (let _r1734 = 0, _n1734 = (6); _r1734 < _n1734; _r1734++) {
+        for (let _r1734 = 0, _n1734 = Math.trunc(6); _r1734 < _n1734; _r1734++) {
             if (this.tunnel_radius[i] > 0) {
                 break;
             }
@@ -356,7 +356,7 @@ class Purplecontrols extends Instance {
         }
         do {
             _dir = this.tunnel_lane_direction - 270;
-            for (let _r1767 = 0, _n1767 = (4); _r1767 < _n1767; _r1767++) {
+            for (let _r1767 = 0, _n1767 = Math.trunc(4); _r1767 < _n1767; _r1767++) {
                 S.d_line_width(_cx + lengthdir_x(this.tunnel_radius[i], _dir), _cy + lengthdir_y(this.tunnel_radius[i], _dir), _cx + lengthdir_x(this.tunnel_radius[i + 1], _dir), _cy + lengthdir_y(this.tunnel_radius[i + 1], _dir), (1 + i) * 1.125);
                 _dir = _dir + 90;
             }
@@ -365,12 +365,12 @@ class Purplecontrols extends Instance {
 
         draw_set_color(_prpl_backdrop);
         _dir = this.tunnel_lane_direction - 270;
-        for (let _r1880 = 0, _n1880 = (4); _r1880 < _n1880; _r1880++) {
+        for (let _r1880 = 0, _n1880 = Math.trunc(4); _r1880 < _n1880; _r1880++) {
             S.d_line_width(_cx + lengthdir_x(this.tunnel_radius[i], _dir), _cy + lengthdir_y(this.tunnel_radius[i], _dir), _cx + lengthdir_x(300, _dir), _cy + lengthdir_y(300, _dir), (1 + i) * 1.125);
             _dir = _dir + 90;
         }
         i = 0;
-        for (let _r1949 = 0, _n1949 = (8); _r1949 < _n1949; _r1949++) {
+        for (let _r1949 = 0, _n1949 = Math.trunc(8); _r1949 < _n1949; _r1949++) {
             if (i == this.tunnel_lane_layer) {
                 draw_set_color(_prpl_dark);
             } else {
@@ -412,7 +412,7 @@ class Purplecontrols extends Instance {
                     draw_set_color(_prpl_light);
                 }
                 _dir = this.tunnel_lane_direction - 270;
-                for (let _r2170 = 0, _n2170 = (4); _r2170 < _n2170; _r2170++) {
+                for (let _r2170 = 0, _n2170 = Math.trunc(4); _r2170 < _n2170; _r2170++) {
                     S.d_circle(_cx + lengthdir_x(this.tunnel_radius[i], _dir), _cy + lengthdir_y(this.tunnel_radius[i], _dir), 2 + (this.tunnel_radius[i] - 12) / 24, false);
                     _dir = _dir + 90;
                 }
@@ -443,7 +443,7 @@ class Purplecontrols extends Instance {
         _alpha_master = 1;
         if (W('obj_pinknode', function (other) {
             i = 0;
-            for (let _r2415 = 0, _n2415 = (4); _r2415 < _n2415; _r2415++) {
+            for (let _r2415 = 0, _n2415 = Math.trunc(4); _r2415 < _n2415; _r2415++) {
                 if (T(this.draw_connection[i])) {
                     if (instance_exists(this.child[i])) {
                         S.d_line(this.x - _cx, this.y - _cy, this.child[i].x - _cx, this.child[i].y - _cy);
@@ -1310,7 +1310,7 @@ class Purplecontrols extends Instance {
             S.ds_list_shuffle(this.maze_destination);
             _list_vertical_lines = S.ds_list_create();
             i = 0;
-            for (let _r4214 = 0, _n4214 = (3 * _number_of_lanes); _r4214 < _n4214; _r4214++) {
+            for (let _r4214 = 0, _n4214 = Math.trunc(3 * _number_of_lanes); _r4214 < _n4214; _r4214++) {
                 switch (i) {
                   case 0:
                     S.ds_list_add(_list_vertical_lines, 12);
@@ -1344,14 +1344,14 @@ class Purplecontrols extends Instance {
             }
             S.ds_list_shuffle(_list_vertical_lines);
             _lane = _number_of_lanes;
-            for (let _r4348 = 0, _n4348 = (_number_of_lanes); _r4348 < _n4348; _r4348++) {
+            for (let _r4348 = 0, _n4348 = Math.trunc(_number_of_lanes); _r4348 < _n4348; _r4348++) {
                 _lane = _lane - 1;
                 this.maze_distance ??= []; this.maze_distance[_lane] = S.ds_list_create();
                 this.maze_direction ??= []; this.maze_direction[_lane] = S.ds_list_create();
                 i = 0;
                 _xx = - (_lane_distance * ((_number_of_lanes - 1) / 2)) + _lane_distance * _lane;
                 _yy = 0;
-                for (let _r4406 = 0, _n4406 = (6); _r4406 < _n4406; _r4406++) {
+                for (let _r4406 = 0, _n4406 = Math.trunc(6); _r4406 < _n4406; _r4406++) {
                     if (i % 2 == 0) {
                         _add_dir = 270;
                         _add_dist = S.ds_list_find_value(_list_vertical_lines, 0);
@@ -1390,7 +1390,7 @@ class Purplecontrols extends Instance {
             S.ds_list_destroy(_list_vertical_lines);
             _safety = choose(0, 1, 2);
             i = 0;
-            for (let _r4662 = 0, _n4662 = (_number_of_lanes); _r4662 < _n4662; _r4662++) {
+            for (let _r4662 = 0, _n4662 = Math.trunc(_number_of_lanes); _r4662 < _n4662; _r4662++) {
                 if (i != _safety) {
                     _bul = scr_fire_bullet(this, this.x - _lane_distance + i * _lane_distance, this.y + 200, 'obj_buzzsaw', 90, 7);
                     _bul.friction = 0.2;
@@ -1562,7 +1562,7 @@ class Purplecontrols extends Instance {
             this.tunnel_speed = this.tunnel_speed + 240 / Math.max(1, this.life_time * 0.9) * (20 - this.life_time) / 20;
         } else {
             i = 0;
-            for (let _r6001 = 0, _n6001 = (8); _r6001 < _n6001; _r6001++) {
+            for (let _r6001 = 0, _n6001 = Math.trunc(8); _r6001 < _n6001; _r6001++) {
                 if (_heart_distance_to_center < Math.max(34, 59 - this.tunnel_speed_base * 3) - i * i / 2) {
                     if (i == 0) {
                         this.tunnel_speed = Math.max(this.tunnel_speed, 2);
@@ -1588,7 +1588,7 @@ class Purplecontrols extends Instance {
         _tunnel_radius_old ??= []; _tunnel_radius_old[7] = 0;
         i = 0;
         if (this.tunnel_speed > 0) {
-            for (let _r6143 = 0, _n6143 = (8); _r6143 < _n6143; _r6143++) {
+            for (let _r6143 = 0, _n6143 = Math.trunc(8); _r6143 < _n6143; _r6143++) {
                 _tunnel_radius_old ??= []; _tunnel_radius_old[i] = this.tunnel_radius[i];
                 if (this.tunnel_radius[i] > 0) {
                     this.tunnel_radius ??= []; this.tunnel_radius[i] = this.tunnel_radius[i] * (1 + this.tunnel_radius[i] / (_tunnel_grow_factor / this.tunnel_speed)) + _tunnel_grow_addition * this.tunnel_speed;
@@ -1607,7 +1607,7 @@ class Purplecontrols extends Instance {
         if (this.tunnel_timer >= _circle_interval) {
             this.tunnel_timer = this.tunnel_timer - _circle_interval;
             i = 8;
-            for (let _r6265 = 0, _n6265 = (7); _r6265 < _n6265; _r6265++) {
+            for (let _r6265 = 0, _n6265 = Math.trunc(7); _r6265 < _n6265; _r6265++) {
                 i = i - 1;
                 this.tunnel_radius ??= []; this.tunnel_radius[i] = this.tunnel_radius[i - 1];
             }
@@ -1649,7 +1649,7 @@ class Purplecontrols extends Instance {
                 _dir = - 1;
                 if (S.ds_list_size(this.pattern_list) <= 0) {
                     _atk = - 1;
-                    for (let _r6503 = 0, _n6503 = (3); _r6503 < _n6503; _r6503++) {
+                    for (let _r6503 = 0, _n6503 = Math.trunc(3); _r6503 < _n6503; _r6503++) {
                         switch (_atk) {
                           case 0:
                             _atk = choose(1, 3, 4);
@@ -1813,7 +1813,7 @@ class Purplecontrols extends Instance {
                 _dir = S.scr_wrap(_dir - _dir_add / 2 * (_repeats - 1) + this.pattern_direction, 0, 360);
                 _multiple_angle = 360 / _multiple;
                 i = 0;
-                for (let _r7424 = 0, _n7424 = (_repeats * _multiple); _r7424 < _n7424; _r7424++) {
+                for (let _r7424 = 0, _n7424 = Math.trunc(_repeats * _multiple); _r7424 < _n7424; _r7424++) {
                     _zap = instance_create_depth(scr_get_box(4) + 1, scr_get_box(5) + 1, - 5, 'obj_pinkzap');
                     if (W(_zap, function (other) {
                         this.direction = _dir;
@@ -2167,7 +2167,7 @@ class Purplecontrols extends Instance {
             this.y = other.y - _spr_offset * this.image_yscale + lengthdir_y(_dist, _dir);
         }, this) === EXIT) return;
         i = 0;
-        for (let _r9862 = 0, _n9862 = (6); _r9862 < _n9862; _r9862++) {
+        for (let _r9862 = 0, _n9862 = Math.trunc(6); _r9862 < _n9862; _r9862++) {
             if (_rotated_amount != 0) {
                 _dir = point_direction(0, 0, this.array_stars_x[i], this.array_stars_y[i]);
                 _dist = point_distance(0, 0, this.array_stars_x[i], this.array_stars_y[i]);
@@ -2180,7 +2180,7 @@ class Purplecontrols extends Instance {
         }
         if (this.array_stars_x[5] == 0 && this.tunnel_lifetime % 5 == 0 || point_distance(0, 0, this.array_stars_x[5], this.array_stars_y[5]) > 200) {
             i = 0;
-            for (let _r10031 = 0, _n10031 = (5); _r10031 < _n10031; _r10031++) {
+            for (let _r10031 = 0, _n10031 = Math.trunc(5); _r10031 < _n10031; _r10031++) {
                 this.array_stars_x ??= []; this.array_stars_x[i + 1] = this.array_stars_x[i];
                 this.array_stars_y ??= []; this.array_stars_y[i + 1] = this.array_stars_y[i];
                 i = i + 1;
@@ -2782,7 +2782,7 @@ class Pinknode extends Instance {
     if (W('obj_pinknode', function (other) {
         if (this != other.id) {
             i = 0;
-            for (let _r23 = 0, _n23 = (4); _r23 < _n23; _r23++) {
+            for (let _r23 = 0, _n23 = Math.trunc(4); _r23 < _n23; _r23++) {
                 if (!T(instance_exists(other.child[i])) && this.child[(i + 2) % 4] == other.id) {
                     other.draw_connection ??= []; other.draw_connection[i] = false;
                     other.child ??= []; other.child[i] = this;
@@ -2806,7 +2806,7 @@ class Pinknode extends Instance {
     if (this.pulse >= 0) {
         this.pulse = this.pulse + 26;
         i = 0;
-        for (let _r21 = 0, _n21 = (4); _r21 < _n21; _r21++) {
+        for (let _r21 = 0, _n21 = Math.trunc(4); _r21 < _n21; _r21++) {
             if (instance_exists(this.child[i]) && T(this.draw_connection[i])) {
                 _dist = point_distance(this.dest_x, this.dest_y, this.child[i].dest_x, this.child[i].dest_y);
                 if (this.pulse >= _dist && this.child[i].pulse < 0) {
@@ -2836,7 +2836,7 @@ class Pinknode extends Instance {
                         _backup_activated = true;
                     } else {
                         i = 0;
-                        for (let _r202 = 0, _n202 = (4); _r202 < _n202; _r202++) {
+                        for (let _r202 = 0, _n202 = Math.trunc(4); _r202 < _n202; _r202++) {
                             if (other.child[i] == this.node_id) {
                                 _backup_activated = true;
                                 break;
@@ -3064,7 +3064,7 @@ class Pinknodeact extends Instance {
                 i = 0;
                 _found_it = false;
                 if (W(this.node_id, function (other) {
-                    for (let _r331 = 0, _n331 = (4); _r331 < _n331; _r331++) {
+                    for (let _r331 = 0, _n331 = Math.trunc(4); _r331 < _n331; _r331++) {
                         if (instance_exists(this.child[i]) && this.draw_connection[i] == 1) {
                             _found_it = true;
                             other.node_id = this.child[i];
@@ -3457,7 +3457,7 @@ class PinkCurtains extends Instance {
     this.audience_popout = 0;
     this.hater_popout = 0;
     i = 0;
-    for (let _r125 = 0, _n125 = (this.audience_number); _r125 < _n125; _r125++) {
+    for (let _r125 = 0, _n125 = Math.trunc(this.audience_number); _r125 < _n125; _r125++) {
         S.ds_list_add(this.l_audience_y, random(60) + choose(0, 180));
         S.ds_list_add(this.l_audience_sway, 3 + random(9));
         S.ds_list_add(this.l_audience_angle, random(360));
@@ -3465,7 +3465,7 @@ class PinkCurtains extends Instance {
         i = i + 1;
     }
     i = 14;
-    for (let _r188 = 0, _n188 = (14); _r188 < _n188; _r188++) {
+    for (let _r188 = 0, _n188 = Math.trunc(14); _r188 < _n188; _r188++) {
         i = i - 1;
         this.curtain_sway ??= []; this.curtain_sway[i] = 0;
         this.curtain_angle ??= []; this.curtain_angle[i] = 0;
@@ -3523,7 +3523,7 @@ class PinkCurtains extends Instance {
     _bits_h = 6;
     _bits_v = 14;
     i = 0;
-    for (let _r508 = 0, _n508 = (_bits_h); _r508 < _n508; _r508++) {
+    for (let _r508 = 0, _n508 = Math.trunc(_bits_h); _r508 < _n508; _r508++) {
         _xx1b = 0;
         _xx2b = 0;
         if (this.closed < 1) {
@@ -3540,7 +3540,7 @@ class PinkCurtains extends Instance {
             _xx2 = _xx2 - 32 * _scale_column;
         }
         j = _bits_v;
-        for (let _r645 = 0, _n645 = (_bits_v); _r645 < _n645; _r645++) {
+        for (let _r645 = 0, _n645 = Math.trunc(_bits_v); _r645 < _n645; _r645++) {
             j = j - 1;
             if (i == _bits_h - 1) {
                 switch (j) {
@@ -3617,7 +3617,7 @@ class PinkCurtains extends Instance {
         if (this.closed <= 0) {
             this.closed = 0;
             i = 0;
-            for (let _r125 = 0, _n125 = (14); _r125 < _n125; _r125++) {
+            for (let _r125 = 0, _n125 = Math.trunc(14); _r125 < _n125; _r125++) {
                 this.curtain_sway ??= []; this.curtain_sway[i] = 2 + i * 1;
                 this.curtain_angle ??= []; this.curtain_angle[i] = 0;
                 i = i + 1;
@@ -3625,7 +3625,7 @@ class PinkCurtains extends Instance {
         }
     }
     i = 0;
-    for (let _r161 = 0, _n161 = (14); _r161 < _n161; _r161++) {
+    for (let _r161 = 0, _n161 = Math.trunc(14); _r161 < _n161; _r161++) {
         this.curtain_sway ??= []; this.curtain_sway[i] = this.curtain_sway[i] + (0.5 - lengthdir_y(0.5, 270 + this.curtain_angle[i])) * sign(- this.curtain_angle[i]) * 2;
         this.curtain_sway ??= []; this.curtain_sway[i] = scr_approach(this.curtain_sway[i], 0, 0.25);
         this.curtain_angle ??= []; this.curtain_angle[i] = this.curtain_angle[i] + this.curtain_sway[i];
@@ -3668,19 +3668,19 @@ class PinkCurtains extends Instance {
                 switch (S.ds_list_find_value(this.l_patterns, 0)) {
                   case 0:
                     i = 4;
-                    for (let _r513 = 0, _n513 = (3); _r513 < _n513; _r513++) {
+                    for (let _r513 = 0, _n513 = Math.trunc(3); _r513 < _n513; _r513++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     i = 7;
-                    for (let _r551 = 0, _n551 = (14); _r551 < _n551; _r551++) {
+                    for (let _r551 = 0, _n551 = Math.trunc(14); _r551 < _n551; _r551++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     i = this.audience_number - 3;
-                    for (let _r591 = 0, _n591 = (3); _r591 < _n591; _r591++) {
+                    for (let _r591 = 0, _n591 = Math.trunc(3); _r591 < _n591; _r591++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
@@ -3691,7 +3691,7 @@ class PinkCurtains extends Instance {
                     break;
                   case 1:
                     i = 0;
-                    for (let _r646 = 0, _n646 = (7); _r646 < _n646; _r646++) {
+                    for (let _r646 = 0, _n646 = Math.trunc(7); _r646 < _n646; _r646++) {
                         if (i >= 2) {
                             S.ds_list_add(this.l_audience_showup, i);
                             this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
@@ -3699,7 +3699,7 @@ class PinkCurtains extends Instance {
                         i = i + 1;
                     }
                     i = i + 1;
-                    for (let _r694 = 0, _n694 = (4); _r694 < _n694; _r694++) {
+                    for (let _r694 = 0, _n694 = Math.trunc(4); _r694 < _n694; _r694++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 2;
@@ -3708,7 +3708,7 @@ class PinkCurtains extends Instance {
                     break;
                   case 2:
                     i = 21;
-                    for (let _r741 = 0, _n741 = (7); _r741 < _n741; _r741++) {
+                    for (let _r741 = 0, _n741 = Math.trunc(7); _r741 < _n741; _r741++) {
                         if (i >= 23) {
                             S.ds_list_add(this.l_audience_showup, i);
                             this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
@@ -3716,7 +3716,7 @@ class PinkCurtains extends Instance {
                         i = i + 1;
                     }
                     i = 19;
-                    for (let _r787 = 0, _n787 = (4); _r787 < _n787; _r787++) {
+                    for (let _r787 = 0, _n787 = Math.trunc(4); _r787 < _n787; _r787++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i - 2;
@@ -3725,7 +3725,7 @@ class PinkCurtains extends Instance {
                     break;
                   case 3:
                     _dice = 1 + irandom(this.audience_number - 2 - 1);
-                    for (let _r843 = 0, _n843 = (13); _r843 < _n843; _r843++) {
+                    for (let _r843 = 0, _n843 = Math.trunc(13); _r843 < _n843; _r843++) {
                         _dice = _dice + (1 + irandom(this.audience_number - 2 - 2));
                         if (_dice >= 21) {
                             _dice = _dice + 1;
@@ -3754,13 +3754,13 @@ class PinkCurtains extends Instance {
                     break;
                   case 4:
                     i = 9;
-                    for (let _r1007 = 0, _n1007 = (4); _r1007 < _n1007; _r1007++) {
+                    for (let _r1007 = 0, _n1007 = Math.trunc(4); _r1007 < _n1007; _r1007++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     i = 15;
-                    for (let _r1045 = 0, _n1045 = (4); _r1045 < _n1045; _r1045++) {
+                    for (let _r1045 = 0, _n1045 = Math.trunc(4); _r1045 < _n1045; _r1045++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
@@ -3771,7 +3771,7 @@ class PinkCurtains extends Instance {
                     break;
                   case 5:
                     i = 10;
-                    for (let _r1100 = 0, _n1100 = (8); _r1100 < _n1100; _r1100++) {
+                    for (let _r1100 = 0, _n1100 = Math.trunc(8); _r1100 < _n1100; _r1100++) {
                         S.ds_list_add(this.l_audience_showup, i);
                         this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
@@ -3784,7 +3784,7 @@ class PinkCurtains extends Instance {
                 S.ds_list_delete(this.l_patterns, 0);
                 S.ds_list_sort(this.l_audience_showup, true);
                 i = S.ds_list_size(this.l_audience_showup);
-                for (let _r1173 = 0, _n1173 = (S.ds_list_size(this.l_audience_showup)); _r1173 < _n1173; _r1173++) {
+                for (let _r1173 = 0, _n1173 = Math.trunc(S.ds_list_size(this.l_audience_showup)); _r1173 < _n1173; _r1173++) {
                     i = i - 1;
                     if (S.ds_list_find_value(this.l_audience_showup, i) >= 21) {
                         S.ds_list_add(this.l_audience_showup, S.ds_list_find_value(this.l_audience_showup, i));
@@ -3821,7 +3821,7 @@ class PinkCurtains extends Instance {
                     }
                 }
                 i = 0;
-                for (let _r1318 = 0, _n1318 = (S.ds_list_size(this.l_audience_showup)); _r1318 < _n1318; _r1318++) {
+                for (let _r1318 = 0, _n1318 = Math.trunc(S.ds_list_size(this.l_audience_showup)); _r1318 < _n1318; _r1318++) {
                     if (this.difficulty > 0 && i < _haters) {
                         S.ds_list_add(this.l_audience_hater, 1);
                     } else {
@@ -3844,7 +3844,7 @@ class PinkCurtains extends Instance {
                   case 2:
                     i = 0;
                     _delay = 3;
-                    for (let _r1439 = 0, _n1439 = (this.audience_number); _r1439 < _n1439; _r1439++) {
+                    for (let _r1439 = 0, _n1439 = Math.trunc(this.audience_number); _r1439 < _n1439; _r1439++) {
                         if (S.ds_list_find_index(this.l_audience_showup, i) >= 0) {
                             if (i < this.audience_number / 2) {
                                 S.ds_list_add(this.l_audience_shoottime, Math.floor((this.audience_number / 2 - i) * _delay));
@@ -3865,7 +3865,7 @@ class PinkCurtains extends Instance {
                 this.audience_popout = 0;
                 this.hater_popout = 0;
                 i = 0;
-                for (let _r1572 = 0, _n1572 = (this.audience_number); _r1572 < _n1572; _r1572++) {
+                for (let _r1572 = 0, _n1572 = Math.trunc(this.audience_number); _r1572 < _n1572; _r1572++) {
                     _dummy = S.ds_list_find_index(this.l_audience_showup, i);
                     if (_dummy >= 0) {
                         if (instance_exists(this.audience_hitbox[i])) {
