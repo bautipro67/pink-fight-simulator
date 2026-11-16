@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_point, collision_rectangle, defineObject, draw_primitive_begin, draw_primitive_end, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_sprite, draw_sprite_ext, draw_vertex, frac, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_find, instance_number, instance_place, irandom, lengthdir_x, lengthdir_y, lerp, merge_color, place_meeting, point_direction, point_distance, random, sign, snd_is_playing, snd_play, snd_stop, sprite_get_height, surface_create, surface_free,
-} from '../rt.js?v=20261116031545';
+} from '../rt.js?v=20261116121953';
 import {
   camerax, cameray, i_ex, scr_afterimage, scr_approach, scr_doom, scr_draw_outline, scr_draw_outline_ext, scr_get_box, scr_lerpvar, scr_script_delayed, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116031545';
+} from '../common.js?v=20261116121953';
 import {
   BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116031545';
+} from '../gml.js?v=20261116121953';
 import {
   array_length,
-} from '../lib5.js?v=20261116031545';
+} from '../lib5.js?v=20261116121953';
 
 // obj_bullet_healing (default sprite None, depth 0)
 class BulletHealing extends Instance {
@@ -53,10 +53,10 @@ class BulletHealing extends Instance {
         if (_x2 + 2 > O('obj_growtangle').x + O('obj_growtangle').sprite_width * 0.5) {
             _x2 = O('obj_growtangle').x + O('obj_growtangle').sprite_width * 0.5;
         }
-        S.d_rectangle_color(_x1, O('obj_growtangle').y - O('obj_growtangle').sprite_height * 0.5 + 5, _x2, O('obj_growtangle').y + O('obj_growtangle').sprite_height * 0.5 - 4, 65280, 65280, 65280, 65280, false);
-        gpu_set_fog(1, 16777215, 0, 0);
+        S.d_rectangle_color(_x1, O('obj_growtangle').y - O('obj_growtangle').sprite_height * 0.5 + 5, _x2, O('obj_growtangle').y + O('obj_growtangle').sprite_height * 0.5 - 4, 0x00ff00, 0x00ff00, 0x00ff00, 0x00ff00, false);
+        gpu_set_fog(1, 0xffffff, 0, 0);
         draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.telegraph_alpha);
-        gpu_set_fog(0, 16777215, 0, 0);
+        gpu_set_fog(0, 0xffffff, 0, 0);
         draw_set_alpha(1);
     }
   }
@@ -1233,7 +1233,7 @@ class Pinkmeteor extends Instance {
         }
     }
     draw_set_alpha(this.heat_alpha);
-    S.d_rectangle_color(S.camera_get_view_x(0), S.camera_get_view_y(0), S.camera_get_view_x(0) + 640, S.camera_get_view_y(0) + 480, 65535, 65535, 255, 255, false);
+    S.d_rectangle_color(S.camera_get_view_x(0), S.camera_get_view_y(0), S.camera_get_view_x(0) + 640, S.camera_get_view_y(0) + 480, 0xffff00, 0xffff00, 0xff0000, 0xff0000, false);
     draw_set_alpha(1);
   }
   step() {
@@ -1775,9 +1775,9 @@ class Fusebomb extends P('obj_regularbullet') {
         }
     }
     if (T(this.has_heart)) {
-        if (_color == 26367) {
+        if (_color == 0xff6600) {
             _color = 0x880000;
-        } else if (_color == 48127) {
+        } else if (_color == 0xffbb00) {
             _color = 0xcc2233;
         } else {
             _color = 0xff6699;
@@ -2315,7 +2315,7 @@ class FusebombBig extends P('obj_regularbullet') {
         _color = 0xffffff;
     }
     if (T(this.has_heart)) {
-        if (_color == 255) {
+        if (_color == 0xff0000) {
             _color = 0x880000;
         } else {
             _color = 0xff6699;

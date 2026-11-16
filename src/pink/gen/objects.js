@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, audio_sound_get_track_position, d3d_set_fog, defineObject, draw_clear_alpha, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_set_halign, draw_set_valign, draw_sprite, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_text, draw_text_color, draw_text_ext, draw_text_ext_transformed, draw_text_transformed, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, random, snd_loop, snd_play, snd_stop, snd_volume, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261116031545';
+} from '../rt.js?v=20261116121953';
 import {
   camerawidth, camerax, cameray, i_ex, scr_shakeobj, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116031545';
+} from '../common.js?v=20261116121953';
 import {
   EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116031545';
+} from '../gml.js?v=20261116121953';
 
 // obj_date_ui (default sprite spr_dokibar_blush, depth 0)
 class DateUi extends Instance {
@@ -157,7 +157,7 @@ class DateUi extends Instance {
             S.d_rectangle(_x + _pop_x + 450, _y + _pop_y + 80, _x + _pop_x + 484, _y + _pop_y + 114, true);
             _popu_rep = 0;
             for (let _r610 = 0, _n610 = (5); _r610 < _n610; _r610++) {
-                S.d_line_width_color(_x + _pop_x + 440 + this.populationx[_popu_rep], _y + 61 + _pop_y + this.populationy[_popu_rep], _x + 440 + _pop_x + this.populationx2[_popu_rep], _y + 61 + _pop_y + this.populationy2[_popu_rep], 1, 4235519, 4235519);
+                S.d_line_width_color(_x + _pop_x + 440 + this.populationx[_popu_rep], _y + 61 + _pop_y + this.populationy[_popu_rep], _x + 440 + _pop_x + this.populationx2[_popu_rep], _y + 61 + _pop_y + this.populationy2[_popu_rep], 1, 0xffa040, 0xffa040);
                 this.populationx ??= []; this.populationx[_popu_rep] = this.populationx[_popu_rep] - 1;
                 this.populationx2 ??= []; this.populationx2[_popu_rep] = this.populationx2[_popu_rep] - 1;
                 if (this.populationx[_popu_rep] < 10) {
@@ -202,7 +202,7 @@ class DateUi extends Instance {
         draw_sprite_ext('spr_radar_dog', 0, _x + 600 + lengthdir_x(this.doglen, this.dogangle), _y + 280 + lengthdir_y(this.doglen, this.dogangle), 0.5, 0.5, 0, 0xffffff, this.dogalpha);
         this.radarangle = this.radarangle + 6;
         S.d_circle(_x + 600, _y + 280, 16, true);
-        S.d_line_color(_x + 600, _y + 280, _x + 600 + lengthdir_x(16, this.radarangle), _y + 280 + lengthdir_y(16, this.radarangle), 65280, 65280);
+        S.d_line_color(_x + 600, _y + 280, _x + 600 + lengthdir_x(16, this.radarangle), _y + 280 + lengthdir_y(16, this.radarangle), 0x00ff00, 0x00ff00);
         if (this.con == 2 && !T(i_ex('obj_date_controller'))) {
             this.inst = instance_create_depth(_x + 600, _y + 280, this.depth + 1, 'obj_afterimage_line');
             this.inst.x2 = _x + 600 + lengthdir_x(16, this.radarangle);
@@ -275,7 +275,7 @@ class DateUi extends Instance {
         this.healthbar_surf = surface_create(96, 250);
     }
     surface_set_target(this.healthbar_surf);
-    draw_clear_alpha(16777215, 0);
+    draw_clear_alpha(0xffffff, 0);
     draw_sprite('spr_dokibar', 1, 0, 0);
     draw_set_color(this.medpink);
     S.d_rectangle(3, this.sprite_height - 1, this.sprite_width - 1, this.sprite_height - doki / this.dokimax * this.sprite_height, false);
@@ -284,7 +284,7 @@ class DateUi extends Instance {
         draw_set_alpha(this.flashsiner);
         if (O('obj_pink_enemy').datecount == 3 && O('obj_pink_enemy').explosioncon == 0) {
         } else {
-            S.d_rectangle_color(3, this.sprite_height - 1, this.sprite_width - 1, this.sprite_height - doki / this.dokimax * this.sprite_height, 16777215, 16777215, 16777215, 16777215, false);
+            S.d_rectangle_color(3, this.sprite_height - 1, this.sprite_width - 1, this.sprite_height - doki / this.dokimax * this.sprite_height, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
         }
         this.flashsiner = this.flashsiner - 1;
         draw_set_alpha(1);
@@ -292,7 +292,7 @@ class DateUi extends Instance {
     if (doki == this.dokimax) {
         this.tsiner = this.tsiner + 1;
         draw_set_alpha(0.5 + Math.sin(this.tsiner * 0.2) * 0.5);
-        S.d_rectangle_color(3, this.sprite_height - 1, this.sprite_width - 1, this.sprite_height - doki / this.dokimax * this.sprite_height, 16777215, 16777215, 16777215, 16777215, false);
+        S.d_rectangle_color(3, this.sprite_height - 1, this.sprite_width - 1, this.sprite_height - doki / this.dokimax * this.sprite_height, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
         draw_set_alpha(1);
     }
     if (O('obj_pink_enemy').doki > 0) {
@@ -595,9 +595,9 @@ class Gigaheart extends Instance {
         }
     }
     draw_self(this);
-    gpu_set_fog(1, 16777215, 0, 0);
+    gpu_set_fog(1, 0xffffff, 0, 0);
     draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.whitealpha);
-    gpu_set_fog(0, 16777215, 0, 0);
+    gpu_set_fog(0, 0xffffff, 0, 0);
   }
 }
 defineObject('obj_gigaheart', Gigaheart);
@@ -1376,9 +1376,9 @@ class GigaheartParticle extends Instance {
             instance_destroy(this);
         }
     }
-    gpu_set_fog(1, 16777215, 0, 0);
+    gpu_set_fog(1, 0xffffff, 0, 0);
     draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, this.extra);
-    gpu_set_fog(0, 16777215, 0, 0);
+    gpu_set_fog(0, 0xffffff, 0, 0);
     this.timer3 = this.timer3 + 1;
     this.image_xscale = 2 + Math.sin(this.timer3 * 0.4) * 0.4;
     this.image_yscale = 2 + Math.sin(this.timer3 * 0.4) * 0.4;

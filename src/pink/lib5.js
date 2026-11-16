@@ -7,9 +7,9 @@ import {
   font_add_sprite_ext, draw_rectangle_color, draw_line_color, draw_line_width_color, draw_circle, draw_set_font, draw_line,
   draw_ellipse, snd_play, snd_loop, point_distance, sprite_get_width, sprite_get_height, sprite_get_xoffset, sprite_get_yoffset,
   draw_circle_color, draw_get_color, draw_set_color, draw_text_transformed, keyboard_check_pressed, mus_volume,
-  draw_set_alpha, Instance, defineObject, instance_destroy,
-} from './rt.js?v=20261116031545';
-import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261116031545';
+  draw_set_alpha, Instance, defineObject, instance_destroy, shader_saturation,
+} from './rt.js?v=20261116121953';
+import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261116121953';
 
 // The date's scripts (obj_date_controller).
 defineScript('d_circle_color', (x, y, r, c1, c2, outline) => draw_circle_color(x, y, r, c1, c2, outline));
@@ -104,8 +104,8 @@ defineScript('scr_draw_sprite_tiled_area', (spr, img, xx, yy, x1, y1, x2, y2, xs
   ctx.restore();
 });
 void point_distance;
-import { moveToPoint } from '../screens/cutscene.js?v=20261116031545';
-import { subst } from '../battle/common.js?v=20261116031545';
+import { moveToPoint } from '../screens/cutscene.js?v=20261116121953';
+import { subst } from '../battle/common.js?v=20261116121953';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")
@@ -220,11 +220,13 @@ defineScript('scr_84_set_draw_font', name => {
   draw_set_font('fnt_' + name);
 });
 
-// Shaders (shader_replace_simple, the saturation effect): not drawn yet.
+// Shaders: shader_replace_simple_set_hook(57) is sh_saturation (Pink's BODY), drawn by the engine
+// (shader_saturation); its one uniform, Position, comes with shader_set_uniform_f. Other shaders are not drawn.
+let shaderOn = -1;
 defineScript('shader_get_uniform', () => -1);
-defineScript('shader_set_uniform_f', () => {});
-defineScript('shader_replace_simple_set_hook', () => {});
-defineScript('shader_replace_simple_reset_hook', () => {});
+defineScript('shader_set_uniform_f', (uniform, v) => { if (shaderOn === 57) shader_saturation(v); });
+defineScript('shader_replace_simple_set_hook', sh => { shaderOn = sh; if (sh === 57) shader_saturation(0); });
+defineScript('shader_replace_simple_reset_hook', () => { shaderOn = -1; shader_saturation(null); });
 
 // obj_initializer2: the pink numbers the DOKI writer uses.
 export function initPinkFonts() {

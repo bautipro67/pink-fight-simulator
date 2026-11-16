@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, button2_h, choose, clamp, collision_rectangle, defineObject, down_h, down_p, draw_clear, draw_clear_alpha, draw_line_width, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text_transformed, draw_vertex_color, global, gpu_set_blendmode, gpu_set_blendmode_ext, gpu_set_colorwriteenable, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_place, irandom, left_h, left_p, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, point_direction, point_distance, random, right_h, right_p, sign, snd_play, snd_stop, string_width, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target, up_h, up_p,
-} from '../rt.js?v=20261116031545';
+} from '../rt.js?v=20261116121953';
 import {
   camerax, cameray, i_ex, scr_approach, scr_fire_bullet, scr_get_box, scr_shakescreen,
-} from '../common.js?v=20261116031545';
+} from '../common.js?v=20261116121953';
 import {
   BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116031545';
+} from '../gml.js?v=20261116121953';
 import {
   array_length,
-} from '../lib5.js?v=20261116031545';
+} from '../lib5.js?v=20261116121953';
 
 // !!! gml_Object_obj_purplecontrols_Step_0.gml has a decompiler WARNING: check the asm
 // obj_purplecontrols (default sprite spr_purpleheart, depth 0)
@@ -174,7 +174,7 @@ class Purplecontrols extends Instance {
             this.surface_effect = surface_create(142, _arrows_height);
         }
         surface_set_target(this.surface_effect);
-        draw_clear_alpha(0, 0);
+        draw_clear_alpha(0x000000, 0);
         _yy = _arrows_height - this.bg_y;
         do {
             _xx = - 1;
@@ -199,7 +199,7 @@ class Purplecontrols extends Instance {
             this.surface_box = surface_create(142, 142);
         }
         surface_set_target(this.surface_box);
-        draw_clear_alpha(0, 0);
+        draw_clear_alpha(0x000000, 0);
         _xx = 70;
         _yy = 70;
         draw_surface_ext(this.surface_effect, _xx - 70, _yy - _arrows_height, 1, 1, 0, 0xffffff, 1);
@@ -228,7 +228,7 @@ class Purplecontrols extends Instance {
             this.surface_box = surface_create(142, 142);
         }
         surface_set_target(this.surface_box);
-        draw_clear(0);
+        draw_clear(0x000000);
         _xx = 70;
         _yy = 70;
         _lane_distance = 40;
@@ -336,7 +336,7 @@ class Purplecontrols extends Instance {
         _cx = 150;
         _cy = 150;
         surface_set_target(this.surface_effect);
-        draw_clear_alpha(0, 0);
+        draw_clear_alpha(0x000000, 0);
         draw_set_color(_prpl_backdrop);
         i = 0;
         for (let _r1544 = 0, _n1544 = (array_length(this.array_stars_x)); _r1544 < _n1544; _r1544++) {
@@ -438,7 +438,7 @@ class Purplecontrols extends Instance {
             this.surface_effect = surface_create(640, 480);
         }
         surface_set_target(this.surface_effect);
-        draw_clear_alpha(0, 0);
+        draw_clear_alpha(0x000000, 0);
         draw_set_color(_prpl_dark);
         _alpha_master = 1;
         if (W('obj_pinknode', function (other) {
@@ -3337,7 +3337,7 @@ class FxPurpleripple extends Instance {
         this.surface_effect = surface_create(256, 256);
     }
     surface_set_target(this.surface_effect);
-    draw_clear_alpha(0, 0);
+    draw_clear_alpha(0x000000, 0);
     draw_set_color(0xffffff);
     S.d_circle(128, 128, this.life_time * 6, false);
     if (this.life_time > 10) {
@@ -3504,7 +3504,7 @@ class PinkCurtains extends Instance {
         _camfix_x = 0;
         _camfix_y = 0;
     }
-    draw_clear_alpha(0, 0);
+    draw_clear_alpha(0x000000, 0);
     if (!T(_drawdummies)) {
         draw_sprite_ext('spr_dw_castle_tv_speaker', 1, _cx + 172, _cy + (scr_get_box(1) - S.camera_get_view_y(0)) - 31, 2 * this.speaker_scale[0], 2 * this.speaker_scale[0], 0, 0xffffff, 1);
         draw_sprite_ext('spr_dw_castle_tv_speaker', 1, _cx + 468, _cy + (scr_get_box(1) - S.camera_get_view_y(0)) - 31, 2 * this.speaker_scale[1], 2 * this.speaker_scale[1], 0, 0xffffff, 1);

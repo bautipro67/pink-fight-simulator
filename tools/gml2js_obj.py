@@ -73,7 +73,15 @@ EVENTS = [(r'^Create_0$', 'create', ''), (r'^Step_0$', 'step', ''), (r'^Step_1$'
 COLOR_FN = {'draw_sprite_ext': [7], 'draw_sprite': [], 'draw_set_color': [0], 'merge_color': [0, 1], 'd3d_set_fog': [1],
             'draw_sprite_part_ext': [10], 'draw_surface_ext': [6], 'draw_sprite_stretched_ext': [6],
             'draw_sprite_tiled_ext': [6], 'draw_text_color': [3, 4, 5, 6], 'draw_rectangle_color': [4, 5, 6, 7],
-            'draw_triangle_color': [6, 7, 8], 'scr_draw_outline_ext': []}
+            'draw_triangle_color': [6, 7, 8], 'scr_draw_outline_ext': [],
+            # (also gpu_set_fog, the other *_color draws and Chapter 5's d_* wrappers of them)
+            'gpu_set_fog': [1], 'draw_line_color': [4, 5], 'draw_line_width_color': [5, 6], 'draw_circle_color': [3, 4],
+            'draw_ellipse_color': [4, 5], 'draw_point_color': [2], 'draw_vertex_color': [2],
+            'draw_text_transformed_color': [6, 7, 8, 9], 'draw_text_ext_color': [5, 6, 7, 8],
+            'draw_text_ext_transformed_color': [8, 9, 10, 11], 'draw_sprite_general': [11, 12, 13, 14],
+            'draw_surface_part_ext': [9], 'draw_surface_stretched_ext': [5], 'draw_clear': [0], 'draw_clear_alpha': [0],
+            'd_rectangle_color': [4, 5, 6, 7], 'd_line_color': [4, 5], 'd_line_width_color': [5, 6],
+            'd_circle_color': [3, 4], 'd_ellipse_color': [4, 5], 'd_triangle_color': [6, 7, 8]}
 KEYWORDS = {'if', 'else', 'while', 'for', 'do', 'until', 'repeat', 'with', 'switch', 'case', 'default', 'break',
             'continue', 'return', 'exit', 'var', 'true', 'false', 'self', 'other', 'global', 'div', 'mod', 'not', 'and', 'or',
             'undefined', 'noone', 'all', 'pi'}

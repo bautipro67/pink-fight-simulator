@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, button1_h, button3_h, choose, defineObject, draw_clear, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text, draw_text_ext, draw_text_ext_transformed, draw_text_transformed_color, draw_vertex_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, left_h, lengthdir_x, lerp, make_color_hsv, make_color_rgb, merge_color, mus_loop, mus_volume, random, right_h, snd_free_all, snd_init, snd_loop, snd_play, snd_stop, snd_volume, sprite_set_offset, string_char_at, string_copy, string_length, string_width, surface_create, surface_exists, surface_free, surface_get_height, surface_get_width, surface_reset_target, surface_set_target, up_h,
-} from '../rt.js?v=20261116031545';
+} from '../rt.js?v=20261116121953';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, room_height, room_width, scr_approach, scr_lerpvar, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116031545';
+} from '../common.js?v=20261116121953';
 import {
   EXIT, LOOP, O, T, VIEW_WPORT, W,
-} from '../gml.js?v=20261116031545';
+} from '../gml.js?v=20261116121953';
 
 // obj_date_controller (default sprite None, depth 0)
 class DateController extends Instance {
@@ -491,7 +491,7 @@ class DateController extends Instance {
             this.surface1 = surface_create(640, 480);
         }
         surface_set_target(this.surface1);
-        draw_clear(0);
+        draw_clear(0x000000);
     }
     this.bg_speed = this.bg_speed + this.bg_speed_max;
     this.bg_speed_y = this.bg_speed_y + this.bg_speed_y_max;
@@ -903,7 +903,7 @@ class DateController extends Instance {
         draw_sprite_ext('spr_datingsim_ui_nodiamonds_inverted', 3, xx, yy, 2, 2, 0, 0xffffff, this.invertbgalpha);
     }
     draw_set_alpha(this.date4darknessalpha);
-    S.d_rectangle_color(this.camx, this.camy, this.camx + this.camwidth, this.camy + this.camheight, 0, 0, 0, 0, false);
+    S.d_rectangle_color(this.camx, this.camy, this.camx + this.camwidth, this.camy + this.camheight, 0x000000, 0x000000, 0x000000, 0x000000, false);
     draw_set_alpha(1);
     if (O('obj_pink_enemy').datecount == 3 || O('obj_pink_enemy').datecount == 4) {
     } else {
@@ -1103,13 +1103,13 @@ class DateController extends Instance {
             _textxscale5 = lerp(0, _xscale5 * _scale_adjust, Math.abs(_drawn_box_x5 - _drawn_box_x5_right) / 170);
             _textyscale5 = _yscale5;
             if (this.drawn_box_x[5] > - 366) {
-                S.d_rectangle_color(_drawn_box_x5, this.drawn_box_y[5], _drawn_box_x5_right, this.drawn_box_y[5] + 60, 16777215, 16777215, 16777215, 16777215, false);
-                S.d_rectangle_color(_drawn_box_x5 - _w, this.drawn_box_y[5] + _w, _drawn_box_x5_right + _w, this.drawn_box_y[5] + 60 - _w, 0, 0, 0, 0, false);
+                S.d_rectangle_color(_drawn_box_x5, this.drawn_box_y[5], _drawn_box_x5_right, this.drawn_box_y[5] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+                S.d_rectangle_color(_drawn_box_x5 - _w, this.drawn_box_y[5] + _w, _drawn_box_x5_right + _w, this.drawn_box_y[5] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
                 if (this.minigame_won == 0) {
                     if (_text_outline == 1) {
                         S.draw_text_transformed_outline((_drawn_box_x5 + _drawn_box_x5_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text5, _textxscale5, _textyscale5, _almost_black);
                     } else {
-                        draw_text_transformed_color((_drawn_box_x5 + _drawn_box_x5_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text5, _textxscale5, _textyscale5, 0, 16777215, 16777215, 16777215, 16777215, true);
+                        draw_text_transformed_color((_drawn_box_x5 + _drawn_box_x5_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text5, _textxscale5, _textyscale5, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                     }
                 }
             }
@@ -1121,13 +1121,13 @@ class DateController extends Instance {
             _textxscale6 = lerp(0, _xscale6 * _scale_adjust, Math.abs(_drawn_box_x6 - _drawn_box_x6_right) / 170);
             _textyscale6 = _yscale6;
             if (this.drawn_box_x[6] < 832) {
-                S.d_rectangle_color(_drawn_box_x6, this.drawn_box_y[6], _drawn_box_x6_right, this.drawn_box_y[6] + 60, 16777215, 16777215, 16777215, 16777215, false);
-                S.d_rectangle_color(_drawn_box_x6 - _w, this.drawn_box_y[6] + _w, _drawn_box_x6_right + _w, this.drawn_box_y[2] + 60 - _w, 0, 0, 0, 0, false);
+                S.d_rectangle_color(_drawn_box_x6, this.drawn_box_y[6], _drawn_box_x6_right, this.drawn_box_y[6] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+                S.d_rectangle_color(_drawn_box_x6 - _w, this.drawn_box_y[6] + _w, _drawn_box_x6_right + _w, this.drawn_box_y[2] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
                 if (this.minigame_won == 0) {
                     if (_text_outline == 1) {
                         S.draw_text_transformed_outline((_drawn_box_x6 + _drawn_box_x6_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text6, _textxscale6, _textyscale6, _almost_black);
                     } else {
-                        draw_text_transformed_color((_drawn_box_x6 + _drawn_box_x6_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text6, _textxscale6, _textyscale6, 0, 16777215, 16777215, 16777215, 16777215, true);
+                        draw_text_transformed_color((_drawn_box_x6 + _drawn_box_x6_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text6, _textxscale6, _textyscale6, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                     }
                 }
             }
@@ -1138,13 +1138,13 @@ class DateController extends Instance {
             _drawn_box_x1_right = lengthdir_x(_radius, _angle1_right) + _centeroffset;
             _textxscale1 = lerp(0, _xscale1 * _scale_adjust, Math.abs(_drawn_box_x1 - _drawn_box_x1_right) / 170);
             _textyscale1 = _yscale1;
-            S.d_rectangle_color(_drawn_box_x1, this.drawn_box_y[1], _drawn_box_x1_right, this.drawn_box_y[1] + 60, 16777215, 16777215, 16777215, 16777215, false);
-            S.d_rectangle_color(_drawn_box_x1 - _w, this.drawn_box_y[1] + _w, _drawn_box_x1_right + _w, this.drawn_box_y[1] + 60 - _w, 0, 0, 0, 0, false);
+            S.d_rectangle_color(_drawn_box_x1, this.drawn_box_y[1], _drawn_box_x1_right, this.drawn_box_y[1] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+            S.d_rectangle_color(_drawn_box_x1 - _w, this.drawn_box_y[1] + _w, _drawn_box_x1_right + _w, this.drawn_box_y[1] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
             if (this.minigame_won == 0) {
                 if (_text_outline == 1) {
                     S.draw_text_transformed_outline((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, _almost_black);
                 } else {
-                    draw_text_transformed_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, 0, 16777215, 16777215, 16777215, 16777215, true);
+                    draw_text_transformed_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                 }
             }
             this.drawn_box_x ??= []; this.drawn_box_x[3] = _box_x - _distance_between_boxes * 2;
@@ -1155,13 +1155,13 @@ class DateController extends Instance {
             _textxscale3 = lerp(0, _xscale3 * _scale_adjust, Math.abs(_drawn_box_x3 - _drawn_box_x3_right) / 170);
             _textyscale3 = _yscale3;
             if (this.drawn_box_x[3] > - 330) {
-                S.d_rectangle_color(_drawn_box_x3, this.drawn_box_y[3], _drawn_box_x3_right, this.drawn_box_y[3] + 60, 16777215, 16777215, 16777215, 16777215, false);
-                S.d_rectangle_color(_drawn_box_x3 - _w, this.drawn_box_y[3] + _w, _drawn_box_x3_right + _w, this.drawn_box_y[3] + 60 - _w, 0, 0, 0, 0, false);
+                S.d_rectangle_color(_drawn_box_x3, this.drawn_box_y[3], _drawn_box_x3_right, this.drawn_box_y[3] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+                S.d_rectangle_color(_drawn_box_x3 - _w, this.drawn_box_y[3] + _w, _drawn_box_x3_right + _w, this.drawn_box_y[3] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
                 if (this.minigame_won == 0) {
                     if (_text_outline == 1) {
                         S.draw_text_transformed_outline((_drawn_box_x3 + _drawn_box_x3_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text3, _textxscale3, _textyscale3, _almost_black);
                     } else {
-                        draw_text_transformed_color((_drawn_box_x3 + _drawn_box_x3_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text3, _textxscale3, _textyscale3, 0, 16777215, 16777215, 16777215, 16777215, true);
+                        draw_text_transformed_color((_drawn_box_x3 + _drawn_box_x3_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text3, _textxscale3, _textyscale3, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                     }
                 }
             }
@@ -1172,13 +1172,13 @@ class DateController extends Instance {
             _drawn_box_x4_right = lengthdir_x(_radius, _angle4_right) + _centeroffset;
             _textxscale4 = lerp(0, _xscale4 * _scale_adjust, Math.abs(_drawn_box_x4 - _drawn_box_x4_right) / 170);
             _textyscale4 = _yscale4;
-            S.d_rectangle_color(_drawn_box_x4, this.drawn_box_y[4], _drawn_box_x4_right, this.drawn_box_y[4] + 60, 16777215, 16777215, 16777215, 16777215, false);
-            S.d_rectangle_color(_drawn_box_x4 - _w, this.drawn_box_y[4] + _w, _drawn_box_x4_right + _w, this.drawn_box_y[4] + 60 - _w, 0, 0, 0, 0, false);
+            S.d_rectangle_color(_drawn_box_x4, this.drawn_box_y[4], _drawn_box_x4_right, this.drawn_box_y[4] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+            S.d_rectangle_color(_drawn_box_x4 - _w, this.drawn_box_y[4] + _w, _drawn_box_x4_right + _w, this.drawn_box_y[4] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
             if (this.minigame_won == 0) {
                 if (_text_outline == 1) {
                     S.draw_text_transformed_outline((_drawn_box_x4 + _drawn_box_x4_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text4, _textxscale4, _textyscale4, _almost_black);
                 } else {
-                    draw_text_transformed_color((_drawn_box_x4 + _drawn_box_x4_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text4, _textxscale4, _textyscale4, 0, 16777215, 16777215, 16777215, 16777215, true);
+                    draw_text_transformed_color((_drawn_box_x4 + _drawn_box_x4_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text4, _textxscale4, _textyscale4, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                 }
             }
         }
@@ -1191,13 +1191,13 @@ class DateController extends Instance {
         draw_set_color(0xffffff);
         _textxscale0 = lerp(0, _xscale0 * _scale_adjust, Math.abs(_drawn_box_x0 - _drawn_box_x0_right) / 170);
         _textyscale0 = _yscale0;
-        S.d_rectangle_color(_drawn_box_x0, this.drawn_box_y[0], _drawn_box_x0_right, this.drawn_box_y[0] + 60, 16777215, 16777215, 16777215, 16777215, false);
-        S.d_rectangle_color(_drawn_box_x0 - _w, this.drawn_box_y[0] + _w, _drawn_box_x0_right + _w, this.drawn_box_y[0] + 60 - _w, 0, 0, 0, 0, false);
+        S.d_rectangle_color(_drawn_box_x0, this.drawn_box_y[0], _drawn_box_x0_right, this.drawn_box_y[0] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+        S.d_rectangle_color(_drawn_box_x0 - _w, this.drawn_box_y[0] + _w, _drawn_box_x0_right + _w, this.drawn_box_y[0] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
         if (this.minigame_won == 0) {
             if (_text_outline == 1) {
                 S.draw_text_transformed_outline((_drawn_box_x0 + _drawn_box_x0_right) / 2, this.drawn_box_y[0] + _text_y_offset + 0, _text0, _textxscale0, _textyscale0, _almost_black);
             } else {
-                draw_text_transformed_color((_drawn_box_x0 + _drawn_box_x0_right) / 2, this.drawn_box_y[0] + _text_y_offset + 0, _text0, _textxscale0, _textyscale0, 0, 16777215, 16777215, 16777215, 16777215, 1);
+                draw_text_transformed_color((_drawn_box_x0 + _drawn_box_x0_right) / 2, this.drawn_box_y[0] + _text_y_offset + 0, _text0, _textxscale0, _textyscale0, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 1);
             }
         }
         if (this.questioncount == 0 && O('obj_pink_enemy').datecount == 1 || this.con != 2) {
@@ -1209,13 +1209,13 @@ class DateController extends Instance {
             _drawn_box_x2_right = lengthdir_x(_radius, _angle2_right) + _centeroffset;
             _textxscale2 = lerp(0, _xscale2 * _scale_adjust, Math.abs(_drawn_box_x2 - _drawn_box_x2_right) / 170);
             _textyscale2 = _yscale2;
-            S.d_rectangle_color(_drawn_box_x2, this.drawn_box_y[2], _drawn_box_x2_right, this.drawn_box_y[2] + 60, 16777215, 16777215, 16777215, 16777215, false);
-            S.d_rectangle_color(_drawn_box_x2 - _w, this.drawn_box_y[2] + _w, _drawn_box_x2_right + _w, this.drawn_box_y[2] + 60 - _w, 0, 0, 0, 0, false);
+            S.d_rectangle_color(_drawn_box_x2, this.drawn_box_y[2], _drawn_box_x2_right, this.drawn_box_y[2] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+            S.d_rectangle_color(_drawn_box_x2 - _w, this.drawn_box_y[2] + _w, _drawn_box_x2_right + _w, this.drawn_box_y[2] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
             if (this.minigame_won == 0) {
                 if (_text_outline == 1) {
                     S.draw_text_transformed_outline((_drawn_box_x2 + _drawn_box_x2_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text2, _textxscale2, _textyscale2, _almost_black);
                 } else {
-                    draw_text_transformed_color((_drawn_box_x2 + _drawn_box_x2_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text2, _textxscale2, _textyscale2, 0, 16777215, 16777215, 16777215, 16777215, true);
+                    draw_text_transformed_color((_drawn_box_x2 + _drawn_box_x2_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text2, _textxscale2, _textyscale2, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                 }
             }
             this.drawn_box_x ??= []; this.drawn_box_x[1] = _box_x + _distance_between_boxes;
@@ -1225,41 +1225,41 @@ class DateController extends Instance {
             _drawn_box_x1_right = lengthdir_x(_radius, _angle1_right) + _centeroffset;
             _textxscale1 = lerp(0, _xscale1 * _scale_adjust, Math.abs(_drawn_box_x1 - _drawn_box_x1_right) / 170);
             _textyscale1 = _yscale1;
-            S.d_rectangle_color(_drawn_box_x1, this.drawn_box_y[1], _drawn_box_x1_right, this.drawn_box_y[1] + 60, 16777215, 16777215, 16777215, 16777215, false);
-            S.d_rectangle_color(_drawn_box_x1 - _w, this.drawn_box_y[1] + _w, _drawn_box_x1_right + _w, this.drawn_box_y[1] + 60 - _w, 0, 0, 0, 0, false);
+            S.d_rectangle_color(_drawn_box_x1, this.drawn_box_y[1], _drawn_box_x1_right, this.drawn_box_y[1] + 60, 0xffffff, 0xffffff, 0xffffff, 0xffffff, false);
+            S.d_rectangle_color(_drawn_box_x1 - _w, this.drawn_box_y[1] + _w, _drawn_box_x1_right + _w, this.drawn_box_y[1] + 60 - _w, 0x000000, 0x000000, 0x000000, 0x000000, false);
             if (this.minigame_won == 0) {
                 if (_text_outline == 1) {
                     S.draw_text_transformed_outline((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, _almost_black);
                 } else {
-                    draw_text_transformed_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, 0, 16777215, 16777215, 16777215, 16777215, true);
+                    draw_text_transformed_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                 }
             }
         }
         if (this.con == 2) {
-            S.d_line_width_color((_drawn_box_x0 + 2 + _drawn_box_x0_right) / 2, ___y, (_drawn_box_x0 + 2 + _drawn_box_x0_right) / 2, this.drawn_box_y[3] + 61, 2, 8388736, 8388736);
+            S.d_line_width_color((_drawn_box_x0 + 2 + _drawn_box_x0_right) / 2, ___y, (_drawn_box_x0 + 2 + _drawn_box_x0_right) / 2, this.drawn_box_y[3] + 61, 2, 0x800080, 0x800080);
         }
         if (this.questioncount == 0 && O('obj_pink_enemy').datecount == 1 || this.con != 2) {
         } else {
-            S.d_line_width_color((_drawn_box_x5 + _drawn_box_x5_right) / 2, ___y, (_drawn_box_x6 + _drawn_box_x6_right) / 2, ___y, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x6 + _drawn_box_x6_right) / 2, ___y, (_drawn_box_x6 + _drawn_box_x6_right) / 2, this.drawn_box_y[3] + 61, 2, 8388736, 8388736);
-            S.d_circle_color((_drawn_box_x6 + _drawn_box_x6_right) / 2 - 1, ___y, 4, 8388736, 8388736, false);
+            S.d_line_width_color((_drawn_box_x5 + _drawn_box_x5_right) / 2, ___y, (_drawn_box_x6 + _drawn_box_x6_right) / 2, ___y, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x6 + _drawn_box_x6_right) / 2, ___y, (_drawn_box_x6 + _drawn_box_x6_right) / 2, this.drawn_box_y[3] + 61, 2, 0x800080, 0x800080);
+            S.d_circle_color((_drawn_box_x6 + _drawn_box_x6_right) / 2 - 1, ___y, 4, 0x800080, 0x800080, false);
             if (this.drawn_box_x[3] > - 330) {
-                S.d_line_width_color((_drawn_box_x3 + _drawn_box_x3_right) / 2, ___y, (_drawn_box_x3 + _drawn_box_x3_right) / 2, this.drawn_box_y[3] + 61, 2, 8388736, 8388736);
+                S.d_line_width_color((_drawn_box_x3 + _drawn_box_x3_right) / 2, ___y, (_drawn_box_x3 + _drawn_box_x3_right) / 2, this.drawn_box_y[3] + 61, 2, 0x800080, 0x800080);
             }
-            S.d_line_width_color((_drawn_box_x4 + _drawn_box_x4_right) / 2, ___y, (_drawn_box_x4 + _drawn_box_x4_right) / 2, this.drawn_box_y[3] + 61, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, ___y, (_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[3] + 61, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x2 + _drawn_box_x2_right) / 2, ___y, (_drawn_box_x2 + _drawn_box_x2_right) / 2, this.drawn_box_y[3] + 61, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x3 + _drawn_box_x3_right) / 2, ___y, (_drawn_box_x4 + _drawn_box_x4_right) / 2, ___y, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x4 + _drawn_box_x4_right) / 2, ___y, (_drawn_box_x0 + _drawn_box_x0_right) / 2, ___y, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x0 + _drawn_box_x0_right) / 2, ___y, (_drawn_box_x1 + _drawn_box_x1_right) / 2, ___y, 2, 8388736, 8388736);
-            S.d_line_width_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, ___y, (_drawn_box_x2 + _drawn_box_x2_right) / 2, ___y, 2, 8388736, 8388736);
+            S.d_line_width_color((_drawn_box_x4 + _drawn_box_x4_right) / 2, ___y, (_drawn_box_x4 + _drawn_box_x4_right) / 2, this.drawn_box_y[3] + 61, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, ___y, (_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[3] + 61, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x2 + _drawn_box_x2_right) / 2, ___y, (_drawn_box_x2 + _drawn_box_x2_right) / 2, this.drawn_box_y[3] + 61, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x3 + _drawn_box_x3_right) / 2, ___y, (_drawn_box_x4 + _drawn_box_x4_right) / 2, ___y, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x4 + _drawn_box_x4_right) / 2, ___y, (_drawn_box_x0 + _drawn_box_x0_right) / 2, ___y, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x0 + _drawn_box_x0_right) / 2, ___y, (_drawn_box_x1 + _drawn_box_x1_right) / 2, ___y, 2, 0x800080, 0x800080);
+            S.d_line_width_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, ___y, (_drawn_box_x2 + _drawn_box_x2_right) / 2, ___y, 2, 0x800080, 0x800080);
             if (this.drawn_box_x[3] > - 330) {
-                S.d_circle_color((_drawn_box_x3 + _drawn_box_x3_right) / 2 - 1, ___y, 4, 8388736, 8388736, false);
+                S.d_circle_color((_drawn_box_x3 + _drawn_box_x3_right) / 2 - 1, ___y, 4, 0x800080, 0x800080, false);
             }
-            S.d_circle_color((_drawn_box_x4 + _drawn_box_x4_right) / 2 - 1, ___y, 4, 8388736, 8388736, false);
-            S.d_circle_color((_drawn_box_x0 + _drawn_box_x0_right) / 2 - 1, ___y, 4, 8388736, 8388736, false);
-            S.d_circle_color((_drawn_box_x1 + _drawn_box_x1_right) / 2 - 1, ___y, 4, 8388736, 8388736, false);
-            S.d_circle_color((_drawn_box_x2 + _drawn_box_x2_right) / 2 - 1, ___y, 4, 8388736, 8388736, false);
+            S.d_circle_color((_drawn_box_x4 + _drawn_box_x4_right) / 2 - 1, ___y, 4, 0x800080, 0x800080, false);
+            S.d_circle_color((_drawn_box_x0 + _drawn_box_x0_right) / 2 - 1, ___y, 4, 0x800080, 0x800080, false);
+            S.d_circle_color((_drawn_box_x1 + _drawn_box_x1_right) / 2 - 1, ___y, 4, 0x800080, 0x800080, false);
+            S.d_circle_color((_drawn_box_x2 + _drawn_box_x2_right) / 2 - 1, ___y, 4, 0x800080, 0x800080, false);
         }
         draw_set_alpha(1);
     }
@@ -1293,7 +1293,7 @@ class DateController extends Instance {
         draw_set_color(0xffffff);
     }
     if (this.show_intro_outro_surfaces == 1 && this.con == 0) {
-        gpu_set_fog(1, 16777215, 0, 0);
+        gpu_set_fog(1, 0xffffff, 0, 0);
         draw_set_alpha(this.intro_outro_surfaces_whiteness_alpha);
         if (this.bugfix_depth_con == 0) {
             this.bugfix_depth_con = this.bugfix_depth_con + 1;
@@ -1302,7 +1302,7 @@ class DateController extends Instance {
             S.d_rectangle(this.camx + this.surface2_x + 1, this.camy, this.camx + this.camwidth / 2 + this.surface2_x + 1, this.camy + this.camheight, false);
         }
         draw_set_alpha(1);
-        gpu_set_fog(0, 16777215, 0, 0);
+        gpu_set_fog(0, 0xffffff, 0, 0);
         this.tailindex = this.tailindex + 0.16666666666666666;
         portrait_offset_x = 0;
         if (this.pinkportrait == 'spr_pinkspeaker_angry') {
@@ -1391,16 +1391,16 @@ class DateController extends Instance {
         draw_set_alpha(this.eyeshaft_alpha);
         _handx = this.camx + 210;
         _handy = this.camy + 395;
-        S.d_line_color(_handx - 105, _handy - 250, _handx - 15 + 9, _handy - 193 + _float_y, 65280, 65280);
-        S.d_line_color(_handx - 105, _handy - 150, _handx - 27 + 9, _handy - 176 + _float_y, 65280, 65280);
-        S.d_line_color(_handx - 105, _handy - 130, _handx - 22 + 9, _handy - 168 + _float_y, 65280, 65280);
-        S.d_line_color(_handx - 60, _handy - 124, _handx - 16 + 9, _handy - 160 + _float_y, 65280, 65280);
-        S.d_line_color(_handx - 14, _handy - 124, _handx - 3 + 9, _handy - 156 + _float_y, 65280, 65280);
-        S.d_line_color(_handx + 240, _handy - 124, _handx + 218 + 9, _handy - 156 + _float_y, 65280, 65280);
-        S.d_line_color(_handx + 280, _handy - 124, _handx + 230 + 9, _handy - 160 + _float_y, 65280, 65280);
-        S.d_line_color(_handx + 315, _handy - 132, _handx + 239 + 9, _handy - 168 + _float_y, 65280, 65280);
-        S.d_line_color(_handx + 315, _handy - 152, _handx + 239 + 9, _handy - 176 + _float_y, 65280, 65280);
-        S.d_line_color(_handx + 315, _handy - 250, _handx + 229 + 9, _handy - 193 + _float_y, 65280, 65280);
+        S.d_line_color(_handx - 105, _handy - 250, _handx - 15 + 9, _handy - 193 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx - 105, _handy - 150, _handx - 27 + 9, _handy - 176 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx - 105, _handy - 130, _handx - 22 + 9, _handy - 168 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx - 60, _handy - 124, _handx - 16 + 9, _handy - 160 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx - 14, _handy - 124, _handx - 3 + 9, _handy - 156 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx + 240, _handy - 124, _handx + 218 + 9, _handy - 156 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx + 280, _handy - 124, _handx + 230 + 9, _handy - 160 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx + 315, _handy - 132, _handx + 239 + 9, _handy - 168 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx + 315, _handy - 152, _handx + 239 + 9, _handy - 176 + _float_y, 0x00ff00, 0x00ff00);
+        S.d_line_color(_handx + 315, _handy - 250, _handx + 229 + 9, _handy - 193 + _float_y, 0x00ff00, 0x00ff00);
         this.eyeshafttimer = this.eyeshafttimer + 1;
         if (this.eyeshafttimer == 10) {
             this.eyeshafttimer = 0;

@@ -2,8 +2,8 @@
 // W(target, fn, self) is GML's with(): fn runs with `this` = each instance and `other` = self;
 // returning EXIT ends the calling event, BREAK leaves the with loop.
 // O(name) reads the first instance of an object and writes every instance, like obj_x.var in GML.
-import { G, instancesOf, objectClass } from './rt.js?v=20261116031545';
-import { tagParent } from './common.js?v=20261116031545';
+import { G, instancesOf, objectClass } from './rt.js?v=20261116121953';
+import { tagParent } from './common.js?v=20261116121953';
 
 export const EXIT = Symbol('exit');
 export const BREAK = Symbol('break');

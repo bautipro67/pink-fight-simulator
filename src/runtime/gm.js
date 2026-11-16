@@ -9,7 +9,7 @@
 // - Colours are 0xRRGGBB numbers. GML literals are BGR: wrap them in bgr(0x...).
 // - Angles are degrees, counter-clockwise; y points down (same as GameMaker).
 // - `global` holds GML globals: global.tension, global.hp[...] etc.
-import { assets, spriteMask } from './assets.js?v=20261116031545';
+import { assets, spriteMask } from './assets.js?v=20261116121953';
 
 export const global = {};
 export const ROOM_W = 640;
@@ -764,7 +764,40 @@ export function d3d_set_fog(enable, color = 0xffffff) {
   fogColor = enable ? (color & 0xffffff) : null;
 }
 const fogged = (img, color, r) => recolor(fogCache, fogRegions, img, color, r, paintFog);
-const sprSource = (img, col, r) => (fogColor !== null ? fogged(img, fogColor, r) : tinted(img, col, r));
+
+// Chapter 5's sh_saturation (Pink's BODY once her GHOST has left it): each pixel's blue channel moves by
+// its saturation and the Position uniform: b = clamp(max - (max - b) / sat * (sat + position), 0, max).
+// shader_saturation(position) turns it on for the sprites drawn next, shader_saturation(null) off.
+// (Position is kept to steps of 0.05. The shader leaves fog out, so a fogged draw under it is only tinted
+// by its blend colour, which multiplies the result as in GameMaker's v_vColour * Colour.)
+let satKey = null;
+const satCache = new WeakMap();
+const satRegions = new WeakMap();
+export function shader_saturation(position) {
+  satKey = position === null || position === undefined ? null : Math.round(position * 20);
+}
+function paintSat(x, img, key, x0, y0, w, h) {
+  const [k, col] = key.split(':').map(Number);
+  const pos = k / 20, cr = (col >> 16 & 255) / 255, cg = (col >> 8 & 255) / 255, cb = (col & 255) / 255;
+  x.drawImage(img, x0, y0, w, h, x0, y0, w, h);
+  const d = x.getImageData(x0, y0, w, h), p = d.data;
+  for (let i = 0; i < p.length; i += 4) {
+    if (!p[i + 3]) continue;
+    const r = p[i] / 255, g = p[i + 1] / 255;
+    let b = p[i + 2] / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    if (max > 0 && max !== min) {
+      const sat = 1 - min / max;
+      b = Math.min(max, Math.max(0, max - (max - b) / sat * (sat + pos)));
+    }
+    p[i] = Math.round(r * cr * 255);
+    p[i + 1] = Math.round(g * cg * 255);
+    p[i + 2] = Math.round(b * cb * 255);
+  }
+  x.putImageData(d, x0, y0);
+}
+const sprSource = (img, col, r) => (satKey !== null ? recolor(satCache, satRegions, img, satKey + ':' + (col & 0xffffff), r, paintSat)
+  : fogColor !== null ? fogged(img, fogColor, r) : tinted(img, col, r));
 
 function begin(alpha) {
   const ctx = G.ctx;
@@ -1158,6 +1191,7 @@ export function tick() {
 
 export function render() {
   resetSurfaceTarget();
+  satKey = null; // (a shader left on by a draw that returned early does not carry into the next frame)
   const ctx = G.ctx;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = 1;

@@ -122,6 +122,17 @@ t = re.sub(r'\b(S\.c_(?:sound_play|snd_play|sndplay|sndplay_x|snd_play_x)\()(\d+
 t = re.sub(r'S\.method\(- ?1, this\.anon_gml_Object_obj_dw_pink_encounter_Step_0_(\d+)_gml_Object_obj_dw_pink_encounter_Step_0\)',
            r'S.pinkSceneFn(this, \1)', t)
 
+# A colour picked at random from GML numbers (obj_spell_revivesong's stars: image_blend = choose(yellow,
+# orange)): each number in the runtime's 0xRRGGBB order.
+_bgr = lambda n: '0x%06x' % (((n & 255) << 16) | (n & 0xff00) | (n >> 16 & 255))
+t = re.sub(r'\b([\w.]*(?:blend|colou?r)\w*) = choose\(([\d, ]+)\);',
+           lambda m: '%s = choose(%s);' % (m.group(1), ', '.join(_bgr(int(n)) for n in m.group(2).split(','))), t)
+
+# obj_fusebomb / obj_fusebomb_big Draw: `_color` holds a converted colour (0xRRGGBB) but is compared with GML
+# numbers; compared in the runtime's order, a bomb carrying a heart is dark red or crimson, as in the game.
+for _gml, _rgb in (('26367', '0xff6600'), ('48127', '0xffbb00'), ('255', '0xff0000')):
+    t = t.replace('if (_color == %s) {' % _gml, 'if (_color == %s) {' % _rgb)
+
 # obj_pinknode Create: fnc_make_node = method(self, ...): a child node at dir * 90 degrees, dist away.
 t = re.sub(r"this\.fnc_make_node = S\.method\([^;]*\);",
            "this.fnc_make_node = (dir, dist) => { this.child ??= []; this.child[dir] = instance_create_depth("

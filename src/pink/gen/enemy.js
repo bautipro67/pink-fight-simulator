@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   S, button3_p, choose, d3d_set_fog, defineObject, draw_set_alpha, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, keyboard_check_pressed, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, mus_loop_ext, mus_volume, random, random_range, snd_init, snd_loop, snd_play, snd_stop,
-} from '../rt.js?v=20261116031545';
+} from '../rt.js?v=20261116121953';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, scr_afterimage, scr_lerpvar, scr_script_delayed, scr_shakeobj, scr_shakescreen, scr_var, snd_play_x,
-} from '../common.js?v=20261116031545';
+} from '../common.js?v=20261116121953';
 import {
   EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116031545';
+} from '../gml.js?v=20261116121953';
 
 // obj_pink_enemy (default sprite spr_pink_idle, depth 0, parent obj_monsterparent)
 class PinkEnemy extends P('obj_monsterparent') {
@@ -352,7 +352,7 @@ class PinkEnemy extends P('obj_monsterparent') {
         this.turnredcon = 1;
         if (this.turnredcon == 1) {
             this.turnredtimer = this.turnredtimer + 1;
-            gpu_set_fog(1, 255, 0, 0);
+            gpu_set_fog(1, 0xff0000, 0, 0);
             __offsetx = - 6;
             __offsety = 28;
             this.i = 0;
@@ -360,7 +360,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                 draw_sprite_part_ext('spr_pink_very_hurt_2xscale', this.image_index, 0, this.i * this.thickness, this.sprite_width, this.thickness + 2, this.x + this.shakex + __offsetx + Math.sin((this.wave_siner + this.i * 8) / 30) * 3, this.y + this.i * this.thickness + __offsety, 1, 1, 0xffffff, 0.2 + Math.sin(this.turnredtimer * 0.35) * 0.2);
                 this.i = this.i + this.thickness;
             }
-            gpu_set_fog(0, 16777215, 0, 0);
+            gpu_set_fog(0, 0xffffff, 0, 0);
         }
         if (this.turnredtimer % 15 == 0) {
             smokey = instance_create(this.x + 50, this.y + 35 + irandom(20), 'obj_afterimage_grow');
@@ -425,9 +425,9 @@ class PinkEnemy extends P('obj_monsterparent') {
             draw_sprite_ext('spr_pink_front_surprised', this.hurttimer / 2, this.x + this.shakex + this.hurtspriteoffx + 43, this.y + this.hurtspriteoffy + 42, 2, 2, 0, this.image_blend, 1);
             if (this.turnredcon == 1) {
                 this.turnredtimer = this.turnredtimer + 1;
-                gpu_set_fog(1, 255, 0, 0);
+                gpu_set_fog(1, 0xff0000, 0, 0);
                 draw_sprite_ext('spr_pink_front_surprised', this.hurttimer / 2, this.x + this.shakex + this.hurtspriteoffx + 43, this.y + this.hurtspriteoffy + 42, 2, 2, 0, this.image_blend, 0.2 + Math.sin(this.turnredtimer * 0.35) * 0.2);
-                gpu_set_fog(0, 16777215, 0, 0);
+                gpu_set_fog(0, 0xffffff, 0, 0);
             }
         }
     } else {
@@ -546,7 +546,7 @@ class PinkEnemy extends P('obj_monsterparent') {
         }
         if (this.turnredcon == 1) {
             this.turnredtimer = this.turnredtimer + 1;
-            gpu_set_fog(1, 255, 0, 0);
+            gpu_set_fog(1, 0xff0000, 0, 0);
             if (this.idlesprite == 'spr_pink_kneeling_sad2') {
                 draw_sprite_ext('spr_pink_kneeling_sad2', this.siner, this.x + 18, this.y - 4, this.image_xscale, this.image_yscale, 0, 0xff0000, 0.2 + Math.sin(this.turnredtimer * 0.35) * 0.2);
             } else if (this.idlesprite == 'spr_pink_front_sweat') {
@@ -554,7 +554,7 @@ class PinkEnemy extends P('obj_monsterparent') {
             } else {
                 draw_sprite_ext(this.thissprite, this.siner, this.x, this.y, this.image_xscale, this.image_yscale, 0, 0xff0000, 0.2 + Math.sin(this.turnredtimer * 0.35) * 0.2);
             }
-            gpu_set_fog(0, 16777215, 0, 0);
+            gpu_set_fog(0, 0xffffff, 0, 0);
             if (this.turnredtimer % 5 == 0) {
                 smokey = instance_create(this.x + 50, this.y + 35 + irandom(20), 'obj_afterimage_grow');
                 if (W(smokey, function (other) {

@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, d3d_set_fog, defineObject, draw_clear_alpha, draw_self, draw_set_alpha, draw_set_blend_mode, draw_set_color, draw_sprite_ext, draw_surface, draw_surface_ext, global, gpu_set_alphatestenable, instance_create, instance_create_depth, instance_destroy, irandom_range, lengthdir_x, lerp, random, random_range, snd_pitch, snd_play, snd_stop, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261116031545';
+} from '../rt.js?v=20261116121953';
 import {
   cameray, clamp01, i_ex, scr_dark_marker, scr_ease_in, scr_ease_inout, scr_ease_out, snd_play_x,
-} from '../common.js?v=20261116031545';
+} from '../common.js?v=20261116121953';
 import {
   EXIT, O, T, W,
-} from '../gml.js?v=20261116031545';
+} from '../gml.js?v=20261116121953';
 
 // obj_spell_revivesong (default sprite spr_ralsei_cherub, depth 0)
 class SpellRevivesong extends Instance {
@@ -105,7 +105,7 @@ class SpellRevivesong extends Instance {
         draw_self(this);
     }, this) === EXIT) return;
     surface_set_target(this.silhouette_surf);
-    draw_clear_alpha(0, 0);
+    draw_clear_alpha(0x000000, 0);
     draw_sprite_ext(this.target_char.sprite_index, this.target_char.image_index, this.target_char.x - (this.xstart - 64), this.target_char.y - (this.ystart - 300) - 2, 2, 2, 0, 0x807976, 1);
     draw_sprite_ext(this.target_char.sprite_index, this.target_char.image_index, this.target_char.x - (this.xstart - 64), this.target_char.y - (this.ystart - 300), 2, 2, 0, 0x807976, 1);
     gpu_set_alphatestenable(true);
@@ -116,7 +116,7 @@ class SpellRevivesong extends Instance {
     gpu_set_alphatestenable(false);
     surface_reset_target();
     surface_set_target(this.light_surf);
-    draw_clear_alpha(0, 0);
+    draw_clear_alpha(0x000000, 0);
     draw_set_blend_mode(0);
     S.scr_draw_beam(64, 0, _length, _spread, 270, 16777215, 1, false);
     draw_set_alpha(1);
@@ -171,13 +171,13 @@ class SpellRevivesong extends Instance {
             d = instance_create(this.x + Math.cos(this.timer / 3 + this.offset) * 30, this.y + Math.sin(this.timer / 3 + this.offset) * 10, 'obj_animation');
             d.sprite_index = 'spr_sparestar_anim';
             d.image_speed = 0.5;
-            d.image_blend = choose(5103871, 7124479);
+            d.image_blend = choose(0xffe04d, 0xffb56c);
             d.image_xscale = 2;
             d.image_yscale = 2;
             d = instance_create(this.x - Math.sin(this.timer / 3 + this.offset) * 30, this.y - Math.cos(this.timer / 3 + this.offset) * 10, 'obj_animation');
             d.sprite_index = 'spr_sparestar_anim';
             d.image_speed = 0.5;
-            d.image_blend = choose(5103871, 7124479);
+            d.image_blend = choose(0xffe04d, 0xffb56c);
             d.image_xscale = 2;
             d.image_yscale = 2;
         }
