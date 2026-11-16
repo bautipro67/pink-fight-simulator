@@ -12,16 +12,16 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instancesOf, draw_sprite_ext, draw_sprite, lengthdir_x, lengthdir_y, sprite_get_xoffset, sprite_get_yoffset,
   sprite_get_width, sprite_get_height, sprite_get_number, choose, irandom, random,
-} from '../runtime/gm.js?v=20261116134227';
-import { snd_volume, snd_stop, audio_sound_set_track_position } from '../runtime/audio.js?v=20261116134227';
-import { loadMusic } from '../runtime/assets.js?v=20261116134227';
+} from '../runtime/gm.js?v=20261116145317';
+import { snd_volume, snd_stop, audio_sound_set_track_position } from '../runtime/audio.js?v=20261116145317';
+import { loadMusic } from '../runtime/assets.js?v=20261116145317';
 import {
   c, c_waitcustom_end, scr_cutscene_make, scr_actor_setup, scr_depth, loadRoom, enterRoom,
-  scr_jump_to_point_sprite,
-} from '../screens/cutscene.js?v=20261116134227';
-import { scr_dark_marker, scr_marker, scr_lerpvar_instance, scr_var_delayed } from './common.js?v=20261116134227';
-import { startBattle } from '../battle/setup.js?v=20261116134227';
-import { gotoRoom } from '../screens/common.js?v=20261116134227';
+  scr_jump_to_point_sprite, moveToPoint,
+} from '../screens/cutscene.js?v=20261116145317';
+import { scr_dark_marker, scr_marker, scr_lerpvar_instance, scr_doom } from './common.js?v=20261116145317';
+import { startBattle } from '../battle/setup.js?v=20261116145317';
+import { gotoRoom } from '../screens/common.js?v=20261116145317';
 
 export { scr_depth };
 
@@ -404,9 +404,12 @@ class BattleStart extends Instance {
           scr_depth(m);
           if (p.color === 255) m.depth += 260;
         }
+        // (scr_battle: the enemy's marker slides to her place in the battle, monstermakex / monstermakey of
+        // encounter 224, in 20 frames and is gone after 25, when the battle controller makes Pink there)
         const m = scr_dark_marker(h.pink[0], h.pink[1], h.pinkSprite);
         m.image_index = 1;
-        scr_var_delayed(m, 'visible', false, 24);
+        moveToPoint(m, 470, 131, 20);
+        scr_doom(m, 25);
       },
     });
   }

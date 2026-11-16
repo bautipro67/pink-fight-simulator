@@ -2,19 +2,19 @@
 /* eslint-disable */
 import {
   Instance, S, defineObject, global, instance_create, instance_create_depth, irandom_range, keyboard_check, make_color_rgb, merge_color, random, random_range, snd_loop, snd_stop, snd_volume,
-} from '../rt.js?v=20261116134227';
+} from '../rt.js?v=20261116145317';
 import {
   camerax, cameray, i_ex, room_height, room_width, scr_dark_marker, scr_marker, scr_var_delayed,
-} from '../common.js?v=20261116134227';
+} from '../common.js?v=20261116145317';
 import {
   EXIT, LOOP, T, W,
-} from '../gml.js?v=20261116134227';
+} from '../gml.js?v=20261116145317';
 import {
   array_length,
-} from '../lib5.js?v=20261116134227';
+} from '../lib5.js?v=20261116145317';
 import {
   scr_depth,
-} from '../scene.js?v=20261116134227';
+} from '../scene.js?v=20261116145317';
 
 // obj_dw_pink_encounter (default sprite spr_eventsmall, depth 0)
 class DwPinkEncounter extends Instance {

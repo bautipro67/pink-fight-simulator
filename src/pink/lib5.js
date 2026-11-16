@@ -8,8 +8,8 @@ import {
   draw_ellipse, snd_play, snd_loop, point_distance, sprite_get_width, sprite_get_height, sprite_get_xoffset, sprite_get_yoffset,
   draw_circle_color, draw_get_color, draw_set_color, draw_text_transformed, keyboard_check_pressed, mus_volume,
   draw_set_alpha, Instance, defineObject, instance_destroy, shader_saturation,
-} from './rt.js?v=20261116134227';
-import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261116134227';
+} from './rt.js?v=20261116145317';
+import { snd_play_x, camerax, cameray, scr_script_delayed } from './common.js?v=20261116145317';
 
 // The date's scripts (obj_date_controller).
 defineScript('d_circle_color', (x, y, r, c1, c2, outline) => draw_circle_color(x, y, r, c1, c2, outline));
@@ -104,8 +104,8 @@ defineScript('scr_draw_sprite_tiled_area', (spr, img, xx, yy, x1, y1, x2, y2, xs
   ctx.restore();
 });
 void point_distance;
-import { moveToPoint } from '../screens/cutscene.js?v=20261116134227';
-import { subst } from '../battle/common.js?v=20261116134227';
+import { moveToPoint } from '../screens/cutscene.js?v=20261116145317';
+import { subst } from '../battle/common.js?v=20261116145317';
 
 // (generated from the GML by tools/gen_doki_tables.py)
 // scr_item_to_doki (default 1) / scr_item_to_dokitext (default "")
@@ -128,7 +128,8 @@ defineScript('scr_dokiadd', (m, amount) => {
     if (amount <= 50) pitch = 1.2;
     if (amount <= 25) pitch = 1.4;
     snd_play_x('snd_mercyadd', 0.8, pitch);
-  } else S.snd_play?.('snd_hurt_muffled_2x');
+  }
+  // (and no sound otherwise: the GML's `_playsound = 0` is a flag the decompiler named snd_hurt_muffled_2x)
   const d = instance_create(global.monsterx[m], global.monstery[m] + 20 - global.hittarget[m] * 20, 'obj_dmgwriter');
   d.damage = amount;
   d.type = 15;
