@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, button2_h, choose, clamp, collision_rectangle, defineObject, down_h, down_p, draw_clear, draw_clear_alpha, draw_line_width, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text_transformed, draw_vertex_color, global, gpu_set_blendmode, gpu_set_blendmode_ext, gpu_set_colorwriteenable, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_place, irandom, left_h, left_p, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, point_direction, point_distance, random, right_h, right_p, sign, snd_play, snd_stop, string_width, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target, up_h, up_p,
-} from '../rt.js?v=20261116220235';
+} from '../rt.js?v=20261117033203';
 import {
   camerax, cameray, i_ex, scr_approach, scr_fire_bullet, scr_get_box, scr_shakescreen,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116220235';
+  AF, BREAK, EXIT, LOOP, O, P, T, W,
+} from '../gml.js?v=20261117033203';
 import {
   array_length,
-} from '../lib5.js?v=20261116220235';
+} from '../lib5.js?v=20261117033203';
 
 // !!! gml_Object_obj_purplecontrols_Step_0.gml has a decompiler WARNING: check the asm
 // obj_purplecontrols (default sprite spr_purpleheart, depth 0)
@@ -77,14 +77,14 @@ class Purplecontrols extends Instance {
     i = 8;
     for (let _r120 = 0, _n120 = Math.trunc(8); _r120 < _n120; _r120++) {
         i = i - 1;
-        this.tunnel_radius ??= []; this.tunnel_radius[i] = 0;
+        this.tunnel_radius ??= []; AF(this.tunnel_radius, i); this.tunnel_radius[i] = 0;
     }
     this.tunnel_lane_layer = 0;
     this.tunnel_lane_direction = 270;
     this.tunnel_speed_base = 0;
     this.tunnel_speed = 0;
-    this.array_stars_x ??= []; this.array_stars_x[5] = 0;
-    this.array_stars_y ??= []; this.array_stars_y[5] = 0;
+    this.array_stars_x ??= []; AF(this.array_stars_x, 5); this.array_stars_x[5] = 0;
+    this.array_stars_y ??= []; AF(this.array_stars_y, 5); this.array_stars_y[5] = 0;
     this.pattern_phase = 0;
     this.pattern_time = 0;
     this.pattern_direction = 270;
@@ -1177,7 +1177,7 @@ class Purplecontrols extends Instance {
                 if (W(instance_create_depth(this.x, this.y, this.depth - 2, 'obj_pinkmeteor'), function (other) {
                     this.image_xscale = 3.5;
                     this.image_yscale = 3.5;
-                    this.mother = other.id;
+                    this.mother = other;
                 }, this) === EXIT) return;
             }
             if (this.super > 0) {
@@ -1346,8 +1346,8 @@ class Purplecontrols extends Instance {
             _lane = _number_of_lanes;
             for (let _r4348 = 0, _n4348 = Math.trunc(_number_of_lanes); _r4348 < _n4348; _r4348++) {
                 _lane = _lane - 1;
-                this.maze_distance ??= []; this.maze_distance[_lane] = S.ds_list_create();
-                this.maze_direction ??= []; this.maze_direction[_lane] = S.ds_list_create();
+                this.maze_distance ??= []; AF(this.maze_distance, _lane); this.maze_distance[_lane] = S.ds_list_create();
+                this.maze_direction ??= []; AF(this.maze_direction, _lane); this.maze_direction[_lane] = S.ds_list_create();
                 i = 0;
                 _xx = - (_lane_distance * ((_number_of_lanes - 1) / 2)) + _lane_distance * _lane;
                 _yy = 0;
@@ -1585,15 +1585,15 @@ class Purplecontrols extends Instance {
                 }
             }
         }
-        _tunnel_radius_old ??= []; _tunnel_radius_old[7] = 0;
+        _tunnel_radius_old ??= []; AF(_tunnel_radius_old, 7); _tunnel_radius_old[7] = 0;
         i = 0;
         if (this.tunnel_speed > 0) {
             for (let _r6143 = 0, _n6143 = Math.trunc(8); _r6143 < _n6143; _r6143++) {
-                _tunnel_radius_old ??= []; _tunnel_radius_old[i] = this.tunnel_radius[i];
+                _tunnel_radius_old ??= []; AF(_tunnel_radius_old, i); _tunnel_radius_old[i] = this.tunnel_radius[i];
                 if (this.tunnel_radius[i] > 0) {
-                    this.tunnel_radius ??= []; this.tunnel_radius[i] = this.tunnel_radius[i] * (1 + this.tunnel_radius[i] / (_tunnel_grow_factor / this.tunnel_speed)) + _tunnel_grow_addition * this.tunnel_speed;
+                    this.tunnel_radius ??= []; AF(this.tunnel_radius, i); this.tunnel_radius[i] = this.tunnel_radius[i] * (1 + this.tunnel_radius[i] / (_tunnel_grow_factor / this.tunnel_speed)) + _tunnel_grow_addition * this.tunnel_speed;
                     if (this.tunnel_radius[i] > _circle_grow_limit) {
-                        this.tunnel_radius ??= []; this.tunnel_radius[i] = 0;
+                        this.tunnel_radius ??= []; AF(this.tunnel_radius, i); this.tunnel_radius[i] = 0;
                         if (this.tunnel_lane_layer == i) {
                             this.tunnel_lane_layer = this.tunnel_lane_layer - 1;
                         }
@@ -1609,9 +1609,9 @@ class Purplecontrols extends Instance {
             i = 8;
             for (let _r6265 = 0, _n6265 = Math.trunc(7); _r6265 < _n6265; _r6265++) {
                 i = i - 1;
-                this.tunnel_radius ??= []; this.tunnel_radius[i] = this.tunnel_radius[i - 1];
+                this.tunnel_radius ??= []; AF(this.tunnel_radius, i); this.tunnel_radius[i] = this.tunnel_radius[i - 1];
             }
-            this.tunnel_radius ??= []; this.tunnel_radius[0] = _starting_radius;
+            this.tunnel_radius ??= []; AF(this.tunnel_radius, 0); this.tunnel_radius[0] = _starting_radius;
             if (this.tunnel_radius[i] > 0) {
                 this.tunnel_lane_layer = this.tunnel_lane_layer + 1;
                 if (this.tunnel_lane_layer >= 8) {
@@ -1851,7 +1851,7 @@ class Purplecontrols extends Instance {
             }
             if (this.tunnel_timer > 0) {
                 _offsetfix = this.tunnel_timer;
-                this.tunnel_radius ??= []; this.tunnel_radius[0] = this.tunnel_radius[0] * (1 + this.tunnel_radius[0] / _tunnel_grow_factor * _offsetfix) + _tunnel_grow_addition * _offsetfix;
+                this.tunnel_radius ??= []; AF(this.tunnel_radius, 0); this.tunnel_radius[0] = this.tunnel_radius[0] * (1 + this.tunnel_radius[0] / _tunnel_grow_factor * _offsetfix) + _tunnel_grow_addition * _offsetfix;
             }
         }
         if (this.buffer_u >= 1) {
@@ -2171,24 +2171,24 @@ class Purplecontrols extends Instance {
             if (_rotated_amount != 0) {
                 _dir = point_direction(0, 0, this.array_stars_x[i], this.array_stars_y[i]);
                 _dist = point_distance(0, 0, this.array_stars_x[i], this.array_stars_y[i]);
-                this.array_stars_x ??= []; this.array_stars_x[i] = lengthdir_x(_dist, _dir + _rotated_amount);
-                this.array_stars_y ??= []; this.array_stars_y[i] = lengthdir_y(_dist, _dir + _rotated_amount);
+                this.array_stars_x ??= []; AF(this.array_stars_x, i); this.array_stars_x[i] = lengthdir_x(_dist, _dir + _rotated_amount);
+                this.array_stars_y ??= []; AF(this.array_stars_y, i); this.array_stars_y[i] = lengthdir_y(_dist, _dir + _rotated_amount);
             }
-            this.array_stars_x ??= []; this.array_stars_x[i] = this.array_stars_x[i] * (1.1 + (this.tunnel_speed_base - 1.5) / 24);
-            this.array_stars_y ??= []; this.array_stars_y[i] = this.array_stars_y[i] * (1.1 + (this.tunnel_speed_base - 1.5) / 24);
+            this.array_stars_x ??= []; AF(this.array_stars_x, i); this.array_stars_x[i] = this.array_stars_x[i] * (1.1 + (this.tunnel_speed_base - 1.5) / 24);
+            this.array_stars_y ??= []; AF(this.array_stars_y, i); this.array_stars_y[i] = this.array_stars_y[i] * (1.1 + (this.tunnel_speed_base - 1.5) / 24);
             i = i + 1;
         }
         if (this.array_stars_x[5] == 0 && this.tunnel_lifetime % 5 == 0 || point_distance(0, 0, this.array_stars_x[5], this.array_stars_y[5]) > 200) {
             i = 0;
             for (let _r10031 = 0, _n10031 = Math.trunc(5); _r10031 < _n10031; _r10031++) {
-                this.array_stars_x ??= []; this.array_stars_x[i + 1] = this.array_stars_x[i];
-                this.array_stars_y ??= []; this.array_stars_y[i + 1] = this.array_stars_y[i];
+                this.array_stars_x ??= []; AF(this.array_stars_x, i + 1); this.array_stars_x[i + 1] = this.array_stars_x[i];
+                this.array_stars_y ??= []; AF(this.array_stars_y, i + 1); this.array_stars_y[i + 1] = this.array_stars_y[i];
                 i = i + 1;
             }
             _randir = random(360);
             _randist = (128 + random(64)) * Math.max(0.2, 1.15 - this.tunnel_speed_base / 10);
-            this.array_stars_x ??= []; this.array_stars_x[0] = lengthdir_x(_randist, _randir);
-            this.array_stars_y ??= []; this.array_stars_y[0] = lengthdir_y(_randist, _randir);
+            this.array_stars_x ??= []; AF(this.array_stars_x, 0); this.array_stars_x[0] = lengthdir_x(_randist, _randir);
+            this.array_stars_y ??= []; AF(this.array_stars_y, 0); this.array_stars_y[0] = lengthdir_y(_randist, _randir);
         }
         this.bg_pulse = this.bg_pulse + 1;
         if (this.heart_travel == 0) {
@@ -2235,13 +2235,13 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(3, _node_dist));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 4), function (other) {
-                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 0); _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 5), function (other) {
-                    _acts ??= []; _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 1); _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 7), function (other) {
-                    _acts ??= []; _acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 2); _acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                 }, this) === EXIT) return;
                 _randnode = choose(2, 6, 8);
                 if (W(S.ds_list_find_value(_li_nodes, _randnode), function (other) {
@@ -2280,19 +2280,19 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(3, _node_dist));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 2), function (other) {
-                    this.child ??= []; this.child[2] = S.ds_list_find_value(_li_nodes, 7);
+                    this.child ??= []; AF(this.child, 2); this.child[2] = S.ds_list_find_value(_li_nodes, 7);
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 4), function (other) {
-                    this.child ??= []; this.child[0] = S.ds_list_find_value(_li_nodes, 6);
+                    this.child ??= []; AF(this.child, 0); this.child[0] = S.ds_list_find_value(_li_nodes, 6);
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 1), function (other) {
-                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 0); _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                     if (W(_acts[0], function (other) {
                         this.pattern = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 3), function (other) {
-                    _acts ??= []; _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 1); _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                     if (W(_acts[1], function (other) {
                         this.pattern = 1;
                         this.pattern_dir = 180;
@@ -2335,20 +2335,20 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(3, _node_dist));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 1), function (other) {
-                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 0); _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                     if (W(_acts[0], function (other) {
                         this.pattern = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 3), function (other) {
-                    _acts ??= []; _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 1); _acts[1] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                     if (W(_acts[1], function (other) {
                         this.pattern = 1;
                         this.pattern_dir = 180;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 5), function (other) {
-                    _acts ??= []; _acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 2); _acts[2] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                     if (W(_acts[2], function (other) {
                         this.pattern = 2;
                         this.pattern_dir = 210;
@@ -2494,39 +2494,39 @@ class Purplecontrols extends Instance {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(0, _node_dist * 2.375));
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 39), function (other) {
-                    _acts ??= []; _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
+                    _acts ??= []; AF(_acts, 0); _acts[0] = instance_create_depth(this.x, this.y, 2, 'obj_pinknodeact');
                     if (W(_acts[0], function (other) {
-                        this.mother = other.id;
+                        this.mother = other;
                         this.mode = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 _li_size = S.ds_list_size(_li_nodes);
                 if (W(S.ds_list_find_value(_li_nodes, 5), function (other) {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(1, _node_dist * 1.25));
-                    this.draw_connection ??= []; this.draw_connection[1] = false;
+                    this.draw_connection ??= []; AF(this.draw_connection, 1); this.draw_connection[1] = false;
                     if (W(S.ds_list_find_value(_li_nodes, _li_size), function (other) {
-                        this.child ??= []; this.child[3] = other.id;
-                        this.draw_connection ??= []; this.draw_connection[3] = true;
+                        this.child ??= []; AF(this.child, 3); this.child[3] = other;
+                        this.draw_connection ??= []; AF(this.draw_connection, 3); this.draw_connection[3] = true;
                         this.checkpoint = 1;
                         this.darkify = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 12), function (other) {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(2, _node_dist * 1.25));
-                    this.draw_connection ??= []; this.draw_connection[2] = false;
+                    this.draw_connection ??= []; AF(this.draw_connection, 2); this.draw_connection[2] = false;
                     if (W(S.ds_list_find_value(_li_nodes, _li_size + 1), function (other) {
-                        this.child ??= []; this.child[0] = other.id;
-                        this.draw_connection ??= []; this.draw_connection[0] = true;
+                        this.child ??= []; AF(this.child, 0); this.child[0] = other;
+                        this.draw_connection ??= []; AF(this.draw_connection, 0); this.draw_connection[0] = true;
                         this.checkpoint = 1;
                         this.darkify = 1;
                     }, this) === EXIT) return EXIT;
                 }, this) === EXIT) return;
                 if (W(S.ds_list_find_value(_li_nodes, 23), function (other) {
                     S.ds_list_add(_li_nodes, this.fnc_make_node(3, _node_dist));
-                    this.draw_connection ??= []; this.draw_connection[3] = false;
+                    this.draw_connection ??= []; AF(this.draw_connection, 3); this.draw_connection[3] = false;
                     if (W(S.ds_list_find_value(_li_nodes, _li_size + 2), function (other) {
-                        this.child ??= []; this.child[1] = other.id;
-                        this.draw_connection ??= []; this.draw_connection[1] = true;
+                        this.child ??= []; AF(this.child, 1); this.child[1] = other;
+                        this.draw_connection ??= []; AF(this.draw_connection, 1); this.draw_connection[1] = true;
                         this.checkpoint = 1;
                         this.darkify = 1;
                     }, this) === EXIT) return EXIT;
@@ -2751,14 +2751,14 @@ defineObject('obj_pinktrail', Pinktrail);
 // obj_pinknode (default sprite None, depth 0)
 class Pinknode extends Instance {
   create() {
-    this.child ??= []; this.child[3] = - 4;
-    this.child ??= []; this.child[0] = - 4;
-    this.child ??= []; this.child[1] = - 4;
-    this.child ??= []; this.child[2] = - 4;
-    this.draw_connection ??= []; this.draw_connection[3] = true;
-    this.draw_connection ??= []; this.draw_connection[0] = true;
-    this.draw_connection ??= []; this.draw_connection[1] = true;
-    this.draw_connection ??= []; this.draw_connection[2] = true;
+    this.child ??= []; AF(this.child, 3); this.child[3] = - 4;
+    this.child ??= []; AF(this.child, 0); this.child[0] = - 4;
+    this.child ??= []; AF(this.child, 1); this.child[1] = - 4;
+    this.child ??= []; AF(this.child, 2); this.child[2] = - 4;
+    this.draw_connection ??= []; AF(this.draw_connection, 3); this.draw_connection[3] = true;
+    this.draw_connection ??= []; AF(this.draw_connection, 0); this.draw_connection[0] = true;
+    this.draw_connection ??= []; AF(this.draw_connection, 1); this.draw_connection[1] = true;
+    this.draw_connection ??= []; AF(this.draw_connection, 2); this.draw_connection[2] = true;
     this.darkify = 0;
     this.dest_x = this.x;
     this.dest_y = this.y;
@@ -2780,12 +2780,12 @@ class Pinknode extends Instance {
   user0() {
     let i;
     if (W('obj_pinknode', function (other) {
-        if (this != other.id) {
+        if (this != other) {
             i = 0;
             for (let _r23 = 0, _n23 = Math.trunc(4); _r23 < _n23; _r23++) {
-                if (!T(instance_exists(other.child[i])) && this.child[(i + 2) % 4] == other.id) {
-                    other.draw_connection ??= []; other.draw_connection[i] = false;
-                    other.child ??= []; other.child[i] = this;
+                if (!T(instance_exists(other.child[i])) && this.child[(i + 2) % 4] == other) {
+                    other.draw_connection ??= []; AF(other.draw_connection, i); other.draw_connection[i] = false;
+                    other.child ??= []; AF(other.child, i); other.child[i] = this;
                     break;
                 }
                 i = i + 1;
@@ -2796,7 +2796,7 @@ class Pinknode extends Instance {
   user1() {
     if (this.hp == 0) {
         if (W(instance_create_depth(this.x, this.y, - 2, 'obj_pinknodeact'), function (other) {
-            this.mother = other.id;
+            this.mother = other;
             this.mode = 1;
         }, this) === EXIT) return;
     }
@@ -2832,7 +2832,7 @@ class Pinknode extends Instance {
             _backup_activated = false;
             if (instance_exists(this.doki_backup_node)) {
                 if (W('obj_purplecontrols', function (other) {
-                    if (this.node_id == other.id) {
+                    if (this.node_id == other) {
                         _backup_activated = true;
                     } else {
                         i = 0;
@@ -2849,7 +2849,7 @@ class Pinknode extends Instance {
             if (T(_backup_activated)) {
                 _doki_x = this.doki_backup_node.x;
                 _doki_y = this.doki_backup_node.y;
-                _doki_mother = this.doki_backup_node.id;
+                _doki_mother = this.doki_backup_node;
             }
             if (W(instance_create_depth(_doki_x, _doki_y, 5, 'obj_dokiheart'), function (other) {
                 this.visible = 0;
@@ -3306,7 +3306,7 @@ class Slidedust extends Instance {
   }
   create() {
     this.image_speed = 0.5;
-    this.alarm ??= []; this.alarm[5] = 10;
+    this.alarm ??= []; AF(this.alarm, 5); this.alarm[5] = 10;
     this.image_xscale = 2;
     this.image_yscale = 2;
   }
@@ -3453,7 +3453,7 @@ class PinkCurtains extends Instance {
     this.l_audience_hater = S.ds_list_create();
     this.l_audience_shoottime = S.ds_list_create();
     this.audience_number = 28;
-    this.audience_hitbox ??= []; this.audience_hitbox[this.audience_number] = - 4;
+    this.audience_hitbox ??= []; AF(this.audience_hitbox, this.audience_number); this.audience_hitbox[this.audience_number] = - 4;
     this.audience_popout = 0;
     this.hater_popout = 0;
     i = 0;
@@ -3461,17 +3461,17 @@ class PinkCurtains extends Instance {
         S.ds_list_add(this.l_audience_y, random(60) + choose(0, 180));
         S.ds_list_add(this.l_audience_sway, 3 + random(9));
         S.ds_list_add(this.l_audience_angle, random(360));
-        this.audience_hitbox ??= []; this.audience_hitbox[i] = - 4;
+        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = - 4;
         i = i + 1;
     }
     i = 14;
     for (let _r188 = 0, _n188 = Math.trunc(14); _r188 < _n188; _r188++) {
         i = i - 1;
-        this.curtain_sway ??= []; this.curtain_sway[i] = 0;
-        this.curtain_angle ??= []; this.curtain_angle[i] = 0;
+        this.curtain_sway ??= []; AF(this.curtain_sway, i); this.curtain_sway[i] = 0;
+        this.curtain_angle ??= []; AF(this.curtain_angle, i); this.curtain_angle[i] = 0;
     }
-    this.speaker_scale ??= []; this.speaker_scale[1] = 1;
-    this.speaker_scale ??= []; this.speaker_scale[0] = 1;
+    this.speaker_scale ??= []; AF(this.speaker_scale, 1); this.speaker_scale[1] = 1;
+    this.speaker_scale ??= []; AF(this.speaker_scale, 0); this.speaker_scale[0] = 1;
     this.speaker_cycle = 0;
     this.speaker_phase = 0;
     this.phase = 0;
@@ -3600,13 +3600,13 @@ class PinkCurtains extends Instance {
     if (W('obj_dmgwriter', function (other) {
         this.depth = this.depth - 10;
     }, this) === EXIT) return;
-    this.speaker_scale ??= []; this.speaker_scale[0] = 0.2 + this.speaker_scale[0] * 0.8;
-    this.speaker_scale ??= []; this.speaker_scale[1] = 0.2 + this.speaker_scale[1] * 0.8;
+    this.speaker_scale ??= []; AF(this.speaker_scale, 0); this.speaker_scale[0] = 0.2 + this.speaker_scale[0] * 0.8;
+    this.speaker_scale ??= []; AF(this.speaker_scale, 1); this.speaker_scale[1] = 0.2 + this.speaker_scale[1] * 0.8;
     this.speaker_cycle = this.speaker_cycle + 36;
     if (this.speaker_cycle >= 360) {
         this.speaker_cycle = this.speaker_cycle - 360;
-        this.speaker_scale ??= []; this.speaker_scale[0] = 1.15;
-        this.speaker_scale ??= []; this.speaker_scale[1] = 1.15;
+        this.speaker_scale ??= []; AF(this.speaker_scale, 0); this.speaker_scale[0] = 1.15;
+        this.speaker_scale ??= []; AF(this.speaker_scale, 1); this.speaker_scale[1] = 1.15;
         this.speaker_phase = this.speaker_phase + 1;
         if (this.speaker_phase >= 8) {
             this.speaker_phase = 0;
@@ -3618,18 +3618,18 @@ class PinkCurtains extends Instance {
             this.closed = 0;
             i = 0;
             for (let _r125 = 0, _n125 = Math.trunc(14); _r125 < _n125; _r125++) {
-                this.curtain_sway ??= []; this.curtain_sway[i] = 2 + i * 1;
-                this.curtain_angle ??= []; this.curtain_angle[i] = 0;
+                this.curtain_sway ??= []; AF(this.curtain_sway, i); this.curtain_sway[i] = 2 + i * 1;
+                this.curtain_angle ??= []; AF(this.curtain_angle, i); this.curtain_angle[i] = 0;
                 i = i + 1;
             }
         }
     }
     i = 0;
     for (let _r161 = 0, _n161 = Math.trunc(14); _r161 < _n161; _r161++) {
-        this.curtain_sway ??= []; this.curtain_sway[i] = this.curtain_sway[i] + (0.5 - lengthdir_y(0.5, 270 + this.curtain_angle[i])) * sign(- this.curtain_angle[i]) * 2;
-        this.curtain_sway ??= []; this.curtain_sway[i] = scr_approach(this.curtain_sway[i], 0, 0.25);
-        this.curtain_angle ??= []; this.curtain_angle[i] = this.curtain_angle[i] + this.curtain_sway[i];
-        this.curtain_angle ??= []; this.curtain_angle[i] = scr_approach(this.curtain_angle[i], 0, Math.max(0, 1 - Math.abs(this.curtain_sway[i])));
+        this.curtain_sway ??= []; AF(this.curtain_sway, i); this.curtain_sway[i] = this.curtain_sway[i] + (0.5 - lengthdir_y(0.5, 270 + this.curtain_angle[i])) * sign(- this.curtain_angle[i]) * 2;
+        this.curtain_sway ??= []; AF(this.curtain_sway, i); this.curtain_sway[i] = scr_approach(this.curtain_sway[i], 0, 0.25);
+        this.curtain_angle ??= []; AF(this.curtain_angle, i); this.curtain_angle[i] = this.curtain_angle[i] + this.curtain_sway[i];
+        this.curtain_angle ??= []; AF(this.curtain_angle, i); this.curtain_angle[i] = scr_approach(this.curtain_angle[i], 0, Math.max(0, 1 - Math.abs(this.curtain_sway[i])));
         i = i + 1;
     }
     switch (this.phase) {
@@ -3670,19 +3670,19 @@ class PinkCurtains extends Instance {
                     i = 4;
                     for (let _r513 = 0, _n513 = Math.trunc(3); _r513 < _n513; _r513++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     i = 7;
                     for (let _r551 = 0, _n551 = Math.trunc(14); _r551 < _n551; _r551++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     i = this.audience_number - 3;
                     for (let _r591 = 0, _n591 = Math.trunc(3); _r591 < _n591; _r591++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     if (this.difficulty <= 0) {
@@ -3694,14 +3694,14 @@ class PinkCurtains extends Instance {
                     for (let _r646 = 0, _n646 = Math.trunc(7); _r646 < _n646; _r646++) {
                         if (i >= 2) {
                             S.ds_list_add(this.l_audience_showup, i);
-                            this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                            this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         }
                         i = i + 1;
                     }
                     i = i + 1;
                     for (let _r694 = 0, _n694 = Math.trunc(4); _r694 < _n694; _r694++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 2;
                     }
                     _shootorder_variant = 1;
@@ -3711,14 +3711,14 @@ class PinkCurtains extends Instance {
                     for (let _r741 = 0, _n741 = Math.trunc(7); _r741 < _n741; _r741++) {
                         if (i >= 23) {
                             S.ds_list_add(this.l_audience_showup, i);
-                            this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                            this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         }
                         i = i + 1;
                     }
                     i = 19;
                     for (let _r787 = 0, _n787 = Math.trunc(4); _r787 < _n787; _r787++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i - 2;
                     }
                     _shootorder_variant = 0;
@@ -3746,7 +3746,7 @@ class PinkCurtains extends Instance {
 
                         }
                         S.ds_list_add(this.l_audience_showup, _dice);
-                        this.audience_hitbox ??= []; this.audience_hitbox[_dice] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, _dice); this.audience_hitbox[_dice] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                     }
                     if (this.difficulty <= 0) {
                         _shootorder_variant = 3;
@@ -3756,13 +3756,13 @@ class PinkCurtains extends Instance {
                     i = 9;
                     for (let _r1007 = 0, _n1007 = Math.trunc(4); _r1007 < _n1007; _r1007++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     i = 15;
                     for (let _r1045 = 0, _n1045 = Math.trunc(4); _r1045 < _n1045; _r1045++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     if (this.difficulty <= 0) {
@@ -3773,7 +3773,7 @@ class PinkCurtains extends Instance {
                     i = 10;
                     for (let _r1100 = 0, _n1100 = Math.trunc(8); _r1100 < _n1100; _r1100++) {
                         S.ds_list_add(this.l_audience_showup, i);
-                        this.audience_hitbox ??= []; this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
+                        this.audience_hitbox ??= []; AF(this.audience_hitbox, i); this.audience_hitbox[i] = instance_create(this.x, this.y, 'obj_audience_hitbox');
                         i = i + 1;
                     }
                     if (this.difficulty <= 0) {
@@ -4054,7 +4054,7 @@ class FxPinksparkle extends Instance {
   }
   create() {
     this.image_index = irandom(2);
-    this.alarm ??= []; this.alarm[0] = 7 + irandom(14);
+    this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 7 + irandom(14);
   }
   step() {
     this.speed = this.speed * 0.75;

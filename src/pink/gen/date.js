@@ -1,14 +1,14 @@
 // The DATE at DOKI MAX (obj_date_controller) and its hearts and smoke (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
 /* eslint-disable */
 import {
-  Instance, S, button1_h, button3_h, choose, defineObject, draw_clear, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text, draw_text_ext, draw_text_ext_transformed, draw_text_transformed_color, draw_vertex_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, left_h, lengthdir_x, lerp, make_color_hsv, make_color_rgb, merge_color, mus_loop, mus_volume, random, right_h, round, snd_free_all, snd_init, snd_loop, snd_play, snd_stop, snd_volume, sprite_set_offset, string_char_at, string_copy, string_length, string_width, surface_create, surface_exists, surface_free, surface_get_height, surface_get_width, surface_reset_target, surface_set_target, up_h,
-} from '../rt.js?v=20261116220235';
+  Instance, S, application_surface, button1_h, button3_h, choose, defineObject, draw_clear, draw_primitive_begin, draw_primitive_end, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_surface_ext, draw_surface_part, draw_text, draw_text_ext, draw_text_ext_transformed, draw_text_transformed_color, draw_vertex_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, left_h, lengthdir_x, lerp, make_color_hsv, make_color_rgb, merge_color, mus_loop, mus_volume, random, right_h, round, snd_free_all, snd_init, snd_loop, snd_play, snd_stop, snd_volume, sprite_set_offset, string_char_at, string_copy, string_length, string_width, surface_create, surface_exists, surface_free, surface_get_height, surface_get_width, surface_reset_target, surface_set_target, up_h,
+} from '../rt.js?v=20261117033203';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, room_height, room_width, scr_approach, scr_lerpvar, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  EXIT, LOOP, O, T, VIEW_WPORT, W,
-} from '../gml.js?v=20261116220235';
+  AF, EXIT, LOOP, O, OI, T, VIEW_WPORT, W,
+} from '../gml.js?v=20261117033203';
 
 // obj_date_controller (default sprite None, depth 0)
 class DateController extends Instance {
@@ -46,13 +46,13 @@ class DateController extends Instance {
         if (W('obj_pink_enemy', function (other) {
             this.firstphaseturn = 1;
             if (this.datecount == 1) {
-                global.tempflag ??= []; global.tempflag[67] = 1;
+                global.tempflag ??= []; AF(global.tempflag, 67); global.tempflag[67] = 1;
             }
             if (this.datecount == 2) {
-                global.tempflag ??= []; global.tempflag[68] = 1;
+                global.tempflag ??= []; AF(global.tempflag, 68); global.tempflag[68] = 1;
             }
             if (this.datecount == 3) {
-                global.tempflag ??= []; global.tempflag[69] = 1;
+                global.tempflag ??= []; AF(global.tempflag, 69); global.tempflag[69] = 1;
             }
         }, this) === EXIT) return;
     }
@@ -92,23 +92,23 @@ class DateController extends Instance {
     this.onthispath = - 1;
     this.hearthealth = 3;
     this.heartcount = 14;
-    this.heartstatus ??= []; this.heartstatus[this.heartcount] = 0;
+    this.heartstatus ??= []; AF(this.heartstatus, this.heartcount); this.heartstatus[this.heartcount] = 0;
     this.date4darknessalpha = 0;
     this.portraittextscale = 1;
-    this.drawn_box_x ??= []; this.drawn_box_x[20] = 0;
+    this.drawn_box_x ??= []; AF(this.drawn_box_x, 20); this.drawn_box_x[20] = 0;
     ___r = 0;
     for (let _r185 = 0, _n185 = Math.trunc(20); _r185 < _n185; _r185++) {
-        this.drawn_box_y ??= []; this.drawn_box_y[___r] = cameray() + 285;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, ___r); this.drawn_box_y[___r] = cameray() + 285;
         ___r = ___r + 1;
     }
-    this.drawn_box_text ??= []; this.drawn_box_text[0] = "test 0";
-    this.drawn_box_text ??= []; this.drawn_box_text[1] = "test 1";
-    this.drawn_box_text ??= []; this.drawn_box_text[2] = "test 2";
-    this.drawn_box_text ??= []; this.drawn_box_text[3] = "test 3";
-    this.drawn_box_text ??= []; this.drawn_box_text[4] = "test 4";
-    this.drawn_box_text ??= []; this.drawn_box_text[5] = "test 5";
-    this.drawn_box_text ??= []; this.drawn_box_text[6] = "test 6";
-    this.drawn_box_text ??= []; this.drawn_box_text[20] = "";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 0); this.drawn_box_text[0] = "test 0";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 1); this.drawn_box_text[1] = "test 1";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 2); this.drawn_box_text[2] = "test 2";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 3); this.drawn_box_text[3] = "test 3";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 4); this.drawn_box_text[4] = "test 4";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 5); this.drawn_box_text[5] = "test 5";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 6); this.drawn_box_text[6] = "test 6";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 20); this.drawn_box_text[20] = "";
     this.drawn_box_x_offset = 0;
     this.draw_box_selected = 0;
     this.draw_box_selected_real = 0;
@@ -123,10 +123,10 @@ class DateController extends Instance {
     }
     this.ghost_fade_con = 0;
     this.ghost_fade_siner = 0;
-    this.rand_array ??= []; this.rand_array[0] = 0;
-    this.rand_array ??= []; this.rand_array[1] = 1;
-    this.rand_array ??= []; this.rand_array[2] = 2;
-    this.rand_array ??= []; this.rand_array[3] = 3;
+    this.rand_array ??= []; AF(this.rand_array, 0); this.rand_array[0] = 0;
+    this.rand_array ??= []; AF(this.rand_array, 1); this.rand_array[1] = 1;
+    this.rand_array ??= []; AF(this.rand_array, 2); this.rand_array[2] = 2;
+    this.rand_array ??= []; AF(this.rand_array, 3); this.rand_array[3] = 3;
     this.portrait1_talkspeed = 0.16666666666666666;
     this.portrait2_talkspeed = 0.16666666666666666;
     this.r = 3;
@@ -137,17 +137,17 @@ class DateController extends Instance {
     while ((i < this.r) && LOOP('DateController#1')) {
         this.j = irandom_range(i, this.r);
         this.temp = this.rand_array[i];
-        this.rand_array ??= []; this.rand_array[i] = this.rand_array[this.j];
-        this.rand_array ??= []; this.rand_array[this.j] = this.temp;
+        this.rand_array ??= []; AF(this.rand_array, i); this.rand_array[i] = this.rand_array[this.j];
+        this.rand_array ??= []; AF(this.rand_array, this.j); this.rand_array[this.j] = this.temp;
         i = i + 1;
     }
-    this.dateorder ??= []; this.dateorder[0] = 0;
+    this.dateorder ??= []; AF(this.dateorder, 0); this.dateorder[0] = 0;
     i = 0;
     while ((i < this.r) && LOOP('DateController#2')) {
         this.j = irandom_range(i, this.r);
         this.temp = this.rand_array[i];
-        this.rand_array ??= []; this.rand_array[i] = this.rand_array[this.j];
-        this.rand_array ??= []; this.rand_array[this.j] = this.temp;
+        this.rand_array ??= []; AF(this.rand_array, i); this.rand_array[i] = this.rand_array[this.j];
+        this.rand_array ??= []; AF(this.rand_array, this.j); this.rand_array[this.j] = this.temp;
         i = i + 1;
     }
     this.questiontext = "";
@@ -156,22 +156,22 @@ class DateController extends Instance {
     this.choicetext ??= []; this.choicetext[this.rand_array[1]] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
     this.choicetext ??= []; this.choicetext[this.rand_array[2]] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
     this.choicetext ??= []; this.choicetext[this.rand_array[3]] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
-    this.choicetext ??= []; this.choicetext[4] = "";
-    this.choicetext ??= []; this.choicetext[5] = "";
-    this.choicetext ??= []; this.choicetext[6] = "";
-    this.choicetext ??= []; this.choicetext[7] = "";
-    this.choicetext ??= []; this.choicetext[8] = "";
-    this.choicetext ??= []; this.choicetext[9] = "";
-    this.drawn_box_text ??= []; this.drawn_box_text[0] = this.choicetext[0];
-    this.drawn_box_text ??= []; this.drawn_box_text[1] = this.choicetext[1];
-    this.drawn_box_text ??= []; this.drawn_box_text[2] = this.choicetext[2];
-    this.drawn_box_text ??= []; this.drawn_box_text[3] = this.choicetext[3];
-    this.drawn_box_text ??= []; this.drawn_box_text[4] = this.choicetext[4];
-    this.drawn_box_text ??= []; this.drawn_box_text[5] = this.choicetext[5];
-    this.drawn_box_text ??= []; this.drawn_box_text[6] = this.choicetext[6];
-    this.drawn_box_text ??= []; this.drawn_box_text[7] = this.choicetext[7];
-    this.drawn_box_text ??= []; this.drawn_box_text[8] = this.choicetext[8];
-    this.drawn_box_text ??= []; this.drawn_box_text[9] = this.choicetext[9];
+    this.choicetext ??= []; AF(this.choicetext, 4); this.choicetext[4] = "";
+    this.choicetext ??= []; AF(this.choicetext, 5); this.choicetext[5] = "";
+    this.choicetext ??= []; AF(this.choicetext, 6); this.choicetext[6] = "";
+    this.choicetext ??= []; AF(this.choicetext, 7); this.choicetext[7] = "";
+    this.choicetext ??= []; AF(this.choicetext, 8); this.choicetext[8] = "";
+    this.choicetext ??= []; AF(this.choicetext, 9); this.choicetext[9] = "";
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 0); this.drawn_box_text[0] = this.choicetext[0];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 1); this.drawn_box_text[1] = this.choicetext[1];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 2); this.drawn_box_text[2] = this.choicetext[2];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 3); this.drawn_box_text[3] = this.choicetext[3];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 4); this.drawn_box_text[4] = this.choicetext[4];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 5); this.drawn_box_text[5] = this.choicetext[5];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 6); this.drawn_box_text[6] = this.choicetext[6];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 7); this.drawn_box_text[7] = this.choicetext[7];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 8); this.drawn_box_text[8] = this.choicetext[8];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 9); this.drawn_box_text[9] = this.choicetext[9];
     _text_xscale = 3;
     _text_yscale = 3;
     if (global.lang == "ja") {
@@ -181,42 +181,42 @@ class DateController extends Instance {
     this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = _text_xscale;
     this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = _text_xscale;
     this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[3]] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[4] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[5] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[6] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[7] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[8] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[9] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[10] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[11] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[12] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[13] = _text_xscale;
-    this.choicetextxscale ??= []; this.choicetextxscale[14] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 4); this.choicetextxscale[4] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 5); this.choicetextxscale[5] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 6); this.choicetextxscale[6] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 7); this.choicetextxscale[7] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 8); this.choicetextxscale[8] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 9); this.choicetextxscale[9] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 10); this.choicetextxscale[10] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 11); this.choicetextxscale[11] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 12); this.choicetextxscale[12] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 13); this.choicetextxscale[13] = _text_xscale;
+    this.choicetextxscale ??= []; AF(this.choicetextxscale, 14); this.choicetextxscale[14] = _text_xscale;
     this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[0]] = _text_xscale;
     this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[1]] = _text_xscale;
     this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[2]] = _text_xscale;
     this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[3]] = _text_xscale;
-    this.choicetextyscale ??= []; this.choicetextyscale[4] = _text_xscale;
-    this.choicetextyscale ??= []; this.choicetextyscale[5] = _text_xscale;
-    this.choicetextyscale ??= []; this.choicetextyscale[6] = _text_xscale;
-    this.choicetextyscale ??= []; this.choicetextyscale[7] = _text_xscale;
-    this.choicetextyscale ??= []; this.choicetextyscale[8] = _text_xscale;
-    this.choicetextyscale ??= []; this.choicetextyscale[9] = _text_xscale;
+    this.choicetextyscale ??= []; AF(this.choicetextyscale, 4); this.choicetextyscale[4] = _text_xscale;
+    this.choicetextyscale ??= []; AF(this.choicetextyscale, 5); this.choicetextyscale[5] = _text_xscale;
+    this.choicetextyscale ??= []; AF(this.choicetextyscale, 6); this.choicetextyscale[6] = _text_xscale;
+    this.choicetextyscale ??= []; AF(this.choicetextyscale, 7); this.choicetextyscale[7] = _text_xscale;
+    this.choicetextyscale ??= []; AF(this.choicetextyscale, 8); this.choicetextyscale[8] = _text_xscale;
+    this.choicetextyscale ??= []; AF(this.choicetextyscale, 9); this.choicetextyscale[9] = _text_xscale;
     this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
     this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 1;
     this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[2]] = 1;
     this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[3]] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[4] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[5] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[6] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[7] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[8] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[9] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[10] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[11] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[12] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[13] = 1;
-    this.choiceiscorrect ??= []; this.choiceiscorrect[14] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 4); this.choiceiscorrect[4] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 5); this.choiceiscorrect[5] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 6); this.choiceiscorrect[6] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 7); this.choiceiscorrect[7] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 8); this.choiceiscorrect[8] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 9); this.choiceiscorrect[9] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 10); this.choiceiscorrect[10] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 11); this.choiceiscorrect[11] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 12); this.choiceiscorrect[12] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 13); this.choiceiscorrect[13] = 1;
+    this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 14); this.choiceiscorrect[14] = 1;
     this.show_intro_outro_surfaces = true;
     this.intro_outro_surfaces_whiteness_alpha = 1;
     this.choicepath0 = S.path_add();
@@ -413,20 +413,20 @@ class DateController extends Instance {
     }
     this.saveportrait1 = this.pinkportrait;
     this.saveportrait2 = this.pinkportrait2;
-    this.surface2x ??= []; this.surface2x[0] = 0;
-    this.surface2x ??= []; this.surface2x[1] = 0;
-    this.surface2x ??= []; this.surface2x[2] = 0;
-    this.surface2x ??= []; this.surface2x[3] = 0;
-    this.surface2x ??= []; this.surface2x[4] = 0;
-    this.surface2x ??= []; this.surface2x[5] = 0;
-    this.surface2x ??= []; this.surface2x[6] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[0] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[1] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[2] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[3] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[4] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[5] = 0;
-    this.surface2xscale ??= []; this.surface2xscale[6] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 0); this.surface2x[0] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 1); this.surface2x[1] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 2); this.surface2x[2] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 3); this.surface2x[3] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 4); this.surface2x[4] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 5); this.surface2x[5] = 0;
+    this.surface2x ??= []; AF(this.surface2x, 6); this.surface2x[6] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 0); this.surface2xscale[0] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 1); this.surface2xscale[1] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 2); this.surface2xscale[2] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 3); this.surface2xscale[3] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 4); this.surface2xscale[4] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 5); this.surface2xscale[5] = 0;
+    this.surface2xscale ??= []; AF(this.surface2xscale, 6); this.surface2xscale[6] = 0;
     this.hero_state = "idle";
     this.hero_state_timer = 0;
     this.ui_alpha = 0;
@@ -991,13 +991,13 @@ class DateController extends Instance {
         _text_xscale = 3;
         _text_yscale = 3;
         _text_y_offset = 28;
-        this.drawn_box_y ??= []; this.drawn_box_y[0] = _box_y;
-        this.drawn_box_y ??= []; this.drawn_box_y[1] = _box_y;
-        this.drawn_box_y ??= []; this.drawn_box_y[2] = _box_y;
-        this.drawn_box_y ??= []; this.drawn_box_y[3] = _box_y;
-        this.drawn_box_y ??= []; this.drawn_box_y[4] = _box_y;
-        this.drawn_box_y ??= []; this.drawn_box_y[5] = _box_y;
-        this.drawn_box_y ??= []; this.drawn_box_y[6] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 0); this.drawn_box_y[0] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 1); this.drawn_box_y[1] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 2); this.drawn_box_y[2] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 3); this.drawn_box_y[3] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 4); this.drawn_box_y[4] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 5); this.drawn_box_y[5] = _box_y;
+        this.drawn_box_y ??= []; AF(this.drawn_box_y, 6); this.drawn_box_y[6] = _box_y;
         _box_alpha = 0;
         if (i_ex('obj_date_heart')) {
             _box_alpha = O('obj_date_heart').image_alpha;
@@ -1005,22 +1005,22 @@ class DateController extends Instance {
         draw_set_alpha(_box_alpha);
         if (global.lang == "ja") {
         } else if (O('obj_pink_enemy').datecount == 2 || O('obj_pink_enemy').datecount == 4) {
-            this.choicetextxscale ??= []; this.choicetextxscale[0] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[1] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[2] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 3;
             if (string_width(this.choicetext[0]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = lerp(3, 0, Number(string_width(this.choicetext[0])) / 200);
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = lerp(3, 0, Number(string_width(this.choicetext[0])) / 200);
             }
             if (string_width(this.choicetext[1]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = lerp(3, 0, Number(string_width(this.choicetext[1])) / 200);
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = lerp(3, 0, Number(string_width(this.choicetext[1])) / 200);
             }
             if (string_width(this.choicetext[2]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = lerp(3, 0, Number(string_width(this.choicetext[2])) / 200);
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = lerp(3, 0, Number(string_width(this.choicetext[2])) / 200);
             }
             __rr = 0;
             for (let _r5495 = 0, _n5495 = Math.trunc(10); _r5495 < _n5495; _r5495++) {
                 if (this.choicetextxscale[__rr] > 3) {
-                    this.choicetextxscale ??= []; this.choicetextxscale[__rr] = 3;
+                    this.choicetextxscale ??= []; AF(this.choicetextxscale, __rr); this.choicetextxscale[__rr] = 3;
                 }
                 __rr = __rr + 1;
             }
@@ -1095,7 +1095,7 @@ class DateController extends Instance {
         }
         if (this.questioncount == 0 && O('obj_pink_enemy').datecount == 1 || this.con != 2) {
         } else {
-            this.drawn_box_x ??= []; this.drawn_box_x[5] = _box_x - _distance_between_boxes * 3;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 5); this.drawn_box_x[5] = _box_x - _distance_between_boxes * 3;
             _angle5 = lerp(0, 180, (this.drawn_box_x[5] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x5 = lengthdir_x(_radius, _angle5) + _centeroffset;
             _angle5_right = lerp(0, 180, (this.drawn_box_x[5] + _offscreen_offset + __a - __o) / _ogradius);
@@ -1113,7 +1113,7 @@ class DateController extends Instance {
                     }
                 }
             }
-            this.drawn_box_x ??= []; this.drawn_box_x[6] = _box_x + _distance_between_boxes * 3;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 6); this.drawn_box_x[6] = _box_x + _distance_between_boxes * 3;
             _angle6 = lerp(0, 180, (this.drawn_box_x[6] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x6 = lengthdir_x(_radius, _angle6) + _centeroffset;
             _angle6_right = lerp(0, 180, (this.drawn_box_x[6] + _offscreen_offset + __a + __o) / _ogradius);
@@ -1131,7 +1131,7 @@ class DateController extends Instance {
                     }
                 }
             }
-            this.drawn_box_x ??= []; this.drawn_box_x[1] = _box_x + _distance_between_boxes;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 1); this.drawn_box_x[1] = _box_x + _distance_between_boxes;
             _angle1 = lerp(0, 180, (this.drawn_box_x[1] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x1 = lengthdir_x(_radius, _angle1) + _centeroffset;
             _angle1_right = lerp(0, 180, (this.drawn_box_x[1] + _offscreen_offset + __a + __o) / _ogradius);
@@ -1147,7 +1147,7 @@ class DateController extends Instance {
                     draw_text_transformed_color((_drawn_box_x1 + _drawn_box_x1_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text1, _textxscale1, _textyscale1, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                 }
             }
-            this.drawn_box_x ??= []; this.drawn_box_x[3] = _box_x - _distance_between_boxes * 2;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 3); this.drawn_box_x[3] = _box_x - _distance_between_boxes * 2;
             _angle3 = lerp(0, 180, (this.drawn_box_x[3] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x3 = lengthdir_x(_radius, _angle3) + _centeroffset;
             _angle3_right = lerp(0, 180, (this.drawn_box_x[3] + _offscreen_offset + __a - __o) / _ogradius);
@@ -1165,7 +1165,7 @@ class DateController extends Instance {
                     }
                 }
             }
-            this.drawn_box_x ??= []; this.drawn_box_x[4] = _box_x - _distance_between_boxes;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 4); this.drawn_box_x[4] = _box_x - _distance_between_boxes;
             _angle4 = lerp(0, 180, (this.drawn_box_x[4] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x4 = lengthdir_x(_radius, _angle4) + _centeroffset;
             _angle4_right = lerp(0, 180, (this.drawn_box_x[4] + _offscreen_offset + __a - __o) / _ogradius);
@@ -1182,7 +1182,7 @@ class DateController extends Instance {
                 }
             }
         }
-        this.drawn_box_x ??= []; this.drawn_box_x[0] = _box_x;
+        this.drawn_box_x ??= []; AF(this.drawn_box_x, 0); this.drawn_box_x[0] = _box_x;
         _angle0 = lerp(0, 180, (this.drawn_box_x[0] + _offscreen_offset) / _ogradius);
         _drawn_box_x0 = lengthdir_x(_radius, _angle0) + _centeroffset;
         _angle0_right = lerp(0, 180, (this.drawn_box_x[0] + _offscreen_offset + __a) / _ogradius);
@@ -1202,7 +1202,7 @@ class DateController extends Instance {
         }
         if (this.questioncount == 0 && O('obj_pink_enemy').datecount == 1 || this.con != 2) {
         } else {
-            this.drawn_box_x ??= []; this.drawn_box_x[2] = _box_x + _distance_between_boxes * 2;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 2); this.drawn_box_x[2] = _box_x + _distance_between_boxes * 2;
             _angle2 = lerp(0, 180, (this.drawn_box_x[2] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x2 = lengthdir_x(_radius, _angle2) + _centeroffset;
             _angle2_right = lerp(0, 180, (this.drawn_box_x[2] + _offscreen_offset + __a + __o) / _ogradius);
@@ -1218,7 +1218,7 @@ class DateController extends Instance {
                     draw_text_transformed_color((_drawn_box_x2 + _drawn_box_x2_right) / 2, this.drawn_box_y[0] + _text_y_offset, _text2, _textxscale2, _textyscale2, 0, 0xffffff, 0xffffff, 0xffffff, 0xffffff, true);
                 }
             }
-            this.drawn_box_x ??= []; this.drawn_box_x[1] = _box_x + _distance_between_boxes;
+            this.drawn_box_x ??= []; AF(this.drawn_box_x, 1); this.drawn_box_x[1] = _box_x + _distance_between_boxes;
             _angle1 = lerp(0, 180, (this.drawn_box_x[1] + _offscreen_offset + __o) / _ogradius);
             _drawn_box_x1 = lengthdir_x(_radius, _angle1) + _centeroffset;
             _angle1_right = lerp(0, 180, (this.drawn_box_x[1] + _offscreen_offset + __a + __o) / _ogradius);
@@ -1525,97 +1525,97 @@ class DateController extends Instance {
     while ((i < this.r) && LOOP('DateController#6')) {
         this.j = irandom_range(i, this.r);
         this.temp = this.rand_array[i];
-        this.rand_array ??= []; this.rand_array[i] = this.rand_array[this.j];
-        this.rand_array ??= []; this.rand_array[this.j] = this.temp;
+        this.rand_array ??= []; AF(this.rand_array, i); this.rand_array[i] = this.rand_array[this.j];
+        this.rand_array ??= []; AF(this.rand_array, this.j); this.rand_array[this.j] = this.temp;
         i = i + 1;
     }
     if (global.lang != "ja") {
-        this.choicetextxscale ??= []; this.choicetextxscale[0] = 3;
-        this.choicetextxscale ??= []; this.choicetextxscale[1] = 3;
-        this.choicetextxscale ??= []; this.choicetextxscale[2] = 3;
-        this.choicetextxscale ??= []; this.choicetextxscale[3] = 3;
+        this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 3;
+        this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 3;
+        this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 3;
+        this.choicetextxscale ??= []; AF(this.choicetextxscale, 3); this.choicetextxscale[3] = 3;
     }
     this.draw_box_selected = 0;
     if (O('obj_pink_enemy').datecount == 1) {
         if (this.questioncount == 1) {
             if (global.flag[1706] == 1) {
-                this.choicetext ??= []; this.choicetext[0] = S.stringsetloc("No", "obj_date_controller_slash_Other_11_gml_28_0");
-                this.choicetext ??= []; this.choicetext[1] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
-                this.choicetext ??= []; this.choicetext[2] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
+                this.choicetext ??= []; AF(this.choicetext, 0); this.choicetext[0] = S.stringsetloc("No", "obj_date_controller_slash_Other_11_gml_28_0");
+                this.choicetext ??= []; AF(this.choicetext, 1); this.choicetext[1] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
+                this.choicetext ??= []; AF(this.choicetext, 2); this.choicetext[2] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
             } else {
-                this.choicetext ??= []; this.choicetext[0] = S.stringsetloc("No", "obj_date_controller_slash_Other_11_gml_28_0");
-                this.choicetext ??= []; this.choicetext[1] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
-                this.choicetext ??= []; this.choicetext[2] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
+                this.choicetext ??= []; AF(this.choicetext, 0); this.choicetext[0] = S.stringsetloc("No", "obj_date_controller_slash_Other_11_gml_28_0");
+                this.choicetext ??= []; AF(this.choicetext, 1); this.choicetext[1] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
+                this.choicetext ??= []; AF(this.choicetext, 2); this.choicetext[2] = S.stringsetloc("Yes", "obj_date_controller_slash_Other_11_gml_29_0");
             }
-            this.choicetextxscale ??= []; this.choicetextxscale[0] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[1] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[2] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 3;
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
-            this.choiceiscorrect ??= []; this.choiceiscorrect[0] = 0;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 0); this.choiceiscorrect[0] = 0;
             if (global.flag[1706] == 1) {
-                this.choiceiscorrect ??= []; this.choiceiscorrect[0] = 1;
+                this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 0); this.choiceiscorrect[0] = 1;
             }
-            this.choiceiscorrect ??= []; this.choiceiscorrect[1] = 1;
-            this.choiceiscorrect ??= []; this.choiceiscorrect[2] = 1;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 1); this.choiceiscorrect[1] = 1;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 2); this.choiceiscorrect[2] = 1;
             this.boxcount = 3;
         }
         if (this.questioncount == 2) {
-            this.choicetext ??= []; this.choicetext[0] = S.stringsetloc("Right", "obj_date_controller_slash_Other_11_gml_68_0");
-            this.choicetext ??= []; this.choicetext[1] = S.stringsetloc("Exactly", "obj_date_controller_slash_Other_11_gml_69_0");
-            this.choicetext ??= []; this.choicetext[2] = S.stringsetloc("Of course", "obj_date_controller_slash_Other_11_gml_71_0");
-            this.choicetext ??= []; this.choicetext[3] = S.stringsetloc("No", "obj_date_controller_slash_Other_11_gml_70_0");
-            this.choicetext ??= []; this.choicetext[4] = S.stringsetloc("Of course", "obj_date_controller_slash_Other_11_gml_71_0");
-            this.choicetext ??= []; this.choicetext[5] = S.stringsetloc("Exactly", "obj_date_controller_slash_Other_11_gml_69_0");
-            this.choicetextxscale ??= []; this.choicetextxscale[0] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[1] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[2] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[3] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[4] = 3;
-            this.choicetextxscale ??= []; this.choicetextxscale[5] = 3;
+            this.choicetext ??= []; AF(this.choicetext, 0); this.choicetext[0] = S.stringsetloc("Right", "obj_date_controller_slash_Other_11_gml_68_0");
+            this.choicetext ??= []; AF(this.choicetext, 1); this.choicetext[1] = S.stringsetloc("Exactly", "obj_date_controller_slash_Other_11_gml_69_0");
+            this.choicetext ??= []; AF(this.choicetext, 2); this.choicetext[2] = S.stringsetloc("Of course", "obj_date_controller_slash_Other_11_gml_71_0");
+            this.choicetext ??= []; AF(this.choicetext, 3); this.choicetext[3] = S.stringsetloc("No", "obj_date_controller_slash_Other_11_gml_70_0");
+            this.choicetext ??= []; AF(this.choicetext, 4); this.choicetext[4] = S.stringsetloc("Of course", "obj_date_controller_slash_Other_11_gml_71_0");
+            this.choicetext ??= []; AF(this.choicetext, 5); this.choicetext[5] = S.stringsetloc("Exactly", "obj_date_controller_slash_Other_11_gml_69_0");
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 3); this.choicetextxscale[3] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 4); this.choicetextxscale[4] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, 5); this.choicetextxscale[5] = 3;
             if (string_width(this.choicetext[0]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = round(70 / string_width(this.choicetext[0]));
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = round(70 / string_width(this.choicetext[0]));
             }
             if (string_width(this.choicetext[1]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = round(70 / string_width(this.choicetext[1]));
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = round(70 / string_width(this.choicetext[1]));
             }
             if (string_width(this.choicetext[2]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = round(70 / string_width(this.choicetext[2]));
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = round(70 / string_width(this.choicetext[2]));
             }
             if (string_width(this.choicetext[3]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[3] = round(70 / string_width(this.choicetext[3]));
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 3); this.choicetextxscale[3] = round(70 / string_width(this.choicetext[3]));
             }
             if (string_width(this.choicetext[4]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[4] = round(70 / string_width(this.choicetext[4]));
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 4); this.choicetextxscale[4] = round(70 / string_width(this.choicetext[4]));
             }
             if (string_width(this.choicetext[5]) > 30) {
-                this.choicetextxscale ??= []; this.choicetextxscale[5] = round(70 / string_width(this.choicetext[5]));
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 5); this.choicetextxscale[5] = round(70 / string_width(this.choicetext[5]));
             }
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 3;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 2.5;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 2;
-                this.choicetextxscale ??= []; this.choicetextxscale[3] = 3;
-                this.choicetextxscale ??= []; this.choicetextxscale[4] = 2;
-                this.choicetextxscale ??= []; this.choicetextxscale[5] = 2.5;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 3;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 2.5;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 2;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 3); this.choicetextxscale[3] = 3;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 4); this.choicetextxscale[4] = 2;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 5); this.choicetextxscale[5] = 2.5;
             }
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[3] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[4] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[5] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 3); this.choicetextxscale[3] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 4); this.choicetextxscale[4] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 5); this.choicetextxscale[5] = 1;
             }
-            this.choiceiscorrect ??= []; this.choiceiscorrect[0] = 0;
-            this.choiceiscorrect ??= []; this.choiceiscorrect[1] = 0;
-            this.choiceiscorrect ??= []; this.choiceiscorrect[2] = 0;
-            this.choiceiscorrect ??= []; this.choiceiscorrect[3] = 1;
-            this.choiceiscorrect ??= []; this.choiceiscorrect[4] = 0;
-            this.choiceiscorrect ??= []; this.choiceiscorrect[5] = 0;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 0); this.choiceiscorrect[0] = 0;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 1); this.choiceiscorrect[1] = 0;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 2); this.choiceiscorrect[2] = 0;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 3); this.choiceiscorrect[3] = 1;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 4); this.choiceiscorrect[4] = 0;
+            this.choiceiscorrect ??= []; AF(this.choiceiscorrect, 5); this.choiceiscorrect[5] = 0;
             this.boxcount = 6;
         }
     }
@@ -1682,12 +1682,12 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 0.8;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 0.8;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 0.8;
-                this.choicetextyscale ??= []; this.choicetextyscale[0] = 0.8;
-                this.choicetextyscale ??= []; this.choicetextyscale[1] = 0.8;
-                this.choicetextyscale ??= []; this.choicetextyscale[2] = 0.8;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 0.8;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 0.8;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 0.8;
+                this.choicetextyscale ??= []; AF(this.choicetextyscale, 0); this.choicetextyscale[0] = 0.8;
+                this.choicetextyscale ??= []; AF(this.choicetextyscale, 1); this.choicetextyscale[1] = 0.8;
+                this.choicetextyscale ??= []; AF(this.choicetextyscale, 2); this.choicetextyscale[2] = 0.8;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -1888,9 +1888,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -1920,9 +1920,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -1952,9 +1952,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -1984,9 +1984,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -2016,9 +2016,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -2048,9 +2048,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 50 / string_width(this.choicetext[this.rand_array[1]]);
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 50 / string_width(this.choicetext[this.rand_array[2]]);
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 1;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 1;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 1;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 1;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 3;
@@ -2068,9 +2068,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 2;
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 1;
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 0.7;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 0.7;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 0.7;
             }
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[0]] = 4;
             this.choiceiscorrect ??= []; this.choiceiscorrect[this.rand_array[1]] = 4;
@@ -2085,9 +2085,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 2;
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 2;
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 0.7;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 0.7;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 0.7;
                 this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[0]] = 0.7;
                 this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[1]] = 0.7;
                 this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[2]] = 0.7;
@@ -2105,9 +2105,9 @@ class DateController extends Instance {
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[1]] = 1;
             this.choicetextxscale ??= []; this.choicetextxscale[this.rand_array[2]] = 2;
             if (global.lang == "ja") {
-                this.choicetextxscale ??= []; this.choicetextxscale[0] = 0.7;
-                this.choicetextxscale ??= []; this.choicetextxscale[1] = 0.7;
-                this.choicetextxscale ??= []; this.choicetextxscale[2] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 0); this.choicetextxscale[0] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 1); this.choicetextxscale[1] = 0.7;
+                this.choicetextxscale ??= []; AF(this.choicetextxscale, 2); this.choicetextxscale[2] = 0.7;
                 this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[0]] = 0.7;
                 this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[1]] = 0.7;
                 this.choicetextyscale ??= []; this.choicetextyscale[this.rand_array[2]] = 0.7;
@@ -2118,20 +2118,20 @@ class DateController extends Instance {
             this.boxcount = 3;
         }
     }
-    this.drawn_box_text ??= []; this.drawn_box_text[0] = this.choicetext[0];
-    this.drawn_box_text ??= []; this.drawn_box_text[1] = this.choicetext[1];
-    this.drawn_box_text ??= []; this.drawn_box_text[2] = this.choicetext[2];
-    this.drawn_box_text ??= []; this.drawn_box_text[3] = this.choicetext[3];
-    this.drawn_box_text ??= []; this.drawn_box_text[4] = this.choicetext[4];
-    this.drawn_box_text ??= []; this.drawn_box_text[5] = this.choicetext[5];
-    this.drawn_box_text ??= []; this.drawn_box_text[6] = this.choicetext[6];
-    this.drawn_box_text ??= []; this.drawn_box_text[7] = this.choicetext[7];
-    this.drawn_box_text ??= []; this.drawn_box_text[8] = this.choicetext[8];
-    this.drawn_box_text ??= []; this.drawn_box_text[9] = this.choicetext[9];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 0); this.drawn_box_text[0] = this.choicetext[0];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 1); this.drawn_box_text[1] = this.choicetext[1];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 2); this.drawn_box_text[2] = this.choicetext[2];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 3); this.drawn_box_text[3] = this.choicetext[3];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 4); this.drawn_box_text[4] = this.choicetext[4];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 5); this.drawn_box_text[5] = this.choicetext[5];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 6); this.drawn_box_text[6] = this.choicetext[6];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 7); this.drawn_box_text[7] = this.choicetext[7];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 8); this.drawn_box_text[8] = this.choicetext[8];
+    this.drawn_box_text ??= []; AF(this.drawn_box_text, 9); this.drawn_box_text[9] = this.choicetext[9];
     _rr = 0;
     for (let _r5132 = 0, _n5132 = Math.trunc(10); _r5132 < _n5132; _r5132++) {
         if (this.choicetextxscale[_rr] > 3) {
-            this.choicetextxscale ??= []; this.choicetextxscale[_rr] = 3;
+            this.choicetextxscale ??= []; AF(this.choicetextxscale, _rr); this.choicetextxscale[_rr] = 3;
         }
         _rr = _rr + 1;
     }
@@ -2705,7 +2705,7 @@ class DateController extends Instance {
                     global.monsterattackname ??= []; global.monsterattackname[O('obj_pink_enemy').myself] = "pink final attack";
                     this.__dc = instance_create_depth(this.x, this.y, this.depth - 20, 'obj_dbulletcontroller');
                     this.__dc.creator = O('obj_pink_enemy').myself;
-                    this.__dc.creatorid = O('obj_pink_enemy').id;
+                    this.__dc.creatorid = OI('obj_pink_enemy');
                     this.__dc.target = O('obj_pink_enemy').mytarget;
                     this.__dc.damage = global.monsterat[O('obj_pink_enemy').myself] * 5;
                     this.__dc.type = 210;
@@ -3417,7 +3417,7 @@ class DateController extends Instance {
             }
         }
         if (this.timer == 41) {
-            this.heartstatus ??= []; this.heartstatus[this.questioncount] = 1;
+            this.heartstatus ??= []; AF(this.heartstatus, this.questioncount); this.heartstatus[this.questioncount] = 1;
             this.timer = 0;
             this.con = 1;
             this.choiceselected = - 1;
@@ -3488,7 +3488,7 @@ class DateController extends Instance {
             this.idiottext_y = lerp(this.camy + 190, this.heart.y + 10, (this.timer - 36) / 5);
         }
         if (this.timer == 41) {
-            this.heartstatus ??= []; this.heartstatus[this.questioncount] = 6;
+            this.heartstatus ??= []; AF(this.heartstatus, this.questioncount); this.heartstatus[this.questioncount] = 6;
             this.timer = 0;
             this.con = 1;
             this.choiceselected = - 1;
@@ -3565,7 +3565,7 @@ class DateController extends Instance {
             this.idiottext2_y = lerp(this.camy + 190, this.heart.y + 10, (this.timer - 36) / 5);
         }
         if (this.timer == 41) {
-            this.heartstatus ??= []; this.heartstatus[this.questioncount] = 7;
+            this.heartstatus ??= []; AF(this.heartstatus, this.questioncount); this.heartstatus[this.questioncount] = 7;
             this.timer = 0;
             this.con = 1;
             this.choiceselected = - 1;
@@ -3847,8 +3847,8 @@ class DateController extends Instance {
         if (O('obj_pink_enemy').datecount == 4 && this.portraitstimer == 22) {
             this.portrait2_xscale = 2;
             this.pinkportrait2_x = this.pinkportrait2_x - 224;
-            global.currentsong ??= []; global.currentsong[0] = snd_init("mus_confession.ogg");
-            global.currentsong ??= []; global.currentsong[1] = mus_loop(global.currentsong[0]);
+            global.currentsong ??= []; AF(global.currentsong, 0); global.currentsong[0] = snd_init("mus_confession.ogg");
+            global.currentsong ??= []; AF(global.currentsong, 1); global.currentsong[1] = mus_loop(global.currentsong[0]);
         }
         if (this.portraitstimer == 31) {
             this.portraitvisibility = true;
@@ -4046,10 +4046,10 @@ class AfterimageScreen extends Instance {
         return;
     }
     if (!T(surface_exists(this.my_surface))) {
-        this.my_surface = surface_create(surface_get_width(this.application_surface), surface_get_height(this.application_surface));
+        this.my_surface = surface_create(surface_get_width(application_surface), surface_get_height(application_surface));
     }
     surface_set_target(this.my_surface);
-    draw_surface(this.application_surface, 0, 0);
+    draw_surface(application_surface, 0, 0);
     surface_reset_target();
     draw_surface_ext(this.my_surface, this.x - this.anchor_x * this.xscale, this.y - this.anchor_y * this.yscale, this.xscale, this.yscale, 0, 0xffffff, this.alpha);
   }
@@ -4058,10 +4058,10 @@ class AfterimageScreen extends Instance {
         return;
     }
     if (!T(surface_exists(this.my_surface))) {
-        this.my_surface = surface_create(surface_get_width(this.application_surface), surface_get_height(this.application_surface));
+        this.my_surface = surface_create(surface_get_width(application_surface), surface_get_height(application_surface));
     }
     surface_set_target(this.my_surface);
-    draw_surface(this.application_surface, 0, 0);
+    draw_surface(application_surface, 0, 0);
     surface_reset_target();
     draw_surface_ext(this.my_surface, this.x - this.anchor_x * this.xscale, this.y - this.anchor_y * this.yscale, this.xscale, this.yscale, 0, 0xffffff, this.alpha);
     if (W('obj_heart', function (other) {

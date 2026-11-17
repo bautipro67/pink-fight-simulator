@@ -2,16 +2,16 @@
 /* eslint-disable */
 import {
   Instance, S, choose, clamp, collision_point, collision_rectangle, defineObject, draw_primitive_begin, draw_primitive_end, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_sprite, draw_sprite_ext, draw_vertex, frac, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, instance_find, instance_number, instance_place, irandom, lengthdir_x, lengthdir_y, lerp, merge_color, place_meeting, point_direction, point_distance, random, sign, snd_is_playing, snd_play, snd_stop, sprite_get_height, surface_create, surface_free,
-} from '../rt.js?v=20261116220235';
+} from '../rt.js?v=20261117033203';
 import {
   camerax, cameray, i_ex, scr_afterimage, scr_approach, scr_doom, scr_draw_outline, scr_draw_outline_ext, scr_get_box, scr_lerpvar, scr_script_delayed, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  BREAK, EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116220235';
+  AF, BREAK, EXIT, LOOP, O, P, T, W,
+} from '../gml.js?v=20261117033203';
 import {
   array_length,
-} from '../lib5.js?v=20261116220235';
+} from '../lib5.js?v=20261117033203';
 
 // obj_bullet_healing (default sprite None, depth 0)
 class BulletHealing extends Instance {
@@ -160,26 +160,26 @@ class BulletHealing extends Instance {
                 _hp_2 = 0;
                 _hp_3 = 0;
                 if (global.hp[1] <= 0) {
-                    global.hp ??= []; global.hp[1] = 0;
+                    global.hp ??= []; AF(global.hp, 1); global.hp[1] = 0;
                     _hp_1 = 1;
                 }
                 if (global.hp[2] <= 0) {
-                    global.hp ??= []; global.hp[2] = 0;
+                    global.hp ??= []; AF(global.hp, 2); global.hp[2] = 0;
                     _hp_2 = 1;
                 }
                 if (global.hp[3] <= 0) {
-                    global.hp ??= []; global.hp[3] = 0;
+                    global.hp ??= []; AF(global.hp, 3); global.hp[3] = 0;
                     _hp_3 = 1;
                 }
                 S.scr_healall(1);
                 if (_hp_1 == 1) {
-                    global.hp ??= []; global.hp[1] = 1;
+                    global.hp ??= []; AF(global.hp, 1); global.hp[1] = 1;
                 }
                 if (_hp_2 == 1) {
-                    global.hp ??= []; global.hp[2] = 1;
+                    global.hp ??= []; AF(global.hp, 2); global.hp[2] = 1;
                 }
                 if (_hp_3 == 1) {
-                    global.hp ??= []; global.hp[3] = 1;
+                    global.hp ??= []; AF(global.hp, 3); global.hp[3] = 1;
                 }
                 if (W('obj_heroparent', function (other) {
                     S.scr_tensionheal(4);
@@ -188,7 +188,7 @@ class BulletHealing extends Instance {
                     _alreadyexists = false;
                     i = 0;
                     while ((i < instance_number('obj_dmgwriter')) && LOOP('BulletHealing#1')) {
-                        this.dmgwriter ??= []; this.dmgwriter[i] = instance_find('obj_dmgwriter', i);
+                        this.dmgwriter ??= []; AF(this.dmgwriter, i); this.dmgwriter[i] = instance_find('obj_dmgwriter', i);
                         if (this.dmgwriter[i].creatorid == this) {
                             this.dmgwriter[i].damage = this.dmgwriter[i].damage + 1;
                             this.dmgwriter[i].init = 0;
@@ -208,7 +208,7 @@ class BulletHealing extends Instance {
                             this.type = 3;
                             this.damage = 1;
                             this.typeb = 1;
-                            this.creatorid = other.id;
+                            this.creatorid = other;
                         }, this) === EXIT) return EXIT;
                         if (global.hp[global.char[this.myself]] >= global.maxhp[global.char[this.myself]]) {
                             this.dmgwr.specialmessage = 3;
@@ -329,7 +329,7 @@ class Dokiheart extends P('obj_bullet_healing') {
             }
         }
         if (W('obj_dokiheart', function (other) {
-            if (this != other.id) {
+            if (this != other) {
                 _dist = point_distance(other.x, other.y, this.x, this.y);
                 if (_dist < 22) {
                     _dir = point_direction(other.x, other.y, this.x, this.y);
@@ -669,7 +669,7 @@ class Pinkzap extends P('obj_regularbullet') {
   alarm0() {
     this.image_index = 0;
     if (this.speed < 0.5 && irandom(9) != 0 || this.speed >= 0.5 && irandom(4) != 0) {
-        this.alarm ??= []; this.alarm[0] = 2;
+        this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 2;
     }
   }
   create() {
@@ -689,7 +689,7 @@ class Pinkzap extends P('obj_regularbullet') {
     this.highlight = 0;
     this.image_speed = 1;
     this.image_index = 0;
-    this.alarm ??= []; this.alarm[0] = 2;
+    this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 2;
     this.life_time = 0;
     this.image_alpha = 0;
     this.tunnel_lane_layer = 0;
@@ -810,7 +810,7 @@ class Pinktimeoutzap extends P('obj_regularbullet') {
     i = Math.ceil(360 / this.dir_add);
     for (let _r78 = 0, _n78 = Math.trunc(Math.ceil(360 / this.dir_add)); _r78 < _n78; _r78++) {
         i = i - 1;
-        this.array_frame ??= []; this.array_frame[i] = irandom(1);
+        this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = irandom(1);
     }
     this.pattern_time = 1;
   }
@@ -839,14 +839,14 @@ class Pinktimeoutzap extends P('obj_regularbullet') {
     if (this.pattern_time > 0) {
         i = 0;
         do {
-            this.array_frame ??= []; this.array_frame[i] = this.array_frame[i] + 1;
+            this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = this.array_frame[i] + 1;
             if (this.array_frame[i] >= 2 && this.array_frame[i] < 3) {
                 if (irandom(19) != 0) {
-                    this.array_frame ??= []; this.array_frame[i] = this.array_frame[i] - 2;
+                    this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = this.array_frame[i] - 2;
                 }
             }
             if (this.array_frame[i] >= this.image_number) {
-                this.array_frame ??= []; this.array_frame[i] = this.array_frame[i] - this.image_number;
+                this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = this.array_frame[i] - this.image_number;
             }
             i = i + 1;
         } while ((!(i * this.dir_add >= (1 - this.pattern_time) * 360 || i >= this.dir_add)) && LOOP('Pinktimeoutzap#3'));
@@ -866,7 +866,7 @@ class Pinktimeoutzap extends P('obj_regularbullet') {
             }, this) === EXIT) return;
             _dir = S.scr_wrap(_dir + _dir_add, 0, 360);
         }
-        this.alarm ??= []; this.alarm[1] = 30;
+        this.alarm ??= []; AF(this.alarm, 1); this.alarm[1] = 30;
     }
     if (this.life_time >= 99999) {
         this.image_alpha = Math.min(this.image_alpha, 1);
@@ -995,7 +995,7 @@ class Pink3durgenter extends P('obj_regularbullet') {
     i = Math.ceil(360 / this.dir_add);
     for (let _r78 = 0, _n78 = Math.trunc(Math.ceil(360 / this.dir_add)); _r78 < _n78; _r78++) {
         i = i - 1;
-        this.array_frame ??= []; this.array_frame[i] = irandom(1);
+        this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = irandom(1);
     }
     this.pattern_time = 1;
     this.backwards_momentum = 0;
@@ -1080,14 +1080,14 @@ class Pink3durgenter extends P('obj_regularbullet') {
     }
     i = 0;
     do {
-        this.array_frame ??= []; this.array_frame[i] = this.array_frame[i] + 1;
+        this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = this.array_frame[i] + 1;
         if (this.array_frame[i] >= 2 && this.array_frame[i] < 3) {
             if (irandom(59) != 0) {
-                this.array_frame ??= []; this.array_frame[i] = this.array_frame[i] - 2;
+                this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = this.array_frame[i] - 2;
             }
         }
         if (this.array_frame[i] >= this.image_number) {
-            this.array_frame ??= []; this.array_frame[i] = this.array_frame[i] - this.image_number;
+            this.array_frame ??= []; AF(this.array_frame, i); this.array_frame[i] = this.array_frame[i] - this.image_number;
         }
         i = i + 1;
     } while ((!(i * this.dir_add >= 360)) && LOOP('Pink3durgenter#5'));
@@ -1149,8 +1149,8 @@ class Pinkmeteor extends Instance {
     i = 5;
     for (let _r64 = 0, _n64 = Math.trunc(5); _r64 < _n64; _r64++) {
         i = i - 1;
-        this.lightray_dir ??= []; this.lightray_dir[i] = _dir;
-        this.lightray_dist ??= []; this.lightray_dist[i] = 0;
+        this.lightray_dir ??= []; AF(this.lightray_dir, i); this.lightray_dir[i] = _dir;
+        this.lightray_dist ??= []; AF(this.lightray_dist, i); this.lightray_dist[i] = 0;
         _dir = _dir + 72;
     }
   }
@@ -1252,8 +1252,8 @@ class Pinkmeteor extends Instance {
             _speedoflight = (_pre_boom_frames + 2 - this.life_time) / (_pre_boom_frames + 2) * 2.5;
             i = 0;
             for (let _r73 = 0, _n73 = Math.trunc(5); _r73 < _n73; _r73++) {
-                this.lightray_dir ??= []; this.lightray_dir[i] = this.lightray_dir[i] + (3 + i) * (1 - 2 * (i % 2)) * _speedoflight * 2;
-                this.lightray_dist ??= []; this.lightray_dist[i] = this.lightray_dist[i] + (7 + i) * _speedoflight * 2;
+                this.lightray_dir ??= []; AF(this.lightray_dir, i); this.lightray_dir[i] = this.lightray_dir[i] + (3 + i) * (1 - 2 * (i % 2)) * _speedoflight * 2;
+                this.lightray_dist ??= []; AF(this.lightray_dist, i); this.lightray_dist[i] = this.lightray_dist[i] + (7 + i) * _speedoflight * 2;
                 i = i + 1;
             }
             if (this.life_time > _pre_boom_frames) {
@@ -1294,13 +1294,13 @@ class Pinkmeteor extends Instance {
                 _boom.y = _boom.y - 33 * _boom.image_yscale;
                 _boom.sprite_index = 'spr_explosion_round';
                 _boom.image_speed = 0.5;
-                _boom.alarm ??= []; _boom.alarm[5] = _boom.image_number * (1 / _boom.image_speed);
+                _boom.alarm ??= []; AF(_boom.alarm, 5); _boom.alarm[5] = _boom.image_number * (1 / _boom.image_speed);
             }
             if (this.life_time == 11) {
                 if (W('obj_slidedust', function (other) {
                     if (this.sprite_index == 'spr_explosion_round') {
                         this.image_speed = 0.334;
-                        this.alarm ??= []; this.alarm[5] = Math.floor(this.alarm[5] * 1.5);
+                        this.alarm ??= []; AF(this.alarm, 5); this.alarm[5] = Math.floor(this.alarm[5] * 1.5);
                     }
                 }, this) === EXIT) return;
             }
@@ -1679,7 +1679,6 @@ class HugeAnimeFace extends P('obj_regularbullet') {
 }
 defineObject('obj_huge_anime_face', HugeAnimeFace);
 
-// !!! gml_Object_obj_fusebomb_Draw_0.gml has a decompiler WARNING: check the asm
 // obj_fusebomb (default sprite spr_fusebomb, depth 0, parent obj_regularbullet)
 class Fusebomb extends P('obj_regularbullet') {
   constructor() {
@@ -1750,16 +1749,7 @@ class Fusebomb extends P('obj_regularbullet') {
     } else {
         _fusecolor = merge_color(0xff0000, 0xffffff, clamp((this.fuse_time - 2) / 30, 0, 1));
     }
-    if (this.grow <= 1) {
-    } else {
-    }
-    if (! 0) {
-        if (this.grow > 1) {
-        } else {
-        }
-    } else {
-    }
-    if (1) {
+    if ((this.grow <= 1 && ((this.fuse_time == 22 || this.fuse_time == 23) || (this.fuse_time < 16 && this.fuse_time % 4 < 2))) || (this.grow > 1 && ((this.fuse_time >= 24 && this.fuse_time < 27) || (this.fuse_time >= 14 && this.fuse_time < 17) || (this.fuse_time >= 8 && this.fuse_time < 10) || (this.fuse_time % 2 == 0 && this.fuse_time < 8)))) {
         if (this.fuse_time < 8) {
             _color = 0xff6600;
         } else {
@@ -1876,7 +1866,7 @@ class Fusebomb extends P('obj_regularbullet') {
             _overlap = true;
         } else {
             if (W('obj_fusebomb', function (other) {
-                if (this != other.id && this.grid_x == other.grid_x && this.grid_y == other.grid_y && T(this.has_heart)) {
+                if (this != other && this.grid_x == other.grid_x && this.grid_y == other.grid_y && T(this.has_heart)) {
                     _overlap = true;
                     return BREAK;
                 }
@@ -1922,7 +1912,7 @@ class Fusebomb extends P('obj_regularbullet') {
                 if (!T(collision_point(_box_x - _lane_distance * 1.5 + _xx * _lane_distance, _box_y - _lane_distance * 1.5 + _yy * _lane_distance, 'obj_dokiheart', 1, 1))) {
                     _overlap = false;
                     if (W('obj_fusebomb', function (other) {
-                        if (this != other.id && this.grid_x == _xx && this.grid_y == _yy && (this.has_heart || this.fuse_time >= 20)) {
+                        if (this != other && this.grid_x == _xx && this.grid_y == _yy && (this.has_heart || this.fuse_time >= 20)) {
                             _overlap = true;
                         }
                     }, this) === EXIT) return;
@@ -1978,7 +1968,7 @@ class Fusebomb extends P('obj_regularbullet') {
                     if (!T(collision_point(_box_x - _lane_distance * 1.5 + _xx * _lane_distance, _box_y - _lane_distance * 1.5 + _yy * _lane_distance, 'obj_dokiheart', 1, 1))) {
                         _overlap = false;
                         if (W('obj_fusebomb', function (other) {
-                            if (this != other.id && this.grid_x == _xx && this.grid_y == _yy && (this.has_heart || this.fuse_time >= 20)) {
+                            if (this != other && this.grid_x == _xx && this.grid_y == _yy && (this.has_heart || this.fuse_time >= 20)) {
                                 _overlap = true;
                             }
                         }, this) === EXIT) return;
@@ -2016,7 +2006,7 @@ class Fusebomb extends P('obj_regularbullet') {
                 this.x = this.dest_x;
                 this.y = this.dest_y;
                 if (W('obj_fusebomb', function (other) {
-                    if (this != other.id) {
+                    if (this != other) {
                         if (this.air_time <= 0) {
                             if (this.grid_x == other.grid_x) {
                                 if (this.grid_y == other.grid_y) {
@@ -2171,7 +2161,7 @@ class Fusebomb extends P('obj_regularbullet') {
         this.dest_y = this.dest_y + lengthdir_y(_lane_distance, this.bounce_dir);
         this.air_height = 24;
         this.air_time = 1;
-        this.alarm ??= []; this.alarm[0] = 1;
+        this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 1;
     }
     if (this.fuse_time <= 0) {
         snd_play('snd_explosion_mmx');
@@ -2561,7 +2551,7 @@ class FusebombBig extends P('obj_regularbullet') {
         this.dest_y = this.dest_y + lengthdir_y(_lane_distance, this.bounce_dir);
         this.air_height = 24;
         this.air_time = 1;
-        this.alarm ??= []; this.alarm[0] = 1;
+        this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 1;
     }
     if (this.fuse_time <= 0) {
         _scaling = 8 * this.scale_multiplier;
@@ -2650,10 +2640,7 @@ class FusebombBig extends P('obj_regularbullet') {
                             _boom.maxlifetime = 150;
                             _boom.xdraw = scr_get_box(4) - _lane_distance * 1.5 + this.grid_x * _lane_distance;
                             _boom.ydraw = scr_get_box(5) - _lane_distance * 1.5 + this.grid_y * _lane_distance;
-                            if (! ((_dir == 0 || _dir == 180) && this.grid_y >= 1 && this.grid_y <= 2)) {
-                            } else {
-                            }
-                            if (1) {
+                            if (((_dir == 0 || _dir == 180) && this.grid_y >= 1 && this.grid_y <= 2) || ((_dir == 90 || _dir == 270) && this.grid_x >= 1 && this.grid_x <= 2)) {
                                 switch (S.ds_list_find_value(_randomlist, _randomcycle)) {
                                   case 0:
                                     _boom.direction = _dir + 90;
@@ -2756,9 +2743,9 @@ class Pinkbombexplosion extends P('obj_regularbullet') {
     this.friendlyfire = false;
     this.image_index = this.image_number / 2;
     this.has_drawn = 0;
-    this.alarm ??= []; this.alarm[0] = 1 + irandom(Math.floor(this.image_number / 2) - 1);
-    this.alarm ??= []; this.alarm[2] = 1;
-    this.alarm ??= []; this.alarm[1] = 6;
+    this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 1 + irandom(Math.floor(this.image_number / 2) - 1);
+    this.alarm ??= []; AF(this.alarm, 2); this.alarm[2] = 1;
+    this.alarm ??= []; AF(this.alarm, 1); this.alarm[1] = 6;
   }
   draw() {
     if (this.has_drawn == 0) {
@@ -2843,15 +2830,15 @@ class Pinkcirclestar extends P('obj_regularbullet') {
     this.grazepoints = 2;
     this.image_speed = 0;
     this.image_index = 0;
-    this.angle ??= []; this.angle[1] = 0;
-    this.angle ??= []; this.angle[0] = 0;
-    this.angle_speed ??= []; this.angle_speed[1] = 4;
-    this.angle_speed ??= []; this.angle_speed[0] = 6;
+    this.angle ??= []; AF(this.angle, 1); this.angle[1] = 0;
+    this.angle ??= []; AF(this.angle, 0); this.angle[0] = 0;
+    this.angle_speed ??= []; AF(this.angle_speed, 1); this.angle_speed[1] = 4;
+    this.angle_speed ??= []; AF(this.angle_speed, 0); this.angle_speed[0] = 6;
     i = 3;
     for (let _r64 = 0, _n64 = Math.trunc(3); _r64 < _n64; _r64++) {
         i = i - 1;
-        this.trail_x ??= []; this.trail_x[i] = this.x;
-        this.trail_y ??= []; this.trail_y[i] = this.y;
+        this.trail_x ??= []; AF(this.trail_x, i); this.trail_x[i] = this.x;
+        this.trail_y ??= []; AF(this.trail_y, i); this.trail_y[i] = this.y;
     }
     this.life_time = 0;
     this.image_alpha = 0;
@@ -2877,7 +2864,7 @@ class Pinkcirclestar extends P('obj_regularbullet') {
     this.life_time = this.life_time + 1;
     i = 0;
     for (let _r18 = 0, _n18 = Math.trunc(2); _r18 < _n18; _r18++) {
-        this.angle ??= []; this.angle[i] = S.scr_wrap(this.angle[i] + this.angle_speed[i], 0, 360);
+        this.angle ??= []; AF(this.angle, i); this.angle[i] = S.scr_wrap(this.angle[i] + this.angle_speed[i], 0, 360);
         i = i + 1;
     }
     if (this.life_time < 30) {
@@ -3194,9 +3181,9 @@ class ExplosionFlamingbit extends Instance {
     _fire.sprite_index = 'spr_dust1';
     _fire.image_blend = 0xff8800;
     _fire.image_speed = choose(1, 0.5);
-    _fire.alarm ??= []; _fire.alarm[5] = _fire.image_number * (1 / _fire.image_speed);
+    _fire.alarm ??= []; AF(_fire.alarm, 5); _fire.alarm[5] = _fire.image_number * (1 / _fire.image_speed);
     _fire.vspeed = - 1;
-    this.alarm ??= []; this.alarm[0] = 2;
+    this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 2;
   }
   alarm1() {
     let _fire;
@@ -3206,17 +3193,17 @@ class ExplosionFlamingbit extends Instance {
     _fire.sprite_index = 'spr_dust1';
     _fire.image_blend = 0xff8800;
     _fire.image_speed = choose(0.5, 0.334, 0.25, 0.2, 0.167);
-    _fire.alarm ??= []; _fire.alarm[5] = _fire.image_number * (1 / _fire.image_speed);
+    _fire.alarm ??= []; AF(_fire.alarm, 5); _fire.alarm[5] = _fire.image_number * (1 / _fire.image_speed);
     _fire.vspeed = - 2;
-    this.alarm ??= []; this.alarm[1] = 10 + irandom(10);
+    this.alarm ??= []; AF(this.alarm, 1); this.alarm[1] = 10 + irandom(10);
   }
   create() {
     this.floor_y = this.y + 16 + random(32);
     this.gravity_direction = 270;
     this.gravity = 0.75;
     this.life_time = 30 + irandom(75);
-    this.alarm ??= []; this.alarm[0] = 1 + irandom(1);
-    this.alarm ??= []; this.alarm[1] = 1 + irandom(9);
+    this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 1 + irandom(1);
+    this.alarm ??= []; AF(this.alarm, 1); this.alarm[1] = 1 + irandom(9);
   }
   draw() {
     return;
@@ -3576,7 +3563,7 @@ class Sweatdrop extends Instance {
   create() {
     this.gravity_direction = 270;
     this.gravity = 1;
-    this.alarm ??= []; this.alarm[0] = 5 + irandom(2);
+    this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 5 + irandom(2);
   }
   draw() {
     draw_set_color(0xffffff);

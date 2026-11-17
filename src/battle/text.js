@@ -5,11 +5,13 @@ import {
   instance_number, withObj, random, button1_p, button2_h, string_length, string_char_at,
   string_insert, string_delete, draw_set_font, draw_set_color, draw_get_color, draw_set_alpha, draw_text,
   draw_text_transformed, draw_text_color, draw_rectangle, draw_sprite_ext, draw_self, button3_h, instancesOf, bgr,
-} from '../runtime/gm.js?v=20261116220235';
-import { snd_play, snd_stop, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261116220235';
+  choose,
+} from '../runtime/gm.js?v=20261117033203';
+import { snd_play, snd_stop, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261117033203';
+import { snd_play_x } from '../pink/common.js?v=20261117033203';
 
 const sin = Math.sin;
-import { fontName, splitCaller, view_x, view_y } from './common.js?v=20261116220235';
+import { fontName, splitCaller, view_x, view_y } from './common.js?v=20261117033203';
 
 // Text sounds that exist in this build; the others are silent.
 const TEXTSND = {
@@ -18,7 +20,7 @@ const TEXTSND = {
 };
 // Tenna's voice: one of nine takes at a random pitch (scr_textsound, Chapter 3).
 const TV_VOICES = ['snd_tv_voice_short', ...[2, 3, 4, 5, 6, 7, 8, 9].map(n => 'snd_tv_voice_short_' + n)];
-import { G } from '../runtime/gm.js?v=20261116220235';
+import { G } from '../runtime/gm.js?v=20261117033203';
 const tsnd = n => TEXTSND[n] ?? null;
 
 // scr_textsetup(font, color, x, y, charline, shake, rate, sound, hspace, vspace, special)
@@ -219,6 +221,10 @@ export class Writer extends Instance {
     this.reachedend = 0;
     this.prevent_mash_buffer = 0;
     this.automash_timer = 0;
+    this.pinkballoonid = null; // (Chapter 5: the balloon of Pink or her ghost this text sits in, obj_battleblcon)
+    // (set again when the text is laid out; a balloon drawn before that reads these)
+    this.linecount = 0;
+    this.stringmax = 0;
     this.specx = [];
     this.specy = [];
     for (let i = 0; i < 7; i++) { this.specx[i] = i * 6; this.specy[i] = i * 6; }
@@ -368,6 +374,12 @@ export class Writer extends Instance {
       if (this.automash_timer == 1) button2 = 1;
     }
     this.prevent_mash_buffer -= 1;
+    // (Chapter 5: the ghost's balloon places its text)
+    const pb = this.pinkballoonid?.alive ? this.pinkballoonid : null;
+    if (pb && pb.sprite_index === 'spr_pink_balloon2') {
+      this.writingx = pb.extrax + 8;
+      this.writingy = pb.extray + 5;
+    }
     if (this.dialoguer == 1 && this.formatted == 0) {
       if (global.fc == 0) { this.charline = this.originalcharline; this.writingx = this.x; }
       else { this.charline = 26; this.writingx = this.x + 58 * this.f; }
@@ -472,8 +484,22 @@ export class Writer extends Instance {
   drawChar(mychar, wx, wy, n) {
     if (this.colorchange == 1) draw_set_color(this.xcolor);
     const sh = () => random(this.shake);
+    // (Chapter 5: text in Pink's balloons follows the balloon; while she pushes, it sways)
+    let ox = 0, oy = 0;
+    const pink = instancesOf('obj_pink_enemy')[0];
+    const pushing = pink && pink.idlesprite === 'spr_mew_pushing';
+    if (pushing) ox = Math.sin(pink.siner * 1) * 5;
+    const pb = this.pinkballoonid?.alive ? this.pinkballoonid : null;
+    if (pb && pb.sprite_index === 'spr_pink_balloon2') {
+      draw_text_transformed(wx, wy, mychar, this.textscale, this.textscale, 0);
+      this.special = 7;
+    }
+    if (pb && pb.sprite_index === 'spr_pink_balloon1' && !pushing) {
+      ox = -7 + pb.extrax;
+      oy = -7 + pb.extray;
+    }
     if (this.special == 0) {
-      draw_text_transformed(wx + sh(), wy + sh(), mychar, this.textscale, this.textscale, 0);
+      draw_text_transformed(wx + sh() + ox, wy + sh() + oy, mychar, this.textscale, this.textscale, 0);
     }
     if (this.special == 1) {
       const col = draw_get_color();
@@ -621,82 +647,20 @@ defineScript('scr_battletext_default', (...a) => {
 
 // ---------------------------------------------------------------- speech bubble
 
-// obj_battleblcon (Chapter 3): auto_length balloons size themselves around the text.
-class BattleBlcon extends Instance {
-  create() {
-    this.sprite_index = 'spr_battleblcon';
-    this.image_speed = 0;
-    this.mywriter = instance_create(this.x + 5, this.y + 3, 'obj_writer');
-    this.mywriter.depth = 9999999;
-    this.auto_length = 0;
-    this.side = 1;
-    this.xoffset = 0;
-    this.init = 0;
-    this.reformatted = 0;
-    this.remmsgno = -1;
-    this.initwritingx = -1;
-    this.initwritingy = -1;
-  }
-  step() {
-    if (!instance_exists(this.mywriter)) instance_destroy(this);
-  }
-  draw() {
-    const w = this.mywriter;
-    if (!instance_exists(w)) return;
-    w.depth = this.depth - 5;
-    if (this.remmsgno != w.msgno) this.reformatted = 0;
-    if (this.auto_length == 0) { this.init = 1; this.reformatted = 1; }
-    if (this.reformatted == 0) {
-      if (w.formatted == 0) w.user5();
-      if (w.formatted == 1) {
-        if (this.init == 0) {
-          this.initwritingx = w.writingx;
-          this.initwritingy = w.writingy;
-          this.init = 1;
-        }
-        this.balloonwidth = w.stringmax * w.hspace + 10;
-        this.balloonheight = (w.linecount + 1) * w.vspace + 5;
-        if (this.side == 1) {
-          w.writingx = this.initwritingx - (this.balloonwidth + 20);
-          w.writingy = this.initwritingy - this.balloonheight / 2;
-        }
-        if (this.side == -1) {
-          this.xoffset = 20;
-          w.writingx = this.initwritingx;
-          w.writingy = this.initwritingy - this.balloonheight / 2;
-        }
-        if (this.side == 2) {
-          w.writingx = this.initwritingx - this.balloonwidth / 2;
-          w.writingy = this.initwritingy - (this.balloonheight + 20);
-        }
-        this.writingx = w.writingx;
-        this.writingy = w.writingy;
-      }
-    }
-    if (this.auto_length == 0) draw_self(this);
-    if (this.auto_length == 1 && this.init == 1 && this.writingx !== undefined) {
-      const sc = this.balloonheight < 40 ? 0.5 : 1;
-      if (this.side == 1) draw_sprite_ext('spr_battleblcon_parts', 4, this.x, this.y, 1, sc, 0, 0xffffff, 1);
-      if (this.side == -1) draw_sprite_ext('spr_battleblcon_parts', 4, this.x - this.xoffset, this.y, -1, sc, 0, 0xffffff, 1);
-      if (this.side == 2) draw_sprite_ext('spr_battleblcon_parts', 4, this.x, this.y, 1, 1, -90, 0xffffff, 1);
-      draw_set_color(0xffffff);
-      const wx = this.writingx, wy = this.writingy, bw = this.balloonwidth, bh = this.balloonheight;
-      draw_rectangle(wx - 10, wy - 5, wx + bw, wy + bh - 5, false);
-      draw_rectangle(wx - 5, wy - 10, wx + bw - 5, wy + bh, false);
-    }
-    this.remmsgno = w.msgno;
-  }
-}
-defineObject('obj_battleblcon', BattleBlcon);
+// obj_battleblcon is Chapter 5's, machine-translated (src/pink/gen/objects.js): its auto_length balloons
+// size themselves around the text, and Pink's own balloons are drawn there (her heart, her ghost's).
 
-// scr_enemyblcon(x, y, type): accepts an optional caller first (sets caller.myblcon/mywriter).
+// scr_enemyblcon(x, y, type), Chapter 5: accepts an optional caller first (sets caller.myblcon/mywriter).
+// [sprite, image_index, auto_length, side]
 const BLCON = {
   2: ['spr_battleblcon_v'], 3: ['spr_battleblcon_long'], 4: ['spr_battleblcon_long', 0], 5: ['spr_battleblcon_long', 1],
   6: ['spr_battleblcon_clubs', 2], 7: ['spr_battleblcon_long_r', 2], 8: ['spr_battleblcon_long_tall'],
   10: ['spr_battleblcon_long', null, 1, 1], 11: ['spr_battleblcon_v2_left'], 12: ['spr_battleblcon_v2_right'],
   12.1: ['spr_battleblcon_v2_right2'], 12.2: ['spr_battleblcon_v2_right3'], 12.3: ['spr_battleblcon_v2_right4'],
   12.4: ['spr_battleblcon_v2_right5'], 13: ['spr_battleblcon_long', null, 1, 2], 14: ['spr_battleblcon_long', null, 1, -1],
+  15: ['spr_battleblcon_long', null, 1, 3], 16: ['spr_battleblcon_long', null, 1, 4], 17: ['spr_battleblcon_long', null, 1],
 };
+const PINK_TEXT = 0xff8a90, GHOST_TEXT = 0xc0aedb; // make_color_rgb(255, 138, 144) / (192, 174, 219)
 defineScript('scr_enemyblcon', (...a) => {
   const [caller, [x, y, type]] = splitCaller(a);
   if (type == 0) {
@@ -704,6 +668,13 @@ defineScript('scr_enemyblcon', (...a) => {
     if (caller) caller.mywriter = w;
     return w;
   }
+  // (in the caller's scope: `mywriter` is the caller's own, so a third-date shake goes to that writer)
+  const shakeCallerWriter = () => {
+    const pink = instancesOf('obj_pink_enemy')[0];
+    if (pink && caller?.mywriter?.alive && pink.datecount == 3) caller.mywriter.shake = 2;
+  };
+  // 18: Pink's heart balloon (with her electric heart sound and a heart voice); 22: her ghost's.
+  if (type == 18) snd_play_x('snd_pink_heart_electric', 1, 1), snd_play(choose('snd_pink_heart_voice_1', 'snd_pink_heart_voice_2'));
   const b = instance_create(x, y, 'obj_battleblcon');
   const e = BLCON[type];
   if (e) {
@@ -711,6 +682,17 @@ defineScript('scr_enemyblcon', (...a) => {
     if (e[1] != null) { b.image_index = e[1]; b.image_speed = 0; }
     if (e[2]) b.auto_length = 1;
     if (e[3] != null) b.side = e[3];
+  }
+  if (type == 17) { b.mywriter.mycolor = PINK_TEXT; b.type = 1; }
+  if (type == 18) {
+    Object.assign(b, { sprite_index: 'spr_pink_balloon1', image_xscale: 2, image_yscale: 2 });
+    b.mywriter.mycolor = PINK_TEXT;
+    shakeCallerWriter();
+  }
+  if (type == 22) {
+    Object.assign(b, { sprite_index: 'spr_pink_balloon2', image_xscale: 2, image_yscale: 2, auto_length: 1, parentid: caller ?? -1 });
+    b.mywriter.mycolor = GHOST_TEXT;
+    shakeCallerWriter();
   }
   if (caller) caller.myblcon = b;
   return b;

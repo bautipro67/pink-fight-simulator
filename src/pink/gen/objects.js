@@ -1,14 +1,14 @@
-// Pink's small objects: the DOKI meter (obj_date_ui), her lipsync, ghosts, dummies, spotlights and ACT effects (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
+// Pink's small objects: the DOKI meter (obj_date_ui), her lipsync, ghosts, dummies, spotlights and ACT effects, and Chapter 5's speech balloon (obj_battleblcon) (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
 /* eslint-disable */
 import {
-  Instance, S, audio_sound_get_track_position, d3d_set_fog, defineObject, draw_clear_alpha, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_set_halign, draw_set_valign, draw_sprite, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_text, draw_text_color, draw_text_ext, draw_text_ext_transformed, draw_text_transformed, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, random, snd_loop, snd_play, snd_stop, snd_volume, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261116220235';
+  Instance, S, audio_sound_get_track_position, d3d_set_fog, defineObject, delta_time, draw_clear_alpha, draw_rectangle, draw_self, draw_set_alpha, draw_set_color, draw_set_font, draw_set_halign, draw_set_valign, draw_sprite, draw_sprite_ext, draw_sprite_part_ext, draw_surface, draw_text, draw_text_color, draw_text_ext, draw_text_ext_transformed, draw_text_transformed, draw_text_transformed_color, global, gpu_set_blendmode, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, irandom, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, point_distance, random, round, snd_loop, snd_play, snd_stop, snd_volume, string_char_at, string_length, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
+} from '../rt.js?v=20261117033203';
 import {
   camerawidth, camerax, cameray, i_ex, scr_shakeobj, scr_shakescreen, snd_play_x,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116220235';
+  AF, EXIT, LOOP, O, T, W,
+} from '../gml.js?v=20261117033203';
 
 // obj_date_ui (default sprite spr_dokibar_blush, depth 0)
 class DateUi extends Instance {
@@ -63,14 +63,14 @@ class DateUi extends Instance {
     this.blushtimer = 0;
     _rep = 0;
     for (let _r196 = 0, _n196 = Math.trunc(7); _r196 < _n196; _r196++) {
-        this.populationx ??= []; this.populationx[_rep] = 0 + _rep * 6;
-        this.populationx2 ??= []; this.populationx2[_rep] = 6 + _rep * 6;
+        this.populationx ??= []; AF(this.populationx, _rep); this.populationx[_rep] = 0 + _rep * 6;
+        this.populationx2 ??= []; AF(this.populationx2, _rep); this.populationx2[_rep] = 6 + _rep * 6;
         if (_rep == 0) {
-            this.populationy ??= []; this.populationy[_rep] = 24 + irandom(26);
+            this.populationy ??= []; AF(this.populationy, _rep); this.populationy[_rep] = 24 + irandom(26);
         } else {
-            this.populationy ??= []; this.populationy[_rep] = this.populationy[_rep - 1];
+            this.populationy ??= []; AF(this.populationy, _rep); this.populationy[_rep] = this.populationy[_rep - 1];
         }
-        this.populationy2 ??= []; this.populationy2[_rep] = 24 + irandom(26);
+        this.populationy2 ??= []; AF(this.populationy2, _rep); this.populationy2[_rep] = 24 + irandom(26);
         _rep = _rep + 1;
     }
     this.weatherkick_con = 0;
@@ -158,17 +158,17 @@ class DateUi extends Instance {
             _popu_rep = 0;
             for (let _r610 = 0, _n610 = Math.trunc(5); _r610 < _n610; _r610++) {
                 S.d_line_width_color(_x + _pop_x + 440 + this.populationx[_popu_rep], _y + 61 + _pop_y + this.populationy[_popu_rep], _x + 440 + _pop_x + this.populationx2[_popu_rep], _y + 61 + _pop_y + this.populationy2[_popu_rep], 1, 0xffa040, 0xffa040);
-                this.populationx ??= []; this.populationx[_popu_rep] = this.populationx[_popu_rep] - 1;
-                this.populationx2 ??= []; this.populationx2[_popu_rep] = this.populationx2[_popu_rep] - 1;
+                this.populationx ??= []; AF(this.populationx, _popu_rep); this.populationx[_popu_rep] = this.populationx[_popu_rep] - 1;
+                this.populationx2 ??= []; AF(this.populationx2, _popu_rep); this.populationx2[_popu_rep] = this.populationx2[_popu_rep] - 1;
                 if (this.populationx[_popu_rep] < 10) {
-                    this.populationx ??= []; this.populationx[_popu_rep] = this.populationx[_popu_rep] + 29;
-                    this.populationx2 ??= []; this.populationx2[_popu_rep] = this.populationx2[_popu_rep] + 29;
+                    this.populationx ??= []; AF(this.populationx, _popu_rep); this.populationx[_popu_rep] = this.populationx[_popu_rep] + 29;
+                    this.populationx2 ??= []; AF(this.populationx2, _popu_rep); this.populationx2[_popu_rep] = this.populationx2[_popu_rep] + 29;
                     if (_popu_rep == 0) {
-                        this.populationy ??= []; this.populationy[_popu_rep] = this.populationy2[4];
+                        this.populationy ??= []; AF(this.populationy, _popu_rep); this.populationy[_popu_rep] = this.populationy2[4];
                     } else {
-                        this.populationy ??= []; this.populationy[_popu_rep] = this.populationy2[_popu_rep - 1];
+                        this.populationy ??= []; AF(this.populationy, _popu_rep); this.populationy[_popu_rep] = this.populationy2[_popu_rep - 1];
                     }
-                    this.populationy2 ??= []; this.populationy2[_popu_rep] = 24 + irandom(26);
+                    this.populationy2 ??= []; AF(this.populationy2, _popu_rep); this.populationy2[_popu_rep] = 24 + irandom(26);
                 }
                 _popu_rep = _popu_rep + 1;
             }
@@ -368,7 +368,7 @@ class PinkLipsync extends Instance {
         this.safety_timer = this.safety_timer + 1;
     }
     if (this.safety_timer >= 30) {
-        this.trackpos = this.trackpos + this.delta_time / 1000000;
+        this.trackpos = this.trackpos + delta_time / 1000000;
         if (this.trackpos >= this.song_length) {
             this.trackpos = this.trackpos - this.song_length;
             this.noteindex = 0;
@@ -1291,7 +1291,7 @@ class DokihealAnim extends Instance {
             this.heartcount = this.heartcount - 1;
             this.i = 0;
             while ((this.i < 2) && LOOP('DokihealAnim#3')) {
-                this.star ??= []; this.star[this.starcount] = instance_create(this.x + random(this.sw), this.y + random(this.sh), 'obj_marker');
+                this.star ??= []; AF(this.star, this.starcount); this.star[this.starcount] = instance_create(this.x + random(this.sw), this.y + random(this.sh), 'obj_marker');
                 if (W(this.star[this.starcount], function (other) {
                     this.image_angle = random(360);
                     this.depth = - 10;
@@ -1407,4 +1407,396 @@ class SharefoodActParticle extends Instance {
   }
 }
 defineObject('obj_sharefood_act_particle', SharefoodActParticle);
+
+// obj_battleblcon (default sprite spr_battleblcon, depth 0)
+class Battleblcon extends Instance {
+  constructor() {
+    super();
+    this.sprite_index = 'spr_battleblcon';
+  }
+  cleanUp() {
+    return;
+  }
+  create() {
+    this.mywriter = instance_create(this.x + 5, this.y + 3, 'obj_writer');
+    this.mywriter.depth = 9999999;
+    this.auto_length = 0;
+    this.side = 1;
+    this.xoffset = 0;
+    this.init = 0;
+    this.reformatted = 0;
+    this.remx = this.x;
+    this.remy = this.y;
+    this.remmsgno = - 1;
+    this.initwritingx = - 1;
+    this.initwritingy = - 1;
+    this.type = 0;
+    this.heartbeattimer = 15;
+    this.heartbeatcon = 0;
+    this.notail = false;
+    this.ghost_follow_x = 0;
+    this.ghost_follow_y = 0;
+    this.dir = 0;
+    this.index = 0;
+    this.extrax = 0;
+    this.extray = 0;
+    this.heartxscale = 1;
+    this.heartyscale = 1;
+    this.shakecon = 0;
+    this.blcon_default_color = 0xffffff;
+    this.parentid = - 1;
+    this.ghost_balloon_index = 0;
+    this.aquafollowballoon = false;
+    if (global.chapter == 5 && i_ex('obj_pink_enemy')) {
+        this.depth = this.depth - this.y;
+        if (i_ex('obj_date_ui') && (O('obj_date_ui').con == 1 || O('obj_date_ui').con == 2)) {
+            this.depth = - 99999999;
+            this.mywriter.depth = this.depth - 1;
+        }
+    }
+    this.heart_random_timer = 0;
+    this.heart_x_random ??= []; AF(this.heart_x_random, 8); this.heart_x_random[8] = 0;
+    this.heart_y_random ??= []; AF(this.heart_y_random, 8); this.heart_y_random[8] = 0;
+    this.targetaqua = - 4;
+    this.flowery_float = false;
+    this.flowery_aqua_float = false;
+  }
+  draw() {
+    let checkstring, spacing, stringlength, newmaxlength, currentlength, ii, mychar, __x, __y, _len, __r, __heart_x_offset, __heart_y_offset, __hx, __hy, _heart_x1, _heart_y1, _heart_x2, _heart_y2, _heart_x3, _heart_y3, _heart_x4, _heart_y4, _heart_x5, _heart_y5, _heart_x6, _heart_y6, _heart_x7, _heart_y7, _heart_x8, _heart_y8, _w, __repeat, _writingx, _writingy, _right_x, _left_x, _y, _balloonwidth_adjusted, _width_remainder, _rep, _iii, _purp_color, _color;
+    draw_set_alpha(1);
+    if (this.type == 2 && i_ex(this.mywriter)) {
+        this.mywriter.special = 5;
+    }
+    if (i_ex(this.mywriter)) {
+        if (global.chapter == 5 && i_ex('obj_date_controller') && O('obj_date_controller').con == 0) {
+            this.depth = O('obj_date_controller').depth + 10;
+        }
+        this.mywriter.depth = this.depth - 5;
+        if (global.chapter == 5 && i_ex('obj_pink_enemy')) {
+            this.mywriter.depth = this.depth - 1;
+        }
+        if (this.remmsgno != O('obj_writer').msgno) {
+            this.reformatted = 0;
+        }
+        if (this.auto_length == 0) {
+            this.init = 1;
+            this.reformatted = 1;
+        }
+        if (this.reformatted == 0) {
+            if (this.mywriter.formatted == 0) {
+                if (W(this.mywriter, function (other) {
+                    this.user5?.();
+                }, this) === EXIT) return;
+            }
+            if (this.mywriter.formatted == 1) {
+                if (this.init == 0) {
+                    this.initwritingx = this.mywriter.writingx;
+                    this.initwritingy = this.mywriter.writingy;
+                    this.init = 1;
+                }
+                this.writingx = this.mywriter.writingx;
+                this.writingy = this.mywriter.writingy;
+                this.stringmax = this.mywriter.stringmax;
+                this.hspace = this.mywriter.hspace;
+                this.vspace = this.mywriter.vspace;
+                this.linecount = this.mywriter.linecount;
+                this.balloonwidth = this.stringmax * this.hspace + 10;
+                this.balloonheight = (this.linecount + 1) * this.vspace + 5;
+                if (global.lang == "ja") {
+                    checkstring = this.mywriter.mystring;
+                    spacing = this.mywriter.hspace;
+                    stringlength = string_length(checkstring);
+                    newmaxlength = 0;
+                    currentlength = 0;
+                    ii = 1;
+                    while ((ii < stringlength + 1) && LOOP('Battleblcon#6')) {
+                        mychar = string_char_at(checkstring, ii);
+                        if (mychar == "&" || mychar == "\n") {
+                            currentlength = 0;
+                        } else if (mychar == "^" || mychar == "*") {
+                            ii = ii + 1;
+                        } else if (mychar == "\\") {
+                            ii = ii + 2;
+                        } else if (mychar == "/" || mychar == "%") {
+                        } else if (S.ord(mychar) < 256 || S.ord(mychar) >= 65377 && S.ord(mychar) <= 65439) {
+                            currentlength = currentlength + spacing * 0.5;
+                        } else {
+                            currentlength = currentlength + spacing;
+                        }
+                        if (currentlength >= newmaxlength) {
+                            newmaxlength = currentlength;
+                        }
+                        ii = ii + 1;
+                    }
+                    this.balloonwidth = newmaxlength + 10;
+                }
+                if (this.side == 1) {
+                    this.mywriter.writingx = this.initwritingx - (this.balloonwidth + 20);
+                    this.mywriter.writingy = this.initwritingy - this.balloonheight / 2;
+                    this.writingx = this.initwritingx - (this.balloonwidth + 20);
+                    this.writingy = this.initwritingy - this.balloonheight / 2;
+                }
+                if (this.side == - 1) {
+                    this.xoffset = 20;
+                    this.mywriter.writingx = this.initwritingx;
+                    this.mywriter.writingy = this.initwritingy - this.balloonheight / 2;
+                    this.writingx = this.initwritingx;
+                    this.writingy = this.initwritingy - this.balloonheight / 2;
+                }
+                if (this.side == 2) {
+                    this.mywriter.writingx = this.initwritingx - this.balloonwidth / 2;
+                    this.mywriter.writingy = this.initwritingy - (this.balloonheight + 20);
+                    this.writingx = this.initwritingx - this.balloonwidth / 2;
+                    this.writingy = this.initwritingy - (this.balloonheight + 20);
+                }
+                if (this.side == 3 || this.side == 4) {
+                    this.mywriter.writingx = this.initwritingx - this.balloonwidth / 2;
+                    this.mywriter.writingy = this.initwritingy;
+                    this.writingx = this.initwritingx - this.balloonwidth / 2;
+                    this.writingy = this.initwritingy;
+                }
+            }
+        }
+        __x = 0;
+        if (global.chapter == 5 && i_ex('obj_pink_enemy') && O('obj_pink_enemy').idlesprite == 'spr_mew_pushing') {
+            __x = Math.sin(O('obj_pink_enemy').siner * 1) * 5;
+        }
+        __y = 0;
+        if (global.chapter == 5 && i_ex('obj_flowery_enemy') && this.sprite_index == 'spr_battleblcon_long' && this.auto_length == 1 && this.side == - 1) {
+            __y = Math.sin(O('obj_flowery_enemy').susieflower.sintimer * 0.1) * 6;
+            if (global.typer == 74) {
+                __y = Math.sin(O('obj_flowery_enemy').ralseiflower.sintimer * 0.1) * 6;
+            }
+        }
+        if (this.flowery_float == 1) {
+            __y = Math.sin(O('obj_flowery_enemy').float_siner * 0.33) * 5;
+        }
+        if (this.flowery_aqua_float == 1) {
+            __y = Math.sin(O('obj_flowery_enemy').float_siner * 0.5) * 8;
+        }
+        if (this.targetaqua != - 4) {
+            __x = this.targetaqua.x;
+            __y = this.targetaqua.y;
+        }
+        if (this.auto_length == 0) {
+            _len = 110;
+            if (this.dir > 0) {
+                __x = lengthdir_x(_len * 0.25, this.dir);
+                __y = lengthdir_y(_len, this.dir);
+                this.dir = this.dir + 6;
+                if (W(this.mywriter, function (other) {
+                    this.pinkballoonid = other;
+                }, this) === EXIT) return;
+                if (this.dir < 300) {
+                    this.x = this.x - 2;
+                    this.extrax = this.extrax - 2;
+                }
+            }
+            if (this.shakecon == 1) {
+                __x = - 2 + irandom(4);
+                __y = - 2 + irandom(4);
+                this.extrax = __x;
+                this.extray = __y;
+            }
+            this.writingx = this.mywriter.writingx;
+            this.writingy = this.mywriter.writingy;
+            this.stringmax = this.mywriter.stringmax;
+            this.hspace = this.mywriter.hspace;
+            this.vspace = this.mywriter.vspace;
+            this.linecount = this.mywriter.linecount;
+            this.balloonwidth = this.stringmax * this.hspace + 10;
+            this.balloonheight = (this.linecount + 1) * this.vspace + 5;
+            if (this.sprite_index == 'spr_pink_balloon1') {
+                this.heart_random_timer = this.heart_random_timer + 1;
+                if (this.heart_random_timer == 10) {
+                    this.heart_random_timer = 0;
+                    __r = 1;
+                    for (let _r989 = 0, _n989 = Math.trunc(8); _r989 < _n989; _r989++) {
+                        this.heart_x_random ??= []; AF(this.heart_x_random, __r); this.heart_x_random[__r] = - 3 + random(6);
+                        this.heart_y_random ??= []; AF(this.heart_y_random, __r); this.heart_y_random[__r] = - 3 + random(6);
+                        __r = __r + 1;
+                    }
+                }
+                __heart_x_offset = - 35;
+                __heart_y_offset = - 70;
+                __hx = this.x + __heart_x_offset + __x;
+                __hy = this.y + __heart_y_offset;
+                _heart_x1 = __hx + 10 + this.heart_x_random[1];
+                _heart_y1 = __hy + 45 + this.balloonheight + 30 + this.heart_y_random[1];
+                _heart_x2 = __hx + 10 + this.heart_x_random[1];
+                _heart_y2 = __hy + 45 + this.heart_y_random[2];
+                _heart_x3 = 0;
+                _heart_y3 = __hy + 20 + this.heart_y_random[3];
+                _heart_x4 = __hx + 80 + this.heart_x_random[4];
+                _heart_y4 = __hy + 48;
+                _heart_x5 = 0;
+                _heart_y5 = __hy + 20 + this.heart_y_random[5];
+                _heart_x6 = __hx + 80 + this.balloonwidth / 2 + 20 + this.heart_x_random[6];
+                _heart_y6 = __hy + 45 + this.heart_y_random[6];
+                _heart_x7 = __hx + 80 + this.balloonwidth / 2 + 20 + this.heart_x_random[7];
+                _heart_y7 = __hy + 45 + this.balloonheight + 30 + this.heart_y_random[7];
+                _heart_x8 = __hx + 80 + this.heart_x_random[8];
+                _heart_y8 = __hy + 45 + this.balloonheight + 30 + 45 + this.heart_y_random[8];
+                _heart_x4 = (_heart_x1 + _heart_x7) / 2;
+                _heart_x3 = (_heart_x2 + _heart_x4) / 2;
+                _heart_x5 = (_heart_x4 + _heart_x6) / 2;
+                _heart_x8 = (_heart_x2 + _heart_x6) / 2;
+                if (this.notail == 0 && this.dir == 0 && this.shakecon == 0) {
+                    draw_sprite_ext('spr_pink_heart_tail', 0, _heart_x7 + 2, this.y + 120 + __heart_y_offset, 1, 1, 0, 0xffffff, 1);
+                }
+                draw_set_color(make_color_rgb(160, 27, 30));
+                S.d_triangle(_heart_x2, _heart_y2, _heart_x3, _heart_y3, _heart_x4, _heart_y4, false);
+                S.d_triangle(_heart_x4, _heart_y4, _heart_x5, _heart_y5, _heart_x6, _heart_y6, false);
+                S.d_triangle(_heart_x1, _heart_y1, _heart_x2, _heart_y2, _heart_x6, _heart_y6, false);
+                S.d_triangle(_heart_x1, _heart_y1, _heart_x6, _heart_y6, _heart_x7, _heart_y7, false);
+                S.d_triangle(_heart_x2, _heart_y2, _heart_x4, _heart_y4, _heart_x6, _heart_y6, false);
+                S.d_triangle(_heart_x1, _heart_y1, _heart_x7, _heart_y7, _heart_x8, _heart_y8, false);
+                _w = 3;
+                draw_set_color(make_color_rgb(255, 138, 144));
+                S.d_line_width(_heart_x1, _heart_y1, _heart_x2, _heart_y2, _w);
+                S.d_line_width(_heart_x2, _heart_y2, _heart_x3, _heart_y3, _w);
+                S.d_line_width(_heart_x3, _heart_y3, _heart_x4, _heart_y4, _w);
+                S.d_line_width(_heart_x4, _heart_y4, _heart_x5, _heart_y5, _w);
+                S.d_line_width(_heart_x5, _heart_y5, _heart_x6, _heart_y6, _w);
+                S.d_line_width(_heart_x6, _heart_y6, _heart_x7, _heart_y7, _w);
+                S.d_line_width(_heart_x7, _heart_y7, _heart_x8, _heart_y8, _w);
+                S.d_line_width(_heart_x8, _heart_y8, _heart_x1, _heart_y1, _w);
+                draw_set_color(0xffffff);
+                if (W(this.mywriter, function (other) {
+                    this.pinkballoonid = other;
+                }, this) === EXIT) return;
+            } else if (this.sprite_index == 'spr_pink_balloon2') {
+                __x = - 10;
+                __y = 10;
+                draw_sprite_ext('spr_battleblcon_parts_ghost', 0, this.parentid.ghostmarker.x + __x - 264, this.parentid.ghostmarker.y + __y - 56, 2, 2, 0, 0xffffff, 1);
+                draw_sprite_ext('spr_battleblcon_parts_ghost', 1, this.parentid.ghostmarker.x + __x - 264 + this.balloonwidth, this.parentid.ghostmarker.y + __y - 56, 2, 2, 0, 0xffffff, 1);
+                draw_sprite_ext('spr_battleblcon_parts_ghost', 2, this.parentid.ghostmarker.x + __x - 264, this.parentid.ghostmarker.y + __y - 56 + this.balloonheight, 2, 2, 0, 0xffffff, 1);
+                draw_sprite_ext('spr_battleblcon_parts_ghost', 3, this.parentid.ghostmarker.x + __x - 264 + this.balloonwidth, this.parentid.ghostmarker.y + __y - 56 + this.balloonheight, 2, 2, 0, 0xffffff, 1);
+                __repeat = 0;
+                for (let _r1758 = 0, _n1758 = Math.trunc(round(this.balloonwidth / 24)); _r1758 < _n1758; _r1758++) {
+                    draw_sprite_ext('spr_battleblcon_parts_ghost', 5, this.parentid.ghostmarker.x + __x - 242 + 24 * __repeat, this.parentid.ghostmarker.y + __y - 56 + this.balloonheight, 2, 2, 0, 0xffffff, 1);
+                    __repeat = __repeat + 1;
+                }
+                draw_set_color(make_color_rgb(192, 174, 219));
+                S.d_line_width(this.parentid.ghostmarker.x + __x - 264, this.parentid.ghostmarker.y + __y - 40, this.parentid.ghostmarker.x + __x - 264, this.parentid.ghostmarker.y + __y - 56 + this.balloonheight, 2);
+                S.d_line_width(this.parentid.ghostmarker.x + __x - 264 + this.balloonwidth + 24, this.parentid.ghostmarker.y + __y - 40, this.parentid.ghostmarker.x + __x - 264 + 24 + this.balloonwidth, this.parentid.ghostmarker.y + __y - 56 + this.balloonheight, 2);
+                S.d_line_width(this.parentid.ghostmarker.x + __x - 240, this.parentid.ghostmarker.y + __y - 56, this.parentid.ghostmarker.x + __x - 264 + this.balloonwidth, this.parentid.ghostmarker.y + __y - 56, 2);
+                draw_set_color(0xffffff);
+                draw_sprite_ext('spr_battleblcon_parts_ghost', 4, this.parentid.ghostmarker.x + __x - 240 + this.balloonwidth, this.parentid.ghostmarker.y + __y + - 56 + this.balloonheight / 2, 2, 2, 0, 0xffffff, 1);
+            } else if (this.sprite_index == 'spr_realisticexplosion') {
+                this.index = this.index + 1;
+                draw_sprite_ext(this.sprite_index, this.index, this.x + 50 + __x, this.y + 30 + __y, 5, 2, 0, make_color_rgb(255, 181, 153), 1);
+                if (this.index > 15) {
+                    if (W(this.mywriter, function (other) {
+                        instance_destroy(this);
+                    }, this) === EXIT) return;
+                    instance_destroy(this);
+                    return;
+                }
+            } else {
+                draw_self(this);
+            }
+        }
+        if (this.auto_length == 1 && this.init == 1 && this.sprite_index == 'spr_pink_balloon2') {
+            this.mywriter.xstart = __x;
+            _writingx = this.parentid.ghostmarker.x + __x - this.balloonwidth - 60;
+            _writingy = this.parentid.ghostmarker.y + __y - this.balloonheight / 2;
+            _right_x = 0;
+            _left_x = 0;
+            _y = 0;
+            __y = 0;
+            _balloonwidth_adjusted = Math.floor(this.balloonwidth / 12) * 12;
+            _width_remainder = this.balloonwidth;
+            for (let _r2191 = 0, _n2191 = Math.trunc(30); _r2191 < _n2191; _r2191++) {
+                if (_width_remainder >= 12) {
+                    _width_remainder = _width_remainder - 12;
+                }
+            }
+            _rep = round(point_distance(_writingx + 2 + __x, _writingy - 5 + _y + __y, _writingx + _balloonwidth_adjusted - 13 + __x, _writingy - 5 + _y + __y) / 12);
+            _iii = 0;
+            for (let _r2257 = 0, _n2257 = Math.trunc(_rep + 2); _r2257 < _n2257; _r2257++) {
+                draw_sprite_ext('spr_battleblcon_ghost_bottom_anim3', this.ghost_balloon_index, _writingx - 11 + __x + _iii * 12, _writingy + 1 + this.balloonheight + _y + __y - 2, 1, 1, 0, 0xffffff, 1);
+                _iii = _iii + 1;
+                _right_x = _writingx - 12 + __x + _iii * 12;
+                _left_x = _writingx - 11 + __x;
+            }
+            this.ghost_balloon_index = this.ghost_balloon_index + 1;
+            S.d_rectangle_color(_writingx - 10 + __x, _writingy - 4 + _y + __y, _right_x - 8, _writingy + this.balloonheight - 0 + _y + __y, 0x000000, 0x000000, 0x000000, 0x000000, false);
+            S.d_rectangle_color(_writingx - 10 + __x, _writingy - 0 + _y + __y, _right_x - 1, _writingy + this.balloonheight - 0 + _y + __y, 0x000000, 0x000000, 0x000000, 0x000000, false);
+            S.d_rectangle_color(_writingx - 10 + __x, _writingy - 3 + _y + __y, _writingx + this.balloonwidth + __x - 14, _writingy + this.balloonheight - 0 + _y + __y, 0x000000, 0x000000, 0x000000, 0x000000, false);
+            _iii = 0;
+            for (let _r2468 = 0, _n2468 = Math.trunc(_rep + 2); _r2468 < _n2468; _r2468++) {
+                draw_sprite_ext('spr_battleblcon_ghost_bottom_anim3', this.ghost_balloon_index, _writingx - 11 + __x + _iii * 12, _writingy + 1 + this.balloonheight + _y + __y - 2, 1, 1, 0, 0xffffff, 1);
+                _iii = _iii + 1;
+                _right_x = _writingx - 12 + __x + _iii * 12;
+                _left_x = _writingx - 11 + __x;
+            }
+            draw_sprite_ext('spr_battleblcon_parts_ghost', 4, _right_x, _writingy + this.balloonheight / 2 - 6 + _y + __y, 1, 1, 0, 0xffffff, 1);
+            draw_set_color(0x800080);
+            draw_set_color(0xffffff);
+            draw_sprite_ext('spr_battleblcon_parts_ghost2', 0, _left_x, _writingy - 4 + _y + __y, 1, 1, 0, 0xffffff, 1);
+            draw_sprite_ext('spr_battleblcon_parts_ghost2', 1, _right_x - 12, _writingy - 4 + _y + __y, 1, 1, 0, 0xffffff, 1);
+            _purp_color = make_color_rgb(192, 174, 219);
+            S.d_line_color(_left_x, _writingy + 3 + _y + __y, _left_x, _writingy - 4 + this.balloonheight + _y + __y + 5, _purp_color, _purp_color);
+            S.d_line_color(_writingx + 1 + __x, _writingy - 5 + _y + __y, _right_x - 12, _writingy - 5 + _y + __y, _purp_color, _purp_color);
+            S.d_line_color(_right_x, _writingy + 5 + _y + __y, _right_x, _writingy - 6 + this.balloonheight / 2 + _y + __y, _purp_color, _purp_color);
+            S.d_line_color(_right_x, _writingy + 6 + this.balloonheight / 2 + _y + __y, _right_x, _writingy - 4 + this.balloonheight + _y + __y + 5, _purp_color, _purp_color);
+            if (this.parentid != - 1) {
+                if (W(this.mywriter, function (other) {
+                    this.pinkballoonid = other;
+                }, this) === EXIT) return;
+                this.extrax = _writingx - 10 + __x;
+                this.extray = _writingy - 4 + _y + __y;
+            }
+        } else if (this.auto_length == 1 && this.init == 1) {
+            _color = this.blcon_default_color;
+            if (this.type == 1) {
+                _color = merge_color(0x000000, 0x808080, 0.1);
+            }
+            this.blconscale = 1;
+            if (this.balloonheight < 40) {
+                this.blconscale = 0.5;
+            }
+            if (this.side == 1) {
+                draw_sprite_ext('spr_battleblcon_parts', 4, this.x + __x, this.y + __y, 1, this.blconscale, 0, _color, 1);
+            }
+            if (this.side == - 1) {
+                draw_sprite_ext('spr_battleblcon_parts', 4, this.x - this.xoffset + __x, this.y + __y, - 1, this.blconscale, 0, _color, 1);
+            }
+            if (this.side == 2) {
+                draw_sprite_ext('spr_battleblcon_parts', 4, this.x + __x, this.y + __y - 1, 1, 1, - 90, _color, 1);
+            }
+            if (this.side == 3) {
+                draw_sprite_ext('spr_battleblcon_parts', 4, this.x + __x - 40, this.y - 20 + __y, 1, 1, 90, _color, 1);
+            }
+            if (this.side == 4) {
+                draw_sprite_ext('spr_battleblcon_parts', 4, this.x + __x, this.y - 20 + __y, 1, 1, 90, _color, 1);
+            }
+            draw_set_color(_color);
+            this.mywriter.xstart = __x;
+            _y = 0;
+            if (global.lang == "ja") {
+                _y = 1;
+            }
+            S.d_rectangle(this.writingx - 10 + __x, this.writingy - 5 + _y + __y, this.writingx + this.balloonwidth + __x, this.writingy + this.balloonheight - 5 + _y + __y, false);
+            S.d_rectangle(this.writingx - 5 + __x, this.writingy - 10 + _y + __y, this.writingx + this.balloonwidth - 5 + __x, this.writingy + this.balloonheight + _y + __y, false);
+            draw_set_color(0xffffff);
+        }
+        this.remmsgno = this.mywriter.msgno;
+    }
+    if (this.aquafollowballoon == 1) {
+        draw_set_font(S.scr_84_get_font("dotumche"));
+        draw_text_transformed_color(this.x - 24, this.y - 42, String(global.msg[0]), 1, 1, 0, 0x000000, 0x000000, 0x000000, 0x000000, 1);
+    }
+  }
+  user0() {
+    return;
+  }
+  step() {
+    if (i_ex(this.mywriter) == 0) {
+        instance_destroy(this);
+    }
+  }
+}
+defineObject('obj_battleblcon', Battleblcon);
 

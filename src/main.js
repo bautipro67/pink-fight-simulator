@@ -1,13 +1,13 @@
-import { loadAssets, loadAudioInBackground } from './runtime/assets.js?v=20261116220235';
-import { audioInit, audioPreload, audioState } from './runtime/audio.js?v=20261116220235';
-import * as gm from './runtime/gm.js?v=20261116220235';
-import { G } from './runtime/gm.js?v=20261116220235';
-import { setupTouch } from './touch.js?v=20261116220235';
-import { setupFullscreen } from './fullscreen.js?v=20261116220235';
-import { loadSettings, applyVolume } from './settings.js?v=20261116220235';
-import { isPaused, pauseStep, openPause, togglePause, pauseContext } from './pause.js?v=20261116220235';
-import './screens/controls.js?v=20261116220235';
-import './codes.js?v=20261116220235';
+import { loadAssets, loadAudioInBackground } from './runtime/assets.js?v=20261117033203';
+import { audioInit, audioPreload, audioState } from './runtime/audio.js?v=20261117033203';
+import * as gm from './runtime/gm.js?v=20261117033203';
+import { G } from './runtime/gm.js?v=20261117033203';
+import { setupTouch } from './touch.js?v=20261117033203';
+import { setupFullscreen } from './fullscreen.js?v=20261117033203';
+import { loadSettings, applyVolume } from './settings.js?v=20261117033203';
+import { isPaused, pauseStep, openPause, togglePause, pauseContext } from './pause.js?v=20261117033203';
+import './screens/controls.js?v=20261117033203';
+import './codes.js?v=20261117033203';
 
 loadSettings();
 
@@ -113,13 +113,13 @@ function debugKeys() {
 
 async function start() {
   // Registers every ported object and script.
-  await Promise.all([import('./battle/index.js?v=20261116220235'), import('./pink/index.js?v=20261116220235')]);
+  await Promise.all([import('./battle/index.js?v=20261117033203'), import('./pink/index.js?v=20261117033203')]);
   const mode = params.has('sandbox') ? 'sandbox' : 'battle';
   if (mode === 'sandbox') {
-    const sb = await import('./debug/sandbox.js?v=20261116220235');
+    const sb = await import('./debug/sandbox.js?v=20261117033203');
     sb.startSandbox(params);
   } else {
-    const title = await import('./screens/title.js?v=20261116220235');
+    const title = await import('./screens/title.js?v=20261117033203');
     title.startTitle();
   }
 }

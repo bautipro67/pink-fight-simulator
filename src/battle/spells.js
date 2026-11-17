@@ -3,9 +3,9 @@ import {
   global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instance_find, withObj, event_user, random, ceil, round, merge_color, point_direction, point_distance,
   angle_difference, button1_p, draw_self, draw_sprite_ext, d3d_set_fog, instance_create_depth, instancesOf,
-} from '../runtime/gm.js?v=20261116220235';
-import { snd_play, snd_stop } from '../runtime/audio.js?v=20261116220235';
-import { withInst, subst } from './common.js?v=20261116220235';
+} from '../runtime/gm.js?v=20261117033203';
+import { snd_play, snd_stop } from '../runtime/audio.js?v=20261117033203';
+import { withInst, subst } from './common.js?v=20261117033203';
 
 const g = global;
 
@@ -508,8 +508,16 @@ class RudeBusterBolt extends Instance {
         if (this.red == 1) this.damage += 90;
         g.hittarget[this.star] = 0;
         S.scr_damage_enemy(this, this.star, this.damage);
+        // (Chapter 5: Pink's BODY is invincible, so the number reads 0; before the third date her head
+        // flashes white instead of the whole sprite)
+        const pink = instancesOf('obj_pink_enemy')[0];
+        if (pink) withObj('obj_dmgwriter', d => { d.damage = 0; });
         if (g.monstertype[0] != 20) {
           withInst(this.target, tg => {
+            if (pink && pink.datecount < 3) {
+              pink.pink_head_white_alpha = 1;
+              return;
+            }
             const of = S.scr_oflash(tg);
             if (this.red == 1) of.flashcolor = 0xff0000;
           });

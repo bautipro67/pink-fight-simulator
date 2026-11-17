@@ -88,7 +88,9 @@ KEYWORDS = {'if', 'else', 'while', 'for', 'do', 'until', 'repeat', 'with', 'swit
 BUILTIN_VARS = {'room': 'G.roomName', 'current_time': 'G.current_time()', 'fps': '30', 'room_speed': '30',
                 'view_wport': 'VIEW_WPORT', 'view_hport': 'VIEW_HPORT', 'id': 'this', 'pi': 'Math.PI', 'noone': 'null',
                 'undefined': 'undefined', 'self': 'this', 'all': "'all'", 'c_white': '0xffffff', 'c_black': '0',
-                'room_width': 'room_width', 'room_height': 'room_height'}
+                'room_width': 'room_width', 'room_height': 'room_height',
+                # (microseconds since the last step: the fixed 30 fps step; the screen as a surface)
+                'delta_time': 'delta_time', 'application_surface': 'application_surface'}
 
 
 CHAIN = r"(?:this\.|global\.|other\.|S\.|O\('[^']+'\)\.)?[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\[[^\[\]]*\])*(?:\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?"
@@ -141,9 +143,16 @@ def array_init(e):
     base, idx = m.group(1), re.findall(IDX, m.group(2))
     out, cur = [], base
     out.append('%s ??= [];' % cur)
+    # (GML fills the gap below a new index with 0: AF, src/pink/gml.js. Only for a plain index, a number or
+    # a variable, that can be read twice without side effects or another random draw.)
+    simple = lambda k: re.fullmatch(r'\[\s*-?\s*(?:\d+|(?:this\.|global\.)?[A-Za-z_$][\w$]*(?:\s*[-+]\s*\d+)?)\s*\]', k)
     for k in idx[:-1]:
+        if simple(k):
+            out.append('AF(%s, %s);' % (cur, k[1:-1]))
         cur += k
         out.append('%s ??= [];' % cur)
+    if simple(idx[-1]):
+        out.append('AF(%s, %s);' % (cur, idx[-1][1:-1]))
     return ' '.join(out) + ' '
 
 
@@ -401,7 +410,15 @@ class Translator:
                 else:
                     out.append(t)
             elif re.match(r'^[A-Za-z_]', t):
-                if prv == '.':
+                if prv == '.' and t == 'id' and nxt != '=' and out and out[-1] == '.':
+                    # inst.id: in GML an instance id stands for the instance (other.id.x, a == other.id).
+                    # Here instances are their own ids (the numeric .id is only the engine's counter), so the
+                    # member is dropped; obj_x.id is the first instance of obj_x.
+                    out.pop()
+                    m_ = re.match(r"^O\('(\w+)'\)$", out[-1]) if out else None
+                    if m_:
+                        out[-1] = "OI('%s')" % m_.group(1)
+                elif prv == '.':
                     out.append(t)
                 elif nxt == '(':
                     if t == 'event_user':

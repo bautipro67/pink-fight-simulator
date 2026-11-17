@@ -4,8 +4,8 @@ import {
   withObj, event_user, choose, random, round, merge_color, button1_p, button2_p, button3_p,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_get_color, draw_rectangle,
   draw_sprite, draw_sprite_ext, draw_text_transformed,
-} from '../runtime/gm.js?v=20261116220235';
-import { withInst, gmlString, knightEnemy } from './common.js?v=20261116220235';
+} from '../runtime/gm.js?v=20261117033203';
+import { withInst, gmlString, knightEnemy } from './common.js?v=20261117033203';
 
 const g = global;
 
@@ -414,7 +414,8 @@ class DmgWriter extends Instance {
     if (this.type == 5 && this.damage < 0) draw_set_color(0xc0c0c0);
     if (this.type == 6) draw_set_color(merge_color(0xffff00, 0xffffff, 0.3));
     let message = this.specialmessage;
-    if (this.damage == 0) message = 1;
+    // (Chapter 5: in Pink's fight a 0 is written as 0, not MISS)
+    if (this.damage == 0 && !(g.chapter == 5 && instance_exists('obj_pink_enemy'))) message = 1;
     if (this.type == 4) message = 2;
     if (this.type == 5 && this.damage == 100) message = 5;
     if (this.type == 12) message = 10;

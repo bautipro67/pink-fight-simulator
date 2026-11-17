@@ -9,7 +9,7 @@
 // - Colours are 0xRRGGBB numbers. GML literals are BGR: wrap them in bgr(0x...).
 // - Angles are degrees, counter-clockwise; y points down (same as GameMaker).
 // - `global` holds GML globals: global.tension, global.hp[...] etc.
-import { assets, spriteMask } from './assets.js?v=20261116220235';
+import { assets, spriteMask } from './assets.js?v=20261117033203';
 
 export const global = {};
 export const ROOM_W = 640;
@@ -920,7 +920,13 @@ export function draw_triangle(x1, y1, x2, y2, x3, y3, outline = false) {
   const ctx = begin(draw.alpha);
   ctx.beginPath();
   ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.lineTo(x3, y3); ctx.closePath();
-  if (outline) { ctx.strokeStyle = css(draw.color); ctx.stroke(); } else { ctx.fillStyle = css(draw.color); ctx.fill(); }
+  if (outline) { ctx.strokeStyle = css(draw.color); ctx.stroke(); } else {
+    ctx.fillStyle = css(draw.color); ctx.fill();
+    // GameMaker fills whole pixels, so triangles sharing an edge leave no seam. The canvas
+    // antialiases each edge and the background shows through between them; a hairline of the
+    // same colour closes that gap (only when opaque, where the overlap cannot double the alpha).
+    if (draw.alpha >= 1) { ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 0.75; ctx.stroke(); }
+  }
   ctx.restore();
 }
 
@@ -1253,7 +1259,17 @@ export function surface_create(w, h) {
   return { canvas, ctx, w: canvas.width, h: canvas.height, alive: true, isSurface: true };
 }
 export const surface_exists = s => !!(s && s.isSurface && s.alive);
-export function surface_free(s) { if (s && s.isSurface) s.alive = false; }
+// application_surface: the screen itself, as a surface (obj_afterimage_screen copies it every frame).
+export const application_surface = {
+  isSurface: true, alive: true,
+  get canvas() { return (surfaceStack[0] ?? G.ctx).canvas; },
+  get ctx() { return (surfaceStack[0] ?? G.ctx); },
+  get w() { return this.canvas.width; },
+  get h() { return this.canvas.height; },
+};
+// delta_time: microseconds since the last step (the simulator steps at a fixed 30 per second).
+export const delta_time = Math.round(1000000 / 30);
+export function surface_free(s) { if (s && s.isSurface && s !== application_surface) s.alive = false; }
 export const surface_get_width = s => s?.w ?? 0;
 export const surface_get_height = s => s?.h ?? 0;
 export function surface_set_target(s) {

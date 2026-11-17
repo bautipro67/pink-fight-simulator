@@ -2,8 +2,8 @@
 // W(target, fn, self) is GML's with(): fn runs with `this` = each instance and `other` = self;
 // returning EXIT ends the calling event, BREAK leaves the with loop.
 // O(name) reads the first instance of an object and writes every instance, like obj_x.var in GML.
-import { G, instancesOf, objectClass } from './rt.js?v=20261116220235';
-import { tagParent } from './common.js?v=20261116220235';
+import { G, instancesOf, objectClass } from './rt.js?v=20261117033203';
+import { tagParent } from './common.js?v=20261117033203';
 
 export const EXIT = Symbol('exit');
 export const BREAK = Symbol('break');
@@ -56,9 +56,20 @@ export function O(name) {
   return p;
 }
 
+// OI(name): obj_x.id, the first instance of obj_x (noone when there is none).
+export const OI = name => instancesOf(name)[0] ?? null;
+
 // P(name): the parent class a translated child extends: the ported parent if there is one (so the
 // child inherits its events), else a name tag.
 export const P = name => objectClass(name) ?? tagParent(name);
 
 // T(v): GML truthiness (a number is true only above 0.5; -1 and 0.5 are false).
 export const T = v => (typeof v === 'number' ? v > 0.5 : !!v);
+
+// AF(array, index): writing past an array's end in GML fills the gap with 0 (a[5] = 0 on a new array gives
+// [0, 0, 0, 0, 0, 0]); JavaScript would leave holes, and arithmetic on them gives NaN. Returns the array.
+export function AF(a, i) {
+  i = Math.trunc(i);
+  if (Array.isArray(a)) for (let k = a.length; k < i; k++) a[k] = 0;
+  return a;
+}

@@ -2,15 +2,14 @@
 /* eslint-disable */
 import {
   S, choose, frac, global, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, lengthdir_x, lengthdir_y, objectClass, round, snd_play,
-} from '../rt.js?v=20261116220235';
+} from '../rt.js?v=20261117033203';
 import {
   i_ex, scr_fire_bullet, scr_get_box,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  EXIT, LOOP, O, T, W,
-} from '../gml.js?v=20261116220235';
+  AF, EXIT, LOOP, O, T, W,
+} from '../gml.js?v=20261117033203';
 
-// !!! gml_Object_obj_dbulletcontroller_Alarm_2.gml has a decompiler WARNING: check the asm
 // !!! gml_Object_obj_dbulletcontroller_Alarm_4.gml has a decompiler WARNING: check the asm
 // obj_dbulletcontroller (default sprite spr_grazemask, depth 0, parent obj_bulletgenparent)
 class PinkTypes {
@@ -99,11 +98,11 @@ class PinkTypes {
                 _s_medium = 1;
                 _d_spicy = 0.95;
                 _s_spicy = 1.3333333333333333;
-                this._rand ??= []; this._rand[0] = choose(0, 2);
-                this._rand ??= []; this._rand[1] = choose(0, 2);
-                this._rand ??= []; this._rand[2] = choose(0, 2);
-                this._rand ??= []; this._rand[3] = choose(0, 2);
-                this._rand ??= []; this._rand[4] = choose(0, 2);
+                this._rand ??= []; AF(this._rand, 0); this._rand[0] = choose(0, 2);
+                this._rand ??= []; AF(this._rand, 1); this._rand[1] = choose(0, 2);
+                this._rand ??= []; AF(this._rand, 2); this._rand[2] = choose(0, 2);
+                this._rand ??= []; AF(this._rand, 3); this._rand[3] = choose(0, 2);
+                this._rand ??= []; AF(this._rand, 4); this._rand[4] = choose(0, 2);
                 _rside = choose(- 1, 1);
                 S.ds_list_add(O('obj_purplecontrols').ds_bullet_list, Math.abs(0 - this._rand[0]) + 0.1, - 1 * _rside, _d_mild, _s_mild, Math.abs(1 - this._rand[0]) + 0.1, - 1 * _rside, _d_mild, _s_mild, Math.abs(2 - this._rand[0]) + 0.1, - 1 * _rside, _d_mild, _s_mild, Math.abs(1 - this._rand[0]) + 0.1, - 1 * _rside, _d_mild, _s_mild, Math.abs(choose(0, 2) - this._rand[0]) + 0.1, - 1 * _rside, 3.75, _s_mild);
                 if (irandom(1) == 0) {
@@ -501,16 +500,10 @@ class PinkTypes {
                     _heartshot = 7;
                     break;
                 }
-                if (_shot_prev == 1) {
-                } else {
-                }
-                if (0) {
+                if (_shot_prev == 1 && ((_heartshot == 6 && (_dir == _dir_prev + 90 || _dir == _dir_prev - 270)) || (_heartshot == 8 && (_dir == _dir_prev - 90 || _dir == _dir_prev + 270)))) {
                     _doki_queue = 1;
                 }
-                if (_dir == _dir_prev + 180 || _dir == _dir_prev - 180) {
-                } else {
-                }
-                if (0) {
+                if ((_dir == _dir_prev + 180 || _dir == _dir_prev - 180) && ((_shot_prev == 0 && _heartshot == 8) || (_shot_prev == 1 && _heartshot == 7) || (_shot_prev == 2 && _heartshot == 6))) {
                     _doki_queue = 1;
                 }
                 if (_doki_queue == 0) {
@@ -881,20 +874,20 @@ class PinkTypes {
                                         _randompattern = choose(0, 0, 1, 1, 2);
                                         switch (_randompattern) {
                                           case 0:
-                                            this._rn ??= []; this._rn[1] = 3 + irandom(1);
-                                            this._rn ??= []; this._rn[0] = Math.max(- 1, this._rn[1] - 4 - irandom(1));
+                                            this._rn ??= []; AF(this._rn, 1); this._rn[1] = 3 + irandom(1);
+                                            this._rn ??= []; AF(this._rn, 0); this._rn[0] = Math.max(- 1, this._rn[1] - 4 - irandom(1));
                                             S.ds_list_add(_list_xy, - 2, this._rn[0], - 2, this._rn[1], 1 + irandom(2), - 2, 5, this._rn[1]);
                                             break;
                                           case 1:
-                                            this._rn ??= []; this._rn[2] = 1 + irandom(1);
-                                            this._rn ??= []; this._rn[1] = 3 + irandom(1);
-                                            this._rn ??= []; this._rn[0] = Math.max(- 1, this._rn[1] - 4 - irandom(1));
+                                            this._rn ??= []; AF(this._rn, 2); this._rn[2] = 1 + irandom(1);
+                                            this._rn ??= []; AF(this._rn, 1); this._rn[1] = 3 + irandom(1);
+                                            this._rn ??= []; AF(this._rn, 0); this._rn[0] = Math.max(- 1, this._rn[1] - 4 - irandom(1));
                                             S.ds_list_add(_list_xy, - 2, this._rn[0], 5, this._rn[1], this._rn[2], - 2, this._rn[2], 4);
                                             break;
                                           case 2:
-                                            this._rn ??= []; this._rn[2] = 1 + irandom(1);
-                                            this._rn ??= []; this._rn[1] = 3 + irandom(1);
-                                            this._rn ??= []; this._rn[0] = Math.max(- 1, this._rn[1] - 4 - irandom(1));
+                                            this._rn ??= []; AF(this._rn, 2); this._rn[2] = 1 + irandom(1);
+                                            this._rn ??= []; AF(this._rn, 1); this._rn[1] = 3 + irandom(1);
+                                            this._rn ??= []; AF(this._rn, 0); this._rn[0] = Math.max(- 1, this._rn[1] - 4 - irandom(1));
                                             S.ds_list_add(_list_xy, - 2, - 1, 4, - 2, 5, 4 - choose(0, 1, 1), - 1 + choose(0, 1, 1), 5);
                                             break;
                                         }
@@ -984,24 +977,24 @@ class PinkTypes {
             global.turntimer = 390;
             this.bullet_lane = choose(0, 1);
             this.btimer_start = this.btimer;
-            this.b_interval ??= []; this.b_interval[0] = 7;
-            this.b_number ??= []; this.b_number[0] = 3;
-            this.b_break ??= []; this.b_break[0] = - 30;
-            this.b_speed ??= []; this.b_speed[0] = 3.2;
-            this.b_interval ??= []; this.b_interval[1] = 10;
-            this.b_number ??= []; this.b_number[1] = 2;
-            this.b_break ??= []; this.b_break[1] = - 36;
-            this.b_speed ??= []; this.b_speed[1] = 2;
-            this.b_interval ??= []; this.b_interval[2] = 36;
-            this.b_number ??= []; this.b_number[2] = 1;
-            this.b_break ??= []; this.b_break[2] = - 24;
-            this.b_speed ??= []; this.b_speed[2] = 1.25;
-            this.btimer_array ??= []; this.btimer_array[2] = this.b_interval[2] - 2;
-            this.btimer_array ??= []; this.btimer_array[1] = this.b_interval[1] - 2;
-            this.btimer_array ??= []; this.btimer_array[0] = this.b_interval[0] - 2;
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[2] = 0;
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[1] = 0;
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[0] = 0;
+            this.b_interval ??= []; AF(this.b_interval, 0); this.b_interval[0] = 7;
+            this.b_number ??= []; AF(this.b_number, 0); this.b_number[0] = 3;
+            this.b_break ??= []; AF(this.b_break, 0); this.b_break[0] = - 30;
+            this.b_speed ??= []; AF(this.b_speed, 0); this.b_speed[0] = 3.2;
+            this.b_interval ??= []; AF(this.b_interval, 1); this.b_interval[1] = 10;
+            this.b_number ??= []; AF(this.b_number, 1); this.b_number[1] = 2;
+            this.b_break ??= []; AF(this.b_break, 1); this.b_break[1] = - 36;
+            this.b_speed ??= []; AF(this.b_speed, 1); this.b_speed[1] = 2;
+            this.b_interval ??= []; AF(this.b_interval, 2); this.b_interval[2] = 36;
+            this.b_number ??= []; AF(this.b_number, 2); this.b_number[2] = 1;
+            this.b_break ??= []; AF(this.b_break, 2); this.b_break[2] = - 24;
+            this.b_speed ??= []; AF(this.b_speed, 2); this.b_speed[2] = 1.25;
+            this.btimer_array ??= []; AF(this.btimer_array, 2); this.btimer_array[2] = this.b_interval[2] - 2;
+            this.btimer_array ??= []; AF(this.btimer_array, 1); this.btimer_array[1] = this.b_interval[1] - 2;
+            this.btimer_array ??= []; AF(this.btimer_array, 0); this.btimer_array[0] = this.b_interval[0] - 2;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 2); this.btimer_array_decimal[2] = 0;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 1); this.btimer_array_decimal[1] = 0;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 0); this.btimer_array_decimal[0] = 0;
             if (instance_exists('obj_growtangle')) {
                 instance_create_depth(scr_get_box(4) - 63, scr_get_box(1) - 8, - 1, 'obj_roundbellbullet');
             }
@@ -1018,15 +1011,15 @@ class PinkTypes {
             _pattern_speed_modifier = 1.5;
         }
         if (instance_exists('obj_growtangle')) {
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[0] = this.btimer_array_decimal[0] + _pattern_speed_modifier;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 0); this.btimer_array_decimal[0] = this.btimer_array_decimal[0] + _pattern_speed_modifier;
             do {
                 if (this.btimer_array_decimal[0] >= 1) {
-                    this.btimer_array_decimal ??= []; this.btimer_array_decimal[0] = this.btimer_array_decimal[0] - 1;
+                    this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 0); this.btimer_array_decimal[0] = this.btimer_array_decimal[0] - 1;
                     this.btimer_array[0] ++;
                     if (this.btimer_array[0] > 0) {
                         if (this.btimer_array[0] % this.b_interval[0] == this.b_interval[0] - 1) {
                             if (this.btimer_array[0] >= this.b_interval[0] * (this.b_number[0] - 1)) {
-                                this.btimer_array ??= []; this.btimer_array[0] = this.b_break[0];
+                                this.btimer_array ??= []; AF(this.btimer_array, 0); this.btimer_array[0] = this.b_break[0];
                             }
                             _bul = scr_fire_bullet(this, scr_get_box(4) - 28, scr_get_box(5) + - 1 * (24 + (scr_get_box(3) - scr_get_box(1)) / 2), 'obj_pinkcatbullet', 270, this.b_speed[0] * _pattern_speed_modifier);
                             _bul.mode = 2;
@@ -1038,15 +1031,15 @@ class PinkTypes {
                 }
             } while ((!(this.btimer_array_decimal[0] < 1)) && LOOP('Dbulletcontroller#4'));
 
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[1] = this.btimer_array_decimal[1] + _pattern_speed_modifier;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 1); this.btimer_array_decimal[1] = this.btimer_array_decimal[1] + _pattern_speed_modifier;
             do {
                 if (this.btimer_array_decimal[1] >= 1) {
-                    this.btimer_array_decimal ??= []; this.btimer_array_decimal[1] = this.btimer_array_decimal[1] - 1;
+                    this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 1); this.btimer_array_decimal[1] = this.btimer_array_decimal[1] - 1;
                     this.btimer_array[1] ++;
                     if (this.btimer_array[1] > 0) {
                         if (this.btimer_array[1] % this.b_interval[1] == this.b_interval[1] - 1) {
                             if (this.btimer_array[1] > this.b_interval[1] * (this.b_number[1] - 1)) {
-                                this.btimer_array ??= []; this.btimer_array[1] = this.b_break[1];
+                                this.btimer_array ??= []; AF(this.btimer_array, 1); this.btimer_array[1] = this.b_break[1];
                             }
                             _bul = scr_fire_bullet(this, scr_get_box(4), scr_get_box(5) + 1 * (24 + (scr_get_box(3) - scr_get_box(1)) / 2), 'obj_pinkcatbullet', 90, this.b_speed[1] * _pattern_speed_modifier);
                             _bul.mode = 2;
@@ -1058,15 +1051,15 @@ class PinkTypes {
                 }
             } while ((!(this.btimer_array_decimal[1] < 1)) && LOOP('Dbulletcontroller#5'));
 
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[2] = this.btimer_array_decimal[2] + _pattern_speed_modifier;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 2); this.btimer_array_decimal[2] = this.btimer_array_decimal[2] + _pattern_speed_modifier;
             do {
                 if (this.btimer_array_decimal[2] >= 1) {
-                    this.btimer_array_decimal ??= []; this.btimer_array_decimal[2] = this.btimer_array_decimal[2] - 1;
+                    this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 2); this.btimer_array_decimal[2] = this.btimer_array_decimal[2] - 1;
                     this.btimer_array[2] ++;
                     if (this.btimer_array[2] > 0) {
                         if (this.btimer_array[2] % this.b_interval[2] == this.b_interval[2] - 1) {
                             if (this.btimer_array[2] > this.b_interval[2] * (this.b_number[2] - 1)) {
-                                this.btimer_array ??= []; this.btimer_array[2] = this.b_break[2];
+                                this.btimer_array ??= []; AF(this.btimer_array, 2); this.btimer_array[2] = this.b_break[2];
                             }
                             _bul = scr_fire_bullet(this, scr_get_box(4) + 28, scr_get_box(5) + - 1 * (24 + (scr_get_box(3) - scr_get_box(1)) / 2), 'obj_pinkcatbullet', 270, this.b_speed[2] * _pattern_speed_modifier);
                             _bul.mode = 2;
@@ -1142,36 +1135,36 @@ class PinkTypes {
             if (i_ex('obj_pink_enemy')) {
                 this.difficulty = O('obj_pink_enemy').difficulty;
             }
-            this.b_interval ??= []; this.b_interval[0] = 4;
-            this.b_number ??= []; this.b_number[0] = 2;
-            this.b_break ??= []; this.b_break[0] = - 20;
-            this.b_speed ??= []; this.b_speed[0] = 5.4;
-            this.b_interval ??= []; this.b_interval[1] = 5;
-            this.b_number ??= []; this.b_number[1] = 2;
-            this.b_break ??= []; this.b_break[1] = - 24;
-            this.b_speed ??= []; this.b_speed[1] = 4.4;
-            this.b_interval ??= []; this.b_interval[2] = 18;
-            this.b_number ??= []; this.b_number[2] = 1;
-            this.b_break ??= []; this.b_break[2] = - 12;
-            this.b_speed ??= []; this.b_speed[2] = 3.4;
-            this.btimer_array ??= []; this.btimer_array[2] = this.b_interval[2] - 2;
-            this.btimer_array ??= []; this.btimer_array[1] = this.b_interval[1] - 2;
-            this.btimer_array ??= []; this.btimer_array[0] = this.b_interval[0] - 2;
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[2] = 0;
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[1] = 0;
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[0] = 0;
+            this.b_interval ??= []; AF(this.b_interval, 0); this.b_interval[0] = 4;
+            this.b_number ??= []; AF(this.b_number, 0); this.b_number[0] = 2;
+            this.b_break ??= []; AF(this.b_break, 0); this.b_break[0] = - 20;
+            this.b_speed ??= []; AF(this.b_speed, 0); this.b_speed[0] = 5.4;
+            this.b_interval ??= []; AF(this.b_interval, 1); this.b_interval[1] = 5;
+            this.b_number ??= []; AF(this.b_number, 1); this.b_number[1] = 2;
+            this.b_break ??= []; AF(this.b_break, 1); this.b_break[1] = - 24;
+            this.b_speed ??= []; AF(this.b_speed, 1); this.b_speed[1] = 4.4;
+            this.b_interval ??= []; AF(this.b_interval, 2); this.b_interval[2] = 18;
+            this.b_number ??= []; AF(this.b_number, 2); this.b_number[2] = 1;
+            this.b_break ??= []; AF(this.b_break, 2); this.b_break[2] = - 12;
+            this.b_speed ??= []; AF(this.b_speed, 2); this.b_speed[2] = 3.4;
+            this.btimer_array ??= []; AF(this.btimer_array, 2); this.btimer_array[2] = this.b_interval[2] - 2;
+            this.btimer_array ??= []; AF(this.btimer_array, 1); this.btimer_array[1] = this.b_interval[1] - 2;
+            this.btimer_array ??= []; AF(this.btimer_array, 0); this.btimer_array[0] = this.b_interval[0] - 2;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 2); this.btimer_array_decimal[2] = 0;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 1); this.btimer_array_decimal[1] = 0;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 0); this.btimer_array_decimal[0] = 0;
         }
         _pattern_speed_modifier = 1;
         if (instance_exists('obj_growtangle')) {
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[0] = this.btimer_array_decimal[0] + _pattern_speed_modifier;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 0); this.btimer_array_decimal[0] = this.btimer_array_decimal[0] + _pattern_speed_modifier;
             do {
                 if (this.btimer_array_decimal[0] >= 1) {
-                    this.btimer_array_decimal ??= []; this.btimer_array_decimal[0] = this.btimer_array_decimal[0] - 1;
+                    this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 0); this.btimer_array_decimal[0] = this.btimer_array_decimal[0] - 1;
                     this.btimer_array[0] ++;
                     if (this.btimer_array[0] > 0) {
                         if (this.btimer_array[0] % this.b_interval[0] == this.b_interval[0] - 1) {
                             if (this.btimer_array[0] >= this.b_interval[0] * (this.b_number[0] - 1)) {
-                                this.btimer_array ??= []; this.btimer_array[0] = this.b_break[0];
+                                this.btimer_array ??= []; AF(this.btimer_array, 0); this.btimer_array[0] = this.b_break[0];
                             }
                             _bul = scr_fire_bullet(this, scr_get_box(4) - 28, scr_get_box(5) + - 1 * (24 + (scr_get_box(3) - scr_get_box(1)) / 2), 'obj_pinkcatbullet', 270, this.b_speed[0] * _pattern_speed_modifier);
                             _bul.mode = 2;
@@ -1183,15 +1176,15 @@ class PinkTypes {
                 }
             } while ((!(this.btimer_array_decimal[0] < 1)) && LOOP('Dbulletcontroller#7'));
 
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[1] = this.btimer_array_decimal[1] + _pattern_speed_modifier;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 1); this.btimer_array_decimal[1] = this.btimer_array_decimal[1] + _pattern_speed_modifier;
             do {
                 if (this.btimer_array_decimal[1] >= 1) {
-                    this.btimer_array_decimal ??= []; this.btimer_array_decimal[1] = this.btimer_array_decimal[1] - 1;
+                    this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 1); this.btimer_array_decimal[1] = this.btimer_array_decimal[1] - 1;
                     this.btimer_array[1] ++;
                     if (this.btimer_array[1] > 0) {
                         if (this.btimer_array[1] % this.b_interval[1] == this.b_interval[1] - 1) {
                             if (this.btimer_array[1] > this.b_interval[1] * (this.b_number[1] - 1)) {
-                                this.btimer_array ??= []; this.btimer_array[1] = this.b_break[1];
+                                this.btimer_array ??= []; AF(this.btimer_array, 1); this.btimer_array[1] = this.b_break[1];
                             }
                             _bul = scr_fire_bullet(this, scr_get_box(4), scr_get_box(5) + 1 * (24 + (scr_get_box(3) - scr_get_box(1)) / 2), 'obj_pinkcatbullet', 90, this.b_speed[1] * _pattern_speed_modifier);
                             _bul.mode = 2;
@@ -1203,15 +1196,15 @@ class PinkTypes {
                 }
             } while ((!(this.btimer_array_decimal[1] < 1)) && LOOP('Dbulletcontroller#8'));
 
-            this.btimer_array_decimal ??= []; this.btimer_array_decimal[2] = this.btimer_array_decimal[2] + _pattern_speed_modifier;
+            this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 2); this.btimer_array_decimal[2] = this.btimer_array_decimal[2] + _pattern_speed_modifier;
             do {
                 if (this.btimer_array_decimal[2] >= 1) {
-                    this.btimer_array_decimal ??= []; this.btimer_array_decimal[2] = this.btimer_array_decimal[2] - 1;
+                    this.btimer_array_decimal ??= []; AF(this.btimer_array_decimal, 2); this.btimer_array_decimal[2] = this.btimer_array_decimal[2] - 1;
                     this.btimer_array[2] ++;
                     if (this.btimer_array[2] > 0) {
                         if (this.btimer_array[2] % this.b_interval[2] == this.b_interval[2] - 1) {
                             if (this.btimer_array[2] > this.b_interval[2] * (this.b_number[2] - 1)) {
-                                this.btimer_array ??= []; this.btimer_array[2] = this.b_break[2];
+                                this.btimer_array ??= []; AF(this.btimer_array, 2); this.btimer_array[2] = this.b_break[2];
                             }
                             _bul = scr_fire_bullet(this, scr_get_box(4) + 28, scr_get_box(5) + - 1 * (24 + (scr_get_box(3) - scr_get_box(1)) / 2), 'obj_pinkcatbullet', 270, this.b_speed[2] * _pattern_speed_modifier);
                             _bul.mode = 2;

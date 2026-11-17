@@ -7,9 +7,12 @@ import {
   left_p, right_p, up_p, down_p, button1_p, button2_p, string_width, string_hash_to_newline,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_rectangle, draw_sprite,
   draw_sprite_ext, draw_text, draw_text_colour, draw_text_transformed, draw_line_width,
-} from '../runtime/gm.js?v=20261116220235';
-import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261116220235';
-import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261116220235';
+  surface_create, surface_exists, surface_free, surface_set_target, surface_reset_target, draw_surface, draw_clear_alpha,
+  gpu_set_blendmode, d3d_set_fog, irandom, random,
+} from '../runtime/gm.js?v=20261117033203';
+import { scr_doom, scr_lerpvar_instance } from '../pink/common.js?v=20261117033203';
+import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261117033203';
+import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261117033203';
 
 const sin = Math.sin, cos = Math.cos;
 const g = global;
@@ -177,6 +180,7 @@ class BattleController extends Instance {
     g.flag[36] = 0;
     g.flag[39] = 0;
     this.disablesusieact = 0;
+    this.shareitemcon = 0; // (Chapter 5: Susie picking the food for ShareFood)
     this.mercytotal = 0;
     this.idefendedthisturn = 0;
     this.rouxlsgridenabled = 0;
@@ -193,6 +197,13 @@ class BattleController extends Instance {
   }
 
   ti(i, j) { return this.tempitem[i]?.[j] ?? 0; }
+  // Chapter 5: Susie's ShareFood (Pink's third Susie ACT) can't be picked while her item pocket is empty.
+  shareFoodBlocked(thischar, k) {
+    const pink = instancesOf('obj_pink_enemy')[0];
+    if (!pink || g.battlespellname[thischar]?.[k] !== g.actnamesus?.[pink.myself]?.[2]) return false;
+    for (let i = 0; i < 12; i++) if (this.ti(i, g.charturn) != 0) return false;
+    return true;
+  }
 
   step() {
     // Chapter 5: the battle waits while Pink's intro (introcon < 3) or her phase 4 intro plays.
@@ -440,7 +451,7 @@ class BattleController extends Instance {
     const bs = k => g.battlespell[thischar][k] ?? 0;
     this.gridNav(c, 2, k => bs(k) != 0, () => right_p() || left_p());
     g.tensionselect = g.battlespellcost[thischar][c[2][t]];
-    if (button1_p() && bs(c[2][t]) != 0 && this.onebuffer < 0) {
+    if (button1_p() && bs(c[2][t]) != 0 && this.onebuffer < 0 && !this.shareFoodBlocked(thischar, c[2][t])) {
       if (g.battlespellcost[thischar][c[2][t]] <= g.tension) {
         this.onebuffer = 2;
         g.bmenuno = 0;
@@ -482,6 +493,16 @@ class BattleController extends Instance {
       this.selnoise = 1;
       const item = this.ti(c[4][t], t);
       S.scr_iteminfo(this, item);
+      // (Chapter 5, ShareFood: the item goes to Pink; Susie's own action stays the ACT)
+      if (this.shareitemcon == 1) {
+        const pink = instancesOf('obj_pink_enemy')[0];
+        if (pink) pink.sharefood_item_number = item;
+        S.scr_itemconsumeb(this);
+        g.charspecial[1] = 0;
+        g.charaction[1] = 0;
+        this.shareitemcon = 0;
+        return;
+      }
       if (this.itemtarget == 0 || this.itemtarget == 2) {
         let tensionhealed = 0;
         if (item == 27) { S.scr_tensionheal(80); tensionhealed = 1; }
@@ -506,6 +527,19 @@ class BattleController extends Instance {
       this.twobuffer = 1;
       g.bmenuno = 0;
       this.movenoise = 1;
+      // (backing out of ShareFood's items drops Susie's ACT; as in the game, the TP stays spent and the
+      // reset `actingsus` is the controller's own)
+      if (this.shareitemcon == 1) {
+        this.shareitemcon = 0;
+        g.bmenuno = 0;
+        this.actingsus = 0;
+        g.actingsingle[t] = 0;
+        g.actingsimul[t] = 0;
+        g.faceaction[t] = 0;
+        g.chartarget[t] = 0;
+        g.charaction[t] = 0;
+        g.charspecial[t] = 0;
+      }
     }
   }
 
@@ -669,6 +703,15 @@ class BattleController extends Instance {
         g.tensionselect = 0;
         S.scr_actinfo_temp(this, c[13][t]);
         S.scr_actselect(this, c[13][t], c[2][t]);
+        // Chapter 5: Susie's ShareFood opens her items: the food to share with Pink (shareitemcon).
+        const pink = instancesOf('obj_pink_enemy')[0];
+        if (pink && pink.actingsus == 3 && t == 1) {
+          this.shareitemcon = 1;
+          g.bmenuno = 4;
+          S.scr_iteminfo_temp(this, t);
+          for (let i = 0; i < 12; i++) if (this.ti(c[4][t], t) == 0 && c[4][t] > 0) c[4][t] -= 1;
+          return;
+        }
         S.scr_nexthero(this);
       }
     }
@@ -827,7 +870,7 @@ class BattleController extends Instance {
         const k = page * 6 + i * 2 + n;
         draw_set_color(0xffffff);
         if ((g.battlespellspecial[thischar][k] ?? 0) >= 1) draw_set_color(this.hpcolorsoft[g.char[thischar] - 1]);
-        if (g.tension < (g.battlespellcost[thischar][k] ?? 0)) draw_set_color(0x808080);
+        if (g.tension < (g.battlespellcost[thischar][k] ?? 0) || this.shareFoodBlocked(thischar, k)) draw_set_color(0x808080);
         else if (g.battlespell[thischar][k] == 3 || g.battlespell[thischar][k] == 8) {
           let pacify_glow = 0;
           for (let s = 0; s < 3; s++) {
@@ -1485,6 +1528,9 @@ defineScript('scr_iteminfo_temp', (ctrl, slot) => {
 defineScript('scr_tensionheal', (n) => {
   g.tension += n;
   if (g.tension > g.maxtension) g.tension = g.maxtension;
+  // (Chapter 5: no higher than the bar's cap, Pink's TEA)
+  const bar = instancesOf('obj_tensionbar')[0];
+  if (bar && bar.maxtensionlimit !== undefined && g.tension > bar.maxtensionlimit) g.tension = bar.maxtensionlimit;
   withObj('obj_battlecontroller', bc => {
     bc.mercytotal += n;
     if (bc.mercytotal < 0) bc.mercytotal = 0;
@@ -1577,11 +1623,143 @@ class TensionBar extends Instance {
     this.flashsiner = 0;
     this.maxed = 0;
     this.yoffset = 0;
+    // Chapter 5: against Pink the TP is capped (her TEA): 8% of the bar, 20 TP, until DOKI hearts raise it
+    // (obj_dokiheart, obj_lovelyboy) and a DATE resets it (obj_date_controller's CleanUp).
+    this.maxtensionlimitpercent = 100;
+    this.maxtensionlimit = 250;
+    if (instance_exists('obj_pink_enemy')) {
+      this.maxtensionlimitpercent = 8;
+      this.maxtensionlimit = 20;
+    }
+    this.healthbar_surf = null;
   }
   alarm5() { instance_destroy(this); }
+  cleanUp() { if (surface_exists(this.healthbar_surf)) surface_free(this.healthbar_surf); }
+  // Chapter 5's bar against Pink (obj_tensionbar Draw_0, the Pink branch): its height follows the TP cap
+  // (spr_tensionbar_parts: top, 1-pixel middle rows, bottom), the fill is measured against the cap, and the
+  // text reads "TP%" over "/ cap%". obj_pink_tension_glow flashes it white and sends up kiss hearts.
+  drawPink() {
+    const lim = this.maxtensionlimit, maxt = g.maxtension;
+    if (!surface_exists(this.healthbar_surf)) this.healthbar_surf = surface_create(96, 250);
+    surface_set_target(this.healthbar_surf);
+    draw_clear_alpha(0xffffff, 0);
+    const size = 60, ts = lerp(-1, 75, this.maxtensionlimitpercent / 100);
+    const sb = size + 43 + ts, bh = 23 + ts * 2, n = round(ts);
+    const top = v => sb + 20 - lerp(0, bh + 20, v / lim);
+    draw_sprite('spr_tensionbar_parts', 3, 0, size + 20 - ts);
+    for (let a = 0; a < n; a++) draw_sprite('spr_tensionbar_parts', 4, 0, size + 43 - a);
+    for (let a = 0; a < n; a++) draw_sprite('spr_tensionbar_parts', 4, 0, size + 43 + a);
+    draw_sprite('spr_tensionbar_parts', 5, 0, sb);
+    const fillc = this.maxed == 1 ? merge_color(0xffff00, 0xffa040, 0.5) : 0xffa040;
+    if (this.apparent < this.current) {
+      draw_set_color(0xff0000);
+      draw_rectangle(3, sb + 20, 21, top(this.current), false);
+      draw_set_color(0xffa040);
+      draw_rectangle(3, sb + 20, 21, top(this.apparent), false);
+    }
+    if (this.apparent > this.current) {
+      draw_set_color(0xffffff);
+      draw_rectangle(3, sb + 20, 21, top(this.apparent), false);
+      draw_set_color(fillc);
+      draw_rectangle(3, sb + 20, 21, top(this.current), false);
+    }
+    if (this.apparent == this.current) {
+      draw_set_color(fillc);
+      draw_rectangle(3, sb + 20, 21, top(this.current), false);
+    }
+    if (g.tensionselect > 0) {
+      this.tsiner += 1;
+      draw_set_color(0xffffff);
+      draw_set_alpha(Math.abs(sin(this.tsiner / 8) * 0.5) + 0.2);
+      const th = top(this.apparent);
+      let th2 = th + lerp(0, bh + 20, g.tensionselect / lim);
+      if (th2 > sb + 22) {
+        th2 = sb + 22;
+        draw_set_color(0x404040);
+        draw_set_alpha(0.7);
+      }
+      draw_rectangle(3, th, 21, th2, false);
+      draw_set_alpha(1);
+    }
+    draw_sprite('spr_tensionbar_parts', 0, 0, size + 20 - ts);
+    draw_sprite('spr_tensionbar_parts', 2, 0, sb + 1);
+    gpu_set_blendmode(3);
+    draw_sprite_ext('spr_tensionbar_cutout_parts', 0, 0, size + 20 - ts, 1, 1, 0, 0xffffff, 1);
+    draw_sprite_ext('spr_tensionbar_cutout_parts', 1, 0, sb + 1, 1, 1, 0, 0xffffff, 1);
+    gpu_set_blendmode(0);
+    const glow = instancesOf('obj_pink_tension_glow')[0];
+    if (glow && glow.alphamod >= 0) {
+      if (glow.alphamod == 1) {
+        for (let k = 0; k < 3; k++) {
+          const m = instance_create(this.x + irandom(25), size + 100 - ts + irandom(ts * 2), 'obj_marker');
+          const dur = 10 + irandom(5);
+          Object.assign(m, { sprite_index: 'spr_kissheart', image_xscale: 1.5, image_yscale: 1.5, image_speed: 5 / dur, speed: 3 + random(3), direction: 90 });
+          scr_lerpvar_instance(m, 'speed', m.speed, 0, dur);
+          scr_lerpvar_instance(m, 'image_alpha', 1, 0.25, dur);
+          scr_doom(m, dur);
+        }
+      }
+      d3d_set_fog(true, 0xffffff, 0, 0);
+      draw_sprite_ext('spr_tensionbar_parts', 3, 0, size + 20 - ts, 1, 1, 0, 0xffffff, glow.alphamod);
+      for (let a = 0; a < n; a++) draw_sprite_ext('spr_tensionbar_parts', 4, 0, size + 43 - a, 1, 1, 0, 0xffffff, glow.alphamod);
+      for (let a = 1; a < round(ts - 1) + 1; a++) draw_sprite_ext('spr_tensionbar_parts', 4, 0, size + 43 + a, 1, 1, 0, 0xffffff, glow.alphamod);
+      draw_sprite_ext('spr_tensionbar_parts', 5, 0, sb, 1, 1, 0, 0xffffff, glow.alphamod);
+      d3d_set_fog(false, 0xffffff, 0, 0);
+    }
+    surface_reset_target();
+    this.updateApparent();
+    draw_surface(this.healthbar_surf, this.x, this.y);
+    const { x, y } = this;
+    draw_sprite('spr_tplogo', 0, x - 30, y + 30);
+    draw_set_color(0xffffff);
+    draw_set_font('fnt_mainbig');
+    this.flashsiner += 1;
+    const tamt = Math.max(0, floor(this.apparent / maxt * 100 + 1e-5));
+    this.maxed = 0;
+    if (tamt < 100) {
+      draw_text(x - 30, y + 70, gmlString(tamt));
+      draw_text(x - 30, y + 95, '/');
+      if (this.maxtensionlimitpercent == 100) draw_text_transformed(x - 31, y + 122, String(this.maxtensionlimitpercent), 0.6, 1, 0);
+      else draw_text(x - 31, y + 122, gmlString(this.maxtensionlimitpercent));
+    } else {
+      this.maxed = 1;
+      draw_set_color(0xffff00);
+      draw_text(x - 28, y + 70, 'M');
+      draw_text(x - 24, y + 90, 'A');
+      draw_text(x - 20, y + 110, 'X');
+    }
+  }
+  // (the bar's shown TP catches up with global.tension)
+  updateApparent() {
+    if (Math.abs(this.apparent - g.tension) < 20) this.apparent = g.tension;
+    if (this.apparent < g.tension) this.apparent += 20;
+    if (this.apparent > g.tension) this.apparent -= 20;
+    if (this.apparent != this.current) {
+      this.changetimer += 1;
+      if (this.changetimer > 15) {
+        const d = () => this.apparent - this.current;
+        if (d() > 0) this.current += 2;
+        if (d() > 10) this.current += 2;
+        if (d() > 25) this.current += 3;
+        if (d() > 50) this.current += 4;
+        if (d() > 100) this.current += 5;
+        if (d() < 0) this.current -= 2;
+        if (d() < -10) this.current -= 2;
+        if (d() < -25) this.current -= 3;
+        if (d() < -50) this.current -= 4;
+        if (d() < -100) this.current -= 5;
+        if (Math.abs(d()) < 3) this.current = this.apparent;
+      }
+    }
+  }
   draw() {
     const knight = knightEnemy();
     if (knight && knight.end_cutscene_version > 0) return;
+    if (instance_exists('obj_pink_enemy')) {
+      this.y = view_y() + 40 + this.yoffset;
+      this.drawPink();
+      return;
+    }
     this.y = view_y() + 40 + this.yoffset;
     const { x, y } = this;
     const sw = this.sprite_width, sh = this.sprite_height, maxt = g.maxtension;

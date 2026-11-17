@@ -3,9 +3,9 @@
 import {
   G, global, Instance, defineObject, defineScript, instance_create, instance_destroy, instancesOf, place_meeting, point_distance, draw_self, draw_sprite_ext, event_user, S, snd_play, snd_stop,
   left_h, right_h, up_h, down_h, button2_h,
-} from './rt.js?v=20261116220235';
-import { first, view_x, view_y, move_towards_point } from './common.js?v=20261116220235';
-import { drawSoulHat } from '../hats.js?v=20261116220235';
+} from './rt.js?v=20261117033203';
+import { first, view_x, view_y, move_towards_point } from './common.js?v=20261117033203';
+import { drawSoulHat } from '../hats.js?v=20261117033203';
 
 const SOLID = 'obj_battlesolid';
 
@@ -93,11 +93,14 @@ export class Heart extends Instance {
       }
       if (bkxy === 0) { px = 0; py = 0; }
     }
-    const sw = this.sprite_width, sh = this.sprite_height;
-    if (this.x + px >= view_x() + 640 - sw) px = view_x() + 640 - sw - this.x;
-    if (this.x + px <= 0) px = -this.x;
-    if (this.y + py <= 0) py = -this.y;
-    if (this.y + py >= view_y() + 320 - sh + this.boundaryup) py = view_y() + 320 - sh - this.y + this.boundaryup;
+    // (kept on screen, except a yellow SOUL and in Pink's purple maze, which moves it itself)
+    if (this.color != 2 && !first('obj_purplecontrols')) {
+      const sw = this.sprite_width, sh = this.sprite_height;
+      if (this.x + px >= view_x() + 640 - sw) px = view_x() + 640 - sw - this.x;
+      if (this.x + px <= 0) px = -this.x;
+      if (this.y + py <= 0) py = -this.y;
+      if (this.y + py >= view_y() + 320 - sh + this.boundaryup) py = view_y() + 320 - sh - this.y + this.boundaryup;
+    }
     this.x += px;
     this.y += py;
     if (this.dmgnoise === 1) {
@@ -165,8 +168,10 @@ export class Grazebox extends Instance {
   endStep() {
     const h = first('obj_heart');
     if (h) {
-      this.x = h.x + 10;
-      this.y = h.y + 10;
+      // (in the purple maze the SOUL is scaled, from its top left corner: the graze box stays on its centre)
+      const scaled = !!first('obj_purplecontrols');
+      this.x = h.x + 10 + (scaled ? -9 + 9 * h.image_xscale : 0);
+      this.y = h.y + 10 + (scaled ? -9 + 9 * h.image_yscale : 0);
     } else instance_destroy(this);
   }
   draw() {
@@ -184,10 +189,18 @@ export class Grazebox extends Instance {
   collision_obj_collidebullet(b) {
     if (!(b.active > 0.5) && b.object_index !== 'obj_sword_tunnel_sword') return;
     const tpf = this.grazetpfactor ?? 1, tf = this.grazetimefactor ?? 1;
+    // (Chapter 5: against Pink, grazing does not shorten the turn, except in cats with difficulty 4, the 3D
+    // tunnel and the rotating box with difficulty 0: _pink_no_time_adjustment)
+    let keepTime = false;
+    const pink = instancesOf('obj_pink_enemy')[0];
+    if (pink) {
+      const ch = pink.myattackchoice, d = pink.difficulty;
+      keepTime = !((ch == 1 && d == 4) || ch == 4 || (ch == 3 && d == 0));
+    }
     if (global.inv < 0) {
       if (b.grazed == 1) {
         S.scr_tensionheal(b.grazepoints / 30 * tpf);
-        if (global.turntimer >= 10) global.turntimer -= b.timepoints / 30 * tf;
+        if (global.turntimer >= 10 && !keepTime) global.turntimer -= b.timepoints / 30 * tf;
         for (const gb of instancesOf('obj_grazebox')) {
           if (gb.grazetimer >= 0 && gb.grazetimer < 4) gb.grazetimer = 3;
           if (gb.grazetimer < 2) gb.grazetimer = 2;
@@ -197,7 +210,7 @@ export class Grazebox extends Instance {
         for (const gb of instancesOf('obj_grazebox')) gb.grazecount = (gb.grazecount ?? 0) + 1;
         b.grazed = 1;
         S.scr_tensionheal(b.grazepoints * tpf);
-        if (global.turntimer >= 10) global.turntimer -= b.timepoints * tf;
+        if (global.turntimer >= 10 && !keepTime) global.turntimer -= b.timepoints * tf;
         for (const c of instancesOf('obj_battlecontroller')) c.grazenoise = 1;
         for (const gb of instancesOf('obj_grazebox')) gb.grazetimer = 10;
       }
@@ -234,6 +247,13 @@ export class MoveHeart extends Instance {
       this.distx = gt.x - 10;
       this.disty = gt.y - 10;
     }
+    // (Chapter 5: for Pink's song the SOUL flies over everything to the stage, below the box)
+    const pink = first('obj_pink_enemy');
+    if (pink && pink.myattackchoice == 5) {
+      this.depth = -99999999;
+      this.distx = view_x() + 315;
+      this.disty = view_y() + 200;
+    }
     this.dist = point_distance(this.x, this.y, this.distx, this.disty);
     move_towards_point(this, this.distx, this.disty, this.dist / this.flytime);
     this.alarm[0] = this.flytime;
@@ -242,6 +262,9 @@ export class MoveHeart extends Instance {
   }
   step() {
     this.image_alpha += 0.334;
+    // (Chapter 5: in Pink's fight the SOUL is purple, except for her song)
+    const pink = first('obj_pink_enemy');
+    if (pink && pink.introcon >= 3 && pink.myattackchoice != 5) this.sprite_index = 'spr_purpleheart';
   }
   alarm0() {
     this.x = this.distx;
@@ -271,6 +294,8 @@ export class ReturnHeart extends Instance {
     move_towards_point(this, this.distx, this.disty, this.dist / this.flytime);
     this.alarm[0] = this.flytime;
     this.image_speed = 0;
+    const pink = first('obj_pink_enemy');
+    if (pink && pink.myattackchoice != 5) this.sprite_index = 'spr_purpleheart';
   }
   alarm0() {
     this.x = this.distx;

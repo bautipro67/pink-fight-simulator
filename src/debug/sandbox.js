@@ -8,13 +8,13 @@ import {
   instancesOf, event_user, choose, keyboard_check, keyboard_check_pressed, random_set_seed, round, S,
   draw_set_font, draw_set_halign, draw_set_color, draw_set_alpha, draw_rectangle, draw_text, draw_sprite_ext,
   fa_left, fa_center, merge_color, button1_p, vk, draw_self,
-} from '../runtime/gm.js?v=20261116220235';
-import { snd_play, snd_init, mus_loop_ext, mus_stop, snd_stop } from '../runtime/audio.js?v=20261116220235';
-import { audioReady, assets } from '../runtime/assets.js?v=20261116220235';
-import { gotoRoom } from '../screens/common.js?v=20261116220235';
-import { getBest, saveBest } from '../settings.js?v=20261116220235';
-import { drawSoulHat } from '../hats.js?v=20261116220235';
-import { tagParent } from '../pink/common.js?v=20261116220235';
+} from '../runtime/gm.js?v=20261117033203';
+import { snd_play, snd_init, mus_loop_ext, mus_stop, snd_stop } from '../runtime/audio.js?v=20261117033203';
+import { audioReady, assets } from '../runtime/assets.js?v=20261117033203';
+import { gotoRoom } from '../screens/common.js?v=20261117033203';
+import { getBest, saveBest } from '../settings.js?v=20261117033203';
+import { drawSoulHat } from '../hats.js?v=20261117033203';
+import { tagParent } from '../pink/common.js?v=20261117033203';
 
 // Pink's turns in fight order (obj_pink_enemy User 0): [myattackchoice, difficulty, name, object the
 // attack needs, datecount (how many dates came before it)]. Only attacks whose objects are ported are
@@ -289,6 +289,7 @@ class SandboxController extends tagParent('obj_battlecontroller') {
     this.god = false;
     this.runs = 0;
     this.music = null;
+    this.mercytotal = 0; // (scr_tensionheal adds to it, as to the battle controller's)
   }
   select(i) {
     this.attackIndex = (i + ATTACKS.length) % ATTACKS.length;

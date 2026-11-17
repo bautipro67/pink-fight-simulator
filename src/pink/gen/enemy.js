@@ -2,13 +2,13 @@
 /* eslint-disable */
 import {
   S, button3_p, choose, d3d_set_fog, defineObject, draw_set_alpha, draw_set_color, draw_sprite_ext, draw_sprite_part_ext, global, gpu_set_fog, instance_create, instance_create_depth, instance_destroy, instance_exists, irandom, keyboard_check_pressed, lengthdir_x, lengthdir_y, lerp, make_color_rgb, merge_color, mus_loop_ext, mus_volume, random, random_range, snd_init, snd_loop, snd_play, snd_stop,
-} from '../rt.js?v=20261116220235';
+} from '../rt.js?v=20261117033203';
 import {
   cameraheight, camerawidth, camerax, cameray, i_ex, scr_afterimage, scr_lerpvar, scr_script_delayed, scr_shakeobj, scr_shakescreen, scr_var, snd_play_x,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  EXIT, LOOP, O, P, T, W,
-} from '../gml.js?v=20261116220235';
+  AF, EXIT, LOOP, O, P, T, W,
+} from '../gml.js?v=20261117033203';
 
 // obj_pink_enemy (default sprite spr_pink_idle, depth 0, parent obj_monsterparent)
 class PinkEnemy extends P('obj_monsterparent') {
@@ -58,8 +58,8 @@ class PinkEnemy extends P('obj_monsterparent') {
   create() {
     super.create?.();
     snd_stop(global.batmusic[1]);
-    global.batmusic ??= []; global.batmusic[0] = snd_init("pink.ogg");
-    global.batmusic ??= []; global.batmusic[1] = mus_loop_ext(global.batmusic[0], 1, 1);
+    global.batmusic ??= []; AF(global.batmusic, 0); global.batmusic[0] = snd_init("pink.ogg");
+    global.batmusic ??= []; AF(global.batmusic, 1); global.batmusic[1] = mus_loop_ext(global.batmusic[0], 1, 1);
     if (W('obj_battleback', function (other) {
         instance_destroy(this);
     }, this) === EXIT) return;
@@ -103,9 +103,9 @@ class PinkEnemy extends P('obj_monsterparent') {
     this.susieheartstimer = 0;
     this.ralseiheartstimer = 0;
     this.pink_head_white_alpha = 0;
-    global.flag ??= []; global.flag[1706] = global.tempflag[67];
-    global.flag ??= []; global.flag[1707] = global.tempflag[68];
-    global.flag ??= []; global.flag[1708] = global.tempflag[69];
+    global.flag ??= []; AF(global.flag, 1706); global.flag[1706] = global.tempflag[67];
+    global.flag ??= []; AF(global.flag, 1707); global.flag[1707] = global.tempflag[68];
+    global.flag ??= []; AF(global.flag, 1708); global.flag[1708] = global.tempflag[69];
     this.sharefoodtimer = 0;
     this.sharefood_item_number = 1;
     this.explode_after_date = false;
@@ -182,7 +182,7 @@ class PinkEnemy extends P('obj_monsterparent') {
     this.teamdamage = 100;
     this.teamdamageproportional = false;
     for (let _r755 = 0, _n755 = Math.trunc(12); _r755 < _n755; _r755++) {
-        this.questionsave ??= []; this.questionsave[this.rr] = this.rr + 1;
+        this.questionsave ??= []; AF(this.questionsave, this.rr); this.questionsave[this.rr] = this.rr + 1;
         this.rr = this.rr + 1;
     }
     this.questionsave = S.scr_array_shuffle(this.questionsave);
@@ -202,7 +202,7 @@ class PinkEnemy extends P('obj_monsterparent') {
     instance_create(this.x, this.y, 'obj_pink_lipsync');
     this.image_speed = 0.16666666666666666;
     global.tempflag[96] ++;
-    global.flag ??= []; global.flag[1449] = global.tempflag[96];
+    global.flag ??= []; AF(global.flag, 1449); global.flag[1449] = global.tempflag[96];
     if (global.flag[1449] > 1) {
         this.introcon = 3;
     }
@@ -810,15 +810,15 @@ class PinkEnemy extends P('obj_monsterparent') {
     this.damage = this.nonteamdamage;
   }
   user12() {
-    global.monsterx ??= []; global.monsterx[this.myself] = this.x + this.sprite_width / 2;
-    global.monstery ??= []; global.monstery[this.myself] = this.y + this.sprite_height / 2;
+    global.monsterx ??= []; AF(global.monsterx, this.myself); global.monsterx[this.myself] = this.x + this.sprite_width / 2;
+    global.monstery ??= []; AF(global.monstery, this.myself); global.monstery[this.myself] = this.y + this.sprite_height / 2;
     S.scr_monstersetup(this);
   }
   step() {
     let __len, _who_is_talking, _rr, __x, noeffectstring, susnoeffectstring, ralnoeffectstring, _kris_flirt_string, _kris_flirthard_string, _s_actstring, _r_actstring, ytarget, __a, spread_range, _cx, _cy, _mcx, _random, _hide;
-    global.monsterhp ??= []; global.monsterhp[this.myself] = global.monstermaxhp[this.myself];
+    global.monsterhp ??= []; AF(global.monsterhp, this.myself); global.monsterhp[this.myself] = global.monstermaxhp[this.myself];
     if (this.datecount == 3) {
-        global.monsterhp ??= []; global.monsterhp[this.myself] = global.monstermaxhp[this.myself] * 0.33;
+        global.monsterhp ??= []; AF(global.monsterhp, this.myself); global.monsterhp[this.myself] = global.monstermaxhp[this.myself] * 0.33;
     }
     if (this.datecount >= 2) {
         this.dokimax = 20;
@@ -857,12 +857,12 @@ class PinkEnemy extends P('obj_monsterparent') {
             this.turnredcon = 1;
             mus_volume(global.batmusic[0], 0, 15);
             mus_volume(global.batmusic[1], 0, 15);
-            global.actsimul ??= []; global.actsimul[this.myself] ??= []; global.actsimul[this.myself][1] = 0;
-            global.actsimulsus ??= []; global.actsimulsus[this.myself] ??= []; global.actsimulsus[this.myself][0] = 0;
-            global.actsimulral ??= []; global.actsimulral[this.myself] ??= []; global.actsimulral[this.myself][0] = 0;
-            global.actsimul ??= []; global.actsimul[this.myself] ??= []; global.actsimul[this.myself][2] = 0;
-            global.actsimulsus ??= []; global.actsimulsus[this.myself] ??= []; global.actsimulsus[this.myself][1] = 0;
-            global.actsimulral ??= []; global.actsimulral[this.myself] ??= []; global.actsimulral[this.myself][1] = 0;
+            global.actsimul ??= []; AF(global.actsimul, this.myself); global.actsimul[this.myself] ??= []; AF(global.actsimul[this.myself], 1); global.actsimul[this.myself][1] = 0;
+            global.actsimulsus ??= []; AF(global.actsimulsus, this.myself); global.actsimulsus[this.myself] ??= []; AF(global.actsimulsus[this.myself], 0); global.actsimulsus[this.myself][0] = 0;
+            global.actsimulral ??= []; AF(global.actsimulral, this.myself); global.actsimulral[this.myself] ??= []; AF(global.actsimulral[this.myself], 0); global.actsimulral[this.myself][0] = 0;
+            global.actsimul ??= []; AF(global.actsimul, this.myself); global.actsimul[this.myself] ??= []; AF(global.actsimul[this.myself], 2); global.actsimul[this.myself][2] = 0;
+            global.actsimulsus ??= []; AF(global.actsimulsus, this.myself); global.actsimulsus[this.myself] ??= []; AF(global.actsimulsus[this.myself], 1); global.actsimulsus[this.myself][1] = 0;
+            global.actsimulral ??= []; AF(global.actsimulral, this.myself); global.actsimulral[this.myself] ??= []; AF(global.actsimulral[this.myself], 1); global.actsimulral[this.myself][1] = 0;
         }
     }
     if (this.introcon == 0) {
@@ -1326,7 +1326,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                 if (W('obj_writer', function (other) {
                     instance_destroy(this);
                 }, this) === EXIT) return;
-                this.alarm ??= []; this.alarm[6] = 1;
+                this.alarm ??= []; AF(this.alarm, 6); this.alarm[6] = 1;
             }
         }
         if (this.talked == 0.6 && this.ghostintrocon != 1) {
@@ -1881,7 +1881,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                     if (global.hp[3] < 1) {
                         this.star = 2;
                         S.scr_healitemspell(this, Math.abs(global.hp[3]) + 1);
-                        global.hp ??= []; global.hp[3] = 1;
+                        global.hp ??= []; AF(global.hp, 3); global.hp[3] = 1;
                     }
                 } else if (this.ballooncon == 26) {
                     S.msgset(0, this.pink_battle_dialogue45);
@@ -2005,7 +2005,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                     this.talked = 0.6;
                     this.talktimer = 0;
                 }
-                this.alarm ??= []; this.alarm[6] = 1;
+                this.alarm ??= []; AF(this.alarm, 6); this.alarm[6] = 1;
             }
         }
         if (this.talked == 1 && T(S.scr_isphase("enemytalk")) && !T(i_ex('obj_writer'))) {
@@ -2091,7 +2091,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                         this.idlesprite = 'spr_pink_idle';
                     }
                     if (this.myattackchoice == 1) {
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "cat";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "cat";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 200;
                         this.dc.difficulty = this.difficulty;
@@ -2109,7 +2109,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                             instance_create_depth(this.x, this.y, 4, 'obj_purplecontrols');
                         }, this) === EXIT) return;
                         O('obj_purplecontrols').mode = 2;
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "bomb";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "bomb";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 206;
                         this.dc.difficulty = this.difficulty;
@@ -2126,7 +2126,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                                 S.scr_moveheart();
                             }
                         }, this) === EXIT) return;
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "rotating box";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "rotating box";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 202;
                         this.dc.difficulty = this.difficulty;
@@ -2149,7 +2149,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                             O('obj_purplecontrols').mode = 7;
                             O('obj_purplecontrols').difficulty = other.difficulty;
                         }, this) === EXIT) return;
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "3d tunnel";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "3d tunnel";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 208;
                         this.dc.difficulty = this.difficulty;
@@ -2158,7 +2158,7 @@ class PinkEnemy extends P('obj_monsterparent') {
                         if (!T(instance_exists('obj_growtangle'))) {
                             instance_create(S.__view_get(0, 0) + 320, S.__view_get(1, 0) + 170, 'obj_growtangle');
                         }
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "singing";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "singing";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 209;
                         this.dc.difficulty = this.difficulty;
@@ -2181,19 +2181,19 @@ class PinkEnemy extends P('obj_monsterparent') {
                             instance_create_depth(this.x, this.y, 4, 'obj_purplecontrols');
                         }, this) === EXIT) return;
                         O('obj_purplecontrols').mode = 2;
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "bomb";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "bomb";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 203;
                         this.dc.difficulty = this.difficulty;
                     }
                     if (this.myattackchoice == 7) {
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "vertical lanes";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "vertical lanes";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 204;
                         this.dc.difficulty = this.difficulty;
                     }
                     if (this.myattackchoice == 8) {
-                        global.monsterattackname ??= []; global.monsterattackname[this.myself] = "vertical lanes";
+                        global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "vertical lanes";
                         this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
                         this.dc.type = 205;
                         this.dc.difficulty = this.difficulty;
@@ -2218,68 +2218,68 @@ class PinkEnemy extends P('obj_monsterparent') {
                 this.rr = choose(0, 1, 2, 3);
                 if (this.datecount == 0) {
                     if (this.rr == 0) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink mews madly!", "obj_pink_enemy_slash_Step_0_gml_605_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink mews madly!", "obj_pink_enemy_slash_Step_0_gml_605_0");
                     }
                     if (this.rr == 1) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink spins her head around and laughs.", "obj_pink_enemy_slash_Step_0_gml_606_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink spins her head around and laughs.", "obj_pink_enemy_slash_Step_0_gml_606_0");
                     }
                     if (this.rr == 2) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink stares at a mirror..^1. she doesn't turn around.", "obj_pink_enemy_slash_Step_0_gml_607_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink stares at a mirror..^1. she doesn't turn around.", "obj_pink_enemy_slash_Step_0_gml_607_0");
                     }
                 }
                 if (this.datecount == 1) {
                     if (this.rr == 0) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink mutters to herself^1, and the smoke worsens.", "obj_pink_enemy_slash_Step_0_gml_611_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink mutters to herself^1, and the smoke worsens.", "obj_pink_enemy_slash_Step_0_gml_611_0");
                     }
                     if (this.rr == 1) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink screams heart-censored magic words.", "obj_pink_enemy_slash_Step_0_gml_612_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink screams heart-censored magic words.", "obj_pink_enemy_slash_Step_0_gml_612_0");
                     }
                     if (this.rr == 2) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's dummy bullets try to cheer her up.", "obj_pink_enemy_slash_Step_0_gml_613_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's dummy bullets try to cheer her up.", "obj_pink_enemy_slash_Step_0_gml_613_0");
                     }
                 }
                 if (this.datecount == 2) {
                     if (this.rr == 0) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's BODY winks!&* Pink's GHOST sticks out her tongue!", "obj_pink_enemy_slash_Step_0_gml_617_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's BODY winks!&* Pink's GHOST sticks out her tongue!", "obj_pink_enemy_slash_Step_0_gml_617_0");
                     }
                     if (this.rr == 1) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's BODY holds out hands!&* Pink's GHOST slaps her BODY's hands away!", "obj_pink_enemy_slash_Step_0_gml_618_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's BODY holds out hands!&* Pink's GHOST slaps her BODY's hands away!", "obj_pink_enemy_slash_Step_0_gml_618_0");
                     }
                     if (this.rr == 2) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's dummy bullets don't know who to cheer for!", "obj_pink_enemy_slash_Step_0_gml_619_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's dummy bullets don't know who to cheer for!", "obj_pink_enemy_slash_Step_0_gml_619_0");
                     }
                 }
                 if (this.datecount == 3) {
                     this.rr = choose(0, 1, 2);
                     if (this.rr == 0) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's BODY shudders!&* Pink's GHOST looks worried^1, then turns away!", "obj_pink_enemy_slash_Step_0_gml_624_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's BODY shudders!&* Pink's GHOST looks worried^1, then turns away!", "obj_pink_enemy_slash_Step_0_gml_624_0");
                     }
                     if (this.rr == 1) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's BODY emits smoke!&* Pink's GHOST reaches out^1, then stops!", "obj_pink_enemy_slash_Step_0_gml_625_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's BODY emits smoke!&* Pink's GHOST reaches out^1, then stops!", "obj_pink_enemy_slash_Step_0_gml_625_0");
                     }
                     if (this.rr == 2) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's BODY's voice falters!&* Pink's GHOST starts to say something^1, then stops!", "obj_pink_enemy_slash_Step_0_gml_626_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's BODY's voice falters!&* Pink's GHOST starts to say something^1, then stops!", "obj_pink_enemy_slash_Step_0_gml_626_0");
                     }
                 } else {
                     if (this.rr == 3) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* The air swirls in rosy chaos.", "obj_pink_enemy_slash_Step_0_gml_630_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* The air swirls in rosy chaos.", "obj_pink_enemy_slash_Step_0_gml_630_0");
                     }
                     if (irandom(100) < 3) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Smells like perfume and plastic.", "obj_pink_enemy_slash_Step_0_gml_631_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Smells like perfume and plastic.", "obj_pink_enemy_slash_Step_0_gml_631_0");
                     }
                 }
                 if (this.doki >= 12) {
-                    global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* The DOKI meter is almost full!", "obj_pink_enemy_slash_Step_0_gml_633_0");
+                    global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* The DOKI meter is almost full!", "obj_pink_enemy_slash_Step_0_gml_633_0");
                 }
                 if (this.firstphaseturn == 1) {
                     if (this.datecount == 1) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink is reeling from the impact of the DATE.&* TP meter reset!", "obj_pink_enemy_slash_Step_0_gml_636_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink is reeling from the impact of the DATE.&* TP meter reset!", "obj_pink_enemy_slash_Step_0_gml_636_0");
                     }
                     if (this.datecount == 2) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink has split into GHOST and BODY!&* TP meter reset!", "obj_pink_enemy_slash_Step_0_gml_637_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink has split into GHOST and BODY!&* TP meter reset!", "obj_pink_enemy_slash_Step_0_gml_637_0");
                     }
                     if (this.datecount == 3) {
-                        global.battlemsg ??= []; global.battlemsg[0] = S.stringsetloc("* Pink's BODY is heavily damaged...!", "obj_pink_enemy_slash_Step_0_gml_638_0");
+                        global.battlemsg ??= []; AF(global.battlemsg, 0); global.battlemsg[0] = S.stringsetloc("* Pink's BODY is heavily damaged...!", "obj_pink_enemy_slash_Step_0_gml_638_0");
                     }
                     this.firstphaseturn = 0;
                 }
@@ -2861,7 +2861,7 @@ class PinkEnemy extends P('obj_monsterparent') {
             this.actingral = 3.5;
             this.actcon = 1;
             this.actconral = 0;
-            global.actsimulral ??= []; global.actsimulral[this.myself] ??= []; global.actsimulral[this.myself][2] = 1;
+            global.actsimulral ??= []; AF(global.actsimulral, this.myself); global.actsimulral[this.myself] ??= []; AF(global.actsimulral[this.myself], 2); global.actsimulral[this.myself][2] = 1;
         }
         if (this.actcon == 20 || this.actconsus == 20 || this.actconral == 20) {
             if (T(S.scr_terminate_writer())) {
@@ -3025,12 +3025,12 @@ class PinkEnemy extends P('obj_monsterparent') {
             if (this.datecount == 3) {
                 mus_volume(global.batmusic[0], 0, 15);
                 mus_volume(global.batmusic[1], 0, 15);
-                global.actsimul ??= []; global.actsimul[this.myself] ??= []; global.actsimul[this.myself][1] = 0;
-                global.actsimulsus ??= []; global.actsimulsus[this.myself] ??= []; global.actsimulsus[this.myself][0] = 0;
-                global.actsimulral ??= []; global.actsimulral[this.myself] ??= []; global.actsimulral[this.myself][0] = 0;
-                global.actsimul ??= []; global.actsimul[this.myself] ??= []; global.actsimul[this.myself][2] = 0;
-                global.actsimulsus ??= []; global.actsimulsus[this.myself] ??= []; global.actsimulsus[this.myself][1] = 0;
-                global.actsimulral ??= []; global.actsimulral[this.myself] ??= []; global.actsimulral[this.myself][1] = 0;
+                global.actsimul ??= []; AF(global.actsimul, this.myself); global.actsimul[this.myself] ??= []; AF(global.actsimul[this.myself], 1); global.actsimul[this.myself][1] = 0;
+                global.actsimulsus ??= []; AF(global.actsimulsus, this.myself); global.actsimulsus[this.myself] ??= []; AF(global.actsimulsus[this.myself], 0); global.actsimulsus[this.myself][0] = 0;
+                global.actsimulral ??= []; AF(global.actsimulral, this.myself); global.actsimulral[this.myself] ??= []; AF(global.actsimulral[this.myself], 0); global.actsimulral[this.myself][0] = 0;
+                global.actsimul ??= []; AF(global.actsimul, this.myself); global.actsimul[this.myself] ??= []; AF(global.actsimul[this.myself], 2); global.actsimul[this.myself][2] = 0;
+                global.actsimulsus ??= []; AF(global.actsimulsus, this.myself); global.actsimulsus[this.myself] ??= []; AF(global.actsimulsus[this.myself], 1); global.actsimulsus[this.myself][1] = 0;
+                global.actsimulral ??= []; AF(global.actsimulral, this.myself); global.actsimulral[this.myself] ??= []; AF(global.actsimulral[this.myself], 1); global.actsimulral[this.myself][1] = 0;
             }
         }
     }
@@ -3193,7 +3193,7 @@ class PinkEnemy extends P('obj_monsterparent') {
             this.introalpha = this.introalpha - 0.04;
         }
         if (this.introtimer == 100) {
-            global.monsterattackname ??= []; global.monsterattackname[this.myself] = "purple intro";
+            global.monsterattackname ??= []; AF(global.monsterattackname, this.myself); global.monsterattackname[this.myself] = "purple intro";
             this.dc = S.scr_bulletspawner(this, this.x, this.y, 'obj_dbulletcontroller');
             this.dc.type = 199;
         }

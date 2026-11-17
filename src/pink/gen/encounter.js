@@ -2,19 +2,19 @@
 /* eslint-disable */
 import {
   Instance, S, defineObject, global, instance_create, instance_create_depth, irandom_range, keyboard_check, make_color_rgb, merge_color, random, random_range, snd_loop, snd_stop, snd_volume,
-} from '../rt.js?v=20261116220235';
+} from '../rt.js?v=20261117033203';
 import {
   camerax, cameray, i_ex, room_height, room_width, scr_dark_marker, scr_marker, scr_var_delayed,
-} from '../common.js?v=20261116220235';
+} from '../common.js?v=20261117033203';
 import {
-  EXIT, LOOP, T, W,
-} from '../gml.js?v=20261116220235';
+  AF, EXIT, LOOP, T, W,
+} from '../gml.js?v=20261117033203';
 import {
   array_length,
-} from '../lib5.js?v=20261116220235';
+} from '../lib5.js?v=20261117033203';
 import {
   scr_depth,
-} from '../scene.js?v=20261116220235';
+} from '../scene.js?v=20261117033203';
 
 // obj_dw_pink_encounter (default sprite spr_eventsmall, depth 0)
 class DwPinkEncounter extends Instance {
@@ -99,7 +99,7 @@ class DwPinkEncounter extends Instance {
                 this.image_blend = 0xffffff;
                 S.scr_debug_print(String(this.depth));
                 if (W('obj_castlereflect_manager', function (other) {
-                    S.add_reflection(other.id);
+                    S.add_reflection(other);
                 }, this) === EXIT) return EXIT;
             }, this) === EXIT) return;
             i = i + 1;
@@ -124,11 +124,11 @@ class DwPinkEncounter extends Instance {
     if (this.con == 0) {
         if (global.tempflag[this.tempflag_index] < 1) {
             this.con = 1;
-            this.alarm ??= []; this.alarm[0] = 1;
+            this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 1;
             global.interact = 1;
             global.facing = 0;
         } else {
-            this.alarm ??= []; this.alarm[0] = 1;
+            this.alarm ??= []; AF(this.alarm, 0); this.alarm[0] = 1;
             this.con = 0.1;
             global.interact = 1;
             global.facing = 0;
@@ -1112,9 +1112,9 @@ class DwPinkEncounter extends Instance {
         global.facing = 3;
         instance_create(0, 0, 'obj_persistentfadein');
         global.entrance = 1;
-        global.flag ??= []; global.flag[1815] = 1;
-        global.flag ??= []; global.flag[1816] = 1;
-        global.flag ??= []; global.flag[1846] = 2;
+        global.flag ??= []; AF(global.flag, 1815); global.flag[1815] = 1;
+        global.flag ??= []; AF(global.flag, 1816); global.flag[1816] = 1;
+        global.flag ??= []; AF(global.flag, 1846); global.flag[1846] = 2;
         this.con = - 99;
         if (S.scr_flag_get(1908) == 0) {
             S.scr_flag_set(1908, 2);

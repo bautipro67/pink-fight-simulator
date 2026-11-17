@@ -19,11 +19,11 @@ gen() {
 }
 NOTE="(machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)"
 gen enemy "PINK: obj_pink_enemy $NOTE" obj_pink_enemy
-gen objects "Pink's small objects: the DOKI meter (obj_date_ui), her lipsync, ghosts, dummies, spotlights and ACT effects $NOTE" \
+gen objects "Pink's small objects: the DOKI meter (obj_date_ui), her lipsync, ghosts, dummies, spotlights and ACT effects, and Chapter 5's speech balloon (obj_battleblcon) $NOTE" \
   obj_date_ui obj_pink_lipsync obj_pink_ghost_marker obj_idiot_text obj_gigaheart obj_lovelyboy obj_sharefood_act \
   obj_shutupballoon obj_mewers_live obj_pink_dummy obj_purple_tea obj_ghostburst obj_marker_doomed obj_heartmarker \
   obj_pink_spotlight obj_animation obj_afterimage_fog obj_afterimage_line obj_dokiheal_anim obj_gigaheart_particle \
-  obj_sharefood_act_particle
+  obj_sharefood_act_particle obj_battleblcon
 gen purple "The purple SOUL (obj_purplecontrols: Pink's FELINE WEB in all its modes) and its effects $NOTE" \
   obj_purplecontrols obj_pinkdust obj_pinktrail obj_pinknode obj_pinknodeact obj_slidedust obj_fx_purpleripple \
   obj_purplebg obj_pink_curtains obj_pink_tension_glow obj_fx_pinkchargestar obj_fx_pinksparkle obj_audience_hitbox

@@ -71,11 +71,48 @@ def fix(lines):
     return lines
 
 
+# Conditions the decompiler could not rebuild ("WARNING: stack values differ at merge"): an && / || chain
+# whose operand is itself a chain comes out as empty if/else blocks and a constant `if (0)` / `if (1)` /
+# `if (!0)`. Each is rewritten from the bytecode (research/code/asm/<entry>.asm, the labels named).
+_E = r'\s*\{\s*\}\s*else\s*\{\s*\}\s*'
+REPAIRS = [
+    # obj_fusebomb Draw (L296 / L355 / L357): the bomb shows its lit colour only on these fuse frames
+    # (it blinks), grey or white otherwise.
+    (r'if \(grow <= 1\)' + _E + r'// WARNING: stack values differ at merge into L296:[^\n]*\n\s*if \(!0\)\s*\{\s*if \(grow > 1\)'
+     + _E + r'// WARNING: stack values differ at merge into L355:[^\n]*\n\s*\}\s*else\s*\{\s*\}\s*'
+     r'// WARNING: stack values differ at merge into L357:[^\n]*\n\s*if \(1\)',
+     'if ((grow <= 1 && ((fuse_time == 22 || fuse_time == 23) || (fuse_time < 16 && fuse_time % 4 < 2))) || '
+     '(grow > 1 && ((fuse_time >= 24 && fuse_time < 27) || (fuse_time >= 14 && fuse_time < 17) || '
+     '(fuse_time >= 8 && fuse_time < 10) || (fuse_time % 2 == 0 && fuse_time < 8))))'),
+    # obj_fusebomb_big Step (L1617): the DOKI hearts of a lane in the middle rows / columns spread; the
+    # ones at the edges take the else branch.
+    (r'if \(!\(\(_dir == 0 \|\| _dir == 180\) && grid_y >= 1 && grid_y <= 2\)\)' + _E
+     + r'// WARNING: stack values differ at merge into L1617:[^\n]*\n\s*if \(1\)',
+     'if (((_dir == 0 || _dir == 180) && grid_y >= 1 && grid_y <= 2) || ((_dir == 90 || _dir == 270) && grid_x >= 1 && grid_x <= 2))'),
+    # obj_dbulletcontroller type 202 (L15101 / L15162): when a DOKI heart shot is queued after a turn.
+    (r'if \(_shot_prev == 1\)' + _E + r'// WARNING: stack values differ at merge into L15101:[^\n]*\n\s*if \(0\)',
+     'if (_shot_prev == 1 && ((_heartshot == 6 && (_dir == _dir_prev + 90 || _dir == _dir_prev - 270)) || '
+     '(_heartshot == 8 && (_dir == _dir_prev - 90 || _dir == _dir_prev + 270))))'),
+    (r'if \(_dir == _dir_prev \+ 180 \|\| _dir == _dir_prev - 180\)' + _E
+     + r'// WARNING: stack values differ at merge into L15162:[^\n]*\n\s*if \(0\)',
+     'if ((_dir == _dir_prev + 180 || _dir == _dir_prev - 180) && ((_shot_prev == 0 && _heartshot == 8) || '
+     '(_shot_prev == 1 && _heartshot == 7) || (_shot_prev == 2 && _heartshot == 6)))'),
+]
+
+
+def repair(src, fn):
+    for pat, rep in REPAIRS:
+        src = re.sub(pat, lambda m: rep, src)
+    if 'stack values differ at merge' in src:
+        print('%s: a decompiler merge warning is left (rebuild it from the asm into REPAIRS)' % fn)
+    return src
+
+
 for o in objs:
     for fn in os.listdir(code):
         if not re.fullmatch(r'gml_Object_%s_[A-Za-z]+_\d+\.gml' % re.escape(o), fn) and not fn.startswith('gml_Object_%s_Collision' % o):
             continue
-        src = open(os.path.join(code, fn), encoding='utf-8').read()
+        src = repair(open(os.path.join(code, fn), encoding='utf-8').read(), fn)
         # Local arrays the decompiler left out of "// locals:" (the bytecode writes them through scope -7,
         # `pushi.e -7` then `[array]undefined.NAME`): added, so they translate as locals, not this.NAME.
         asm = os.path.join(code, 'asm', fn[:-4] + '.asm')

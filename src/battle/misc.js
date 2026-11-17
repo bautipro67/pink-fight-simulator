@@ -3,8 +3,8 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   draw_sprite_ext, d3d_set_fog, objectExists, lerp, make_color_hsv, merge_color, instancesOf,
-} from '../runtime/gm.js?v=20261116220235';
-import { splitCaller, draw_sprite_tiled_ext, knightEnemy } from './common.js?v=20261116220235';
+} from '../runtime/gm.js?v=20261117033203';
+import { splitCaller, draw_sprite_tiled_ext, knightEnemy } from './common.js?v=20261117033203';
 
 // Generic effect objects the Knight modules may also register (their Chapter 3 versions win).
 const shared = (name, cls) => { if (!objectExists(name)) defineObject(name, cls); };
@@ -72,15 +72,31 @@ class OFlash extends Instance {
     this.target = null;
     this.image_speed = 0;
     this.flashcolor = 0xffffff;
+    this.follow = false;
   }
   draw() {
-    if (instance_exists(this.target)) {
-      this.image_index = this.target.image_index;
-      this.sprite_index = this.target.sprite_index;
+    const t = this.target;
+    // (Chapter 5: Pink draws these poses from idlesprite at an offset, so the flash takes that pose there)
+    const pink = t && t.alive && t.constructor.objName === 'obj_pink_enemy' ? t : null;
+    const PINK_POSES = { spr_pink_front_sweat: [52, 38], spr_pink_front_angry: [52, 38], spr_pink_very_hurt: [0, 6] };
+    if (pink && PINK_POSES[pink.idlesprite]) {
+      this.sprite_index = pink.idlesprite;
+      this.x = pink.x + PINK_POSES[pink.idlesprite][0];
+      this.y = pink.y + PINK_POSES[pink.idlesprite][1];
+    } else if (instance_exists(t)) {
+      this.image_index = t.image_index;
+      this.sprite_index = t.sprite_index;
+      this.image_angle = t.image_angle;
+    }
+    if (this.follow && instance_exists(t)) {
+      this.x = t.x;
+      this.y = t.y;
+      this.image_xscale = t.image_xscale;
+      this.image_yscale = t.image_yscale;
     }
     this.siner += this.flashspeed;
     d3d_set_fog(true, this.flashcolor, 0, 1);
-    draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, 0, this.image_blend, Math.sin(this.siner / 3));
+    draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle, this.image_blend, Math.sin(this.siner / 3));
     d3d_set_fog(false, 0, 0, 0);
     if (this.siner > 4 && Math.sin(this.siner / 3) < 0) instance_destroy(this);
   }
