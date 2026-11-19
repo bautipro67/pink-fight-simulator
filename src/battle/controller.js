@@ -9,10 +9,10 @@ import {
   draw_sprite_ext, draw_text, draw_text_colour, draw_text_transformed, draw_line_width,
   surface_create, surface_exists, surface_free, surface_set_target, surface_reset_target, draw_surface, draw_clear_alpha,
   gpu_set_blendmode, d3d_set_fog, irandom, random,
-} from '../runtime/gm.js?v=20261117033203';
-import { scr_doom, scr_lerpvar_instance } from '../pink/common.js?v=20261117033203';
-import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261117033203';
-import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261117033203';
+} from '../runtime/gm.js?v=20261119135953';
+import { scr_doom, scr_lerpvar_instance } from '../pink/common.js?v=20261119135953';
+import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261119135953';
+import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261119135953';
 
 const sin = Math.sin, cos = Math.cos;
 const g = global;
@@ -797,8 +797,7 @@ class BattleController extends Instance {
       if (g.monster[i] != 1) continue;
       draw_set_color(0xffffff);
       let mercydraw = 0, tireddraw = 0, c1 = 0xffffff, c2 = 0xffffff;
-      let aqcolor = merge_color(0x00ffff, 0x0000ff, 0.3);
-      if (g.charturn == 2) aqcolor = merge_color(aqcolor, 0xffffff, 0.5 + sin(this.t_siner / 4) * 0.5);
+      const aqcolor = merge_color(0x00ffff, 0x0000ff, 0.3); // (Chapter 5: no flashing on Ralsei's turn, unlike Chapter 4)
       if (g.monsterstatus[i] == 1) tireddraw = 1;
       if (g.mercymod[i] >= g.mercymax[i]) mercydraw = 1;
       const namewidth = string_width(string_hash_to_newline(g.monstername[i]));
@@ -838,7 +837,7 @@ class BattleController extends Instance {
       }
       const mercyamt = Math.min(100, g.mercymod[i]);
       if (this.hidemercy == 0) {
-        const mercypercent = Math.min(100, ceil(g.mercymod[i] / g.mercymax[i] * 100));
+        const mercypercent = Math.min(100, round(g.mercymod[i])); // (Chapter 5: the MERCY value itself, rounded)
         draw_set_color(merge_color(0xffa040, 0xff0000, 0.5));
         draw_rectangle(xx + 520, yy + 380 + i * 30, xx + 600, yy + 380 + i * 30 + 15, false);
         draw_set_color(0xffff00);
@@ -871,15 +870,13 @@ class BattleController extends Instance {
         draw_set_color(0xffffff);
         if ((g.battlespellspecial[thischar][k] ?? 0) >= 1) draw_set_color(this.hpcolorsoft[g.char[thischar] - 1]);
         if (g.tension < (g.battlespellcost[thischar][k] ?? 0) || this.shareFoodBlocked(thischar, k)) draw_set_color(0x808080);
-        else if (g.battlespell[thischar][k] == 3 || g.battlespell[thischar][k] == 8) {
+        else if (g.battlespell[thischar][k] == 3 || g.battlespell[thischar][k] == 8 || g.battlespell[thischar][k] == 13) {
+          // (Chapter 5: spell 13 glows too, in a steady colour)
           let pacify_glow = 0;
           for (let s = 0; s < 3; s++) {
             if (g.monster[s] == 1 && g.monsterstatus[s] == 1 && g.encounterno != 31) pacify_glow = 1;
           }
-          if (pacify_glow == 1) {
-            const aq = merge_color(0x00ffff, 0x0000ff, 0.3);
-            draw_set_color(merge_color(aq, 0xffffff, 0.5 + sin(this.t_siner / 4) * 0.5));
-          }
+          if (pacify_glow == 1) draw_set_color(merge_color(0x00ffff, 0x0000ff, 0.3));
         }
         draw_text(xx + 30 + n * 230, yy + 375 + i * 30, string_hash_to_newline(g.battlespellname[thischar][k] ?? ' '));
       }
@@ -953,8 +950,9 @@ class BattleController extends Instance {
       if (chartime == 2) draw_sprite_ext('spr_headsusie', 0, xx + 30 + xoffset, yy + 375 + yoffset, 1, 1, 0, susblend, 1);
       if (chartime == 3) draw_sprite_ext('spr_headralsei', 0, xx + 30 + xoffset, yy + 375 + yoffset, 1, 1, 0, susblend, 1);
       if (chartime == 4) {
-        draw_sprite_ext('spr_headsusie', 0, xx + 30 + xoffset, yy + 375 + yoffset, 1, 1, 0, susblend, 1);
-        draw_sprite_ext('spr_headralsei', 0, xx + 60 + xoffset, yy + 375 + yoffset, 1, 1, 0, susblend, 1);
+        // (Chapter 5 moves both heads 6 px left)
+        draw_sprite_ext('spr_headsusie', 0, xx + 30 - 6 + xoffset, yy + 375 + yoffset, 1, 1, 0, susblend, 1);
+        draw_sprite_ext('spr_headralsei', 0, xx + 60 - 6 + xoffset, yy + 375 + yoffset, 1, 1, 0, susblend, 1);
       }
       const s1 = string_hash_to_newline(this.actname[i] ?? ' ');
       let xs = (206 - charoffset) / Math.max(1, string_width(s1));
@@ -1005,9 +1003,11 @@ defineScript('scr_charbox', (ctrl) => {
     if (g.fighting == 1) {
       let spare_glow = 0, pacify_glow = 0;
       for (let k = 0; k < 3; k++) if (g.monster[k] == 1 && g.mercymod[k] >= 100) spare_glow = 1;
-      if (c == 2) {
+      // (Chapter 5: Susie's TECH glows too, from 160 TP; Ralsei's from 40)
+      if (c == 1 || c == 2) {
+        const tensionamount = c == 1 ? 160 : 40;
         for (let k = 0; k < 3; k++) {
-          if (g.monster[k] == 1 && g.monsterstatus[k] == 1 && g.tension >= 40) pacify_glow = 1;
+          if (g.monster[k] == 1 && g.monsterstatus[k] == 1 && g.tension >= tensionamount) pacify_glow = 1;
           if (g.encounterno == 31) pacify_glow = 0;
         }
       }
