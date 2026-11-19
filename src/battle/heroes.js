@@ -2,9 +2,9 @@
 import {
   global, Instance, defineObject, S, instance_create, instance_exists, withObj, random, round, ceil,
   merge_color, draw_sprite_ext, d3d_set_fog, sprite_get_number,
-} from '../runtime/gm.js?v=20261119135953';
-import { snd_play, snd_stop, snd_pitch } from '../runtime/audio.js?v=20261119135953';
-import { withInst } from './common.js?v=20261119135953';
+} from '../runtime/gm.js?v=20261119162300';
+import { snd_play, snd_stop, snd_pitch } from '../runtime/audio.js?v=20261119162300';
+import { withInst } from './common.js?v=20261119162300';
 
 const g = global;
 
@@ -27,6 +27,9 @@ export class HeroParent extends Instance {
     this.darkify = 0;
     this.image_xscale = 2;
     this.image_yscale = 2;
+    this.maxframes = 0;
+    this.act_init = 0;
+    this.pinkflashtimer = 0;
     this.myheight = 37;
     this.mywidth = 34;
     this.index = 0;
@@ -74,13 +77,17 @@ export class HeroParent extends Instance {
   draw() {
     const me = this.myself;
     if (g.hp[g.char[me]] > 0) {
-      if (g.myfight == 3 && g.faceaction[me] == 6) this.state = 6;
+      if (g.myfight == 3 && g.faceaction[me] == 6 && this.state != 8) this.state = 6;
       if (this.state == 0 && this.hurt == 0) {
         this.acttimer = 0;
         this.thissprite = this.idlesprite;
         if (g.faceaction[me] == 1) this.thissprite = this.attackreadysprite;
         if (g.faceaction[me] == 3) this.thissprite = this.itemreadysprite;
-        if (g.faceaction[me] == 2) this.thissprite = this.spellreadysprite;
+        if (g.faceaction[me] == 2) {
+          this.thissprite = this.spellreadysprite;
+          // (Chapter 5: Ralsei readies ReviveSong singing; flag 1311 is his alternate outfit)
+          if (this.object_index == 'obj_heroralsei' && g.charspecial[2] == 12) this.thissprite = g.flag[1311] == 1 ? 'spr_ralseib_sing_ready' : 'spr_ralsei_sing_ready';
+        }
         if (g.faceaction[me] == 6) this.thissprite = this.actreadysprite;
         if (g.charcond[me] == 5) {
           this.thissprite = this.defeatsprite;
@@ -135,7 +142,7 @@ export class HeroParent extends Instance {
         if (S.scr_monsterpop() == 0) this.attacktimer = 0;
         this.thissprite = this.spellsprite;
         // Chapter 5: Ralsei readies ReviveSong singing.
-        if (this.object_index == 'obj_heroralsei' && g.charspecial[2] == 12) this.thissprite = 'spr_ralsei_sing_ready';
+        if (this.object_index == 'obj_heroralsei' && g.charspecial[2] == 12) this.thissprite = g.flag[1311] == 1 ? 'spr_ralseib_sing_ready' : 'spr_ralsei_sing_ready';
         this.index = this.image_index;
         this.attacktimer += 0.5;
       }
@@ -152,17 +159,21 @@ export class HeroParent extends Instance {
         this.attacktimer += 0.5;
       }
       if (this.state == 6) {
-        if (g.myfight == 3) {
-          if (this.acttimer < this.actframes) this.acttimer += 0.5;
-        } else this.acttimer += 0.5;
-        this.thissprite = this.actsprite;
-        this.index = this.acttimer;
-        if (this.acttimer >= this.actreturnframes) {
-          this.acttimer = 0;
-          this.state = 0;
-          g.faceaction[me] = 0;
+        // (Chapter 5: the first frame of an ACT only starts it)
+        if (this.act_init == 0) this.act_init = 1;
+        else {
+          if (g.myfight == 3) {
+            if (this.acttimer < this.actframes) this.acttimer += 0.5;
+          } else this.acttimer += 0.5;
+          this.thissprite = this.actsprite;
+          this.index = this.acttimer;
+          if (this.acttimer >= this.actreturnframes) {
+            this.acttimer = 0;
+            this.state = 0;
+            g.faceaction[me] = 0;
+          }
         }
-      }
+      } else this.act_init = 0;
       if (this.state == 7) {
         this.hurt = 0;
         this.hurttimer = 0;
@@ -175,6 +186,22 @@ export class HeroParent extends Instance {
           this.index = 0;
         }
       }
+      // State 8 (scr_battle_sprite_set): a set sprite (the uniforms, Ralsei's mad looks...). It ends
+      // after maxframes; with maxframes -1 it plays once and stops on frame 0; with 0 it stays.
+      if (this.state == 8) {
+        const n = sprite_get_number(this.sprite_index);
+        if (this.maxframes == -1 && this.image_index >= n - 0.1) {
+          this.image_speed = 0;
+          this.image_index = 0;
+        } else if (this.maxframes == -1) {
+          // (still playing)
+        } else if (this.image_index + this.image_speed >= this.maxframes && this.maxframes != 0) {
+          this.state = 0;
+          this.hurt = 0;
+          this.attacktimer = 0;
+          this.maxframes = 0;
+        }
+      }
       if (this.hurt == 1) {
         this.hurtindex = this.hurttimer / 2;
         if (this.hurtindex > 2) this.hurtindex = 2;
@@ -184,7 +211,9 @@ export class HeroParent extends Instance {
           g.charcond[me] = 0;
         }
         if (g.faceaction[me] == 0) g.faceaction[me] = 5;
-        if (g.faceaction[me] != 4) {
+        if (this.state == 8) {
+          // (the set sprite is drawn instead of the hurt pose)
+        } else if (g.faceaction[me] != 4) {
           this.specdraw = 1;
           draw_sprite_ext(this.hurtsprite, this.hurtindex, this.x - 20 + this.hurtindex * 10, this.y, 2, 2, 0, this.image_blend, this.image_alpha);
         } else {
@@ -208,7 +237,7 @@ export class HeroParent extends Instance {
       this.index = 0;
       this.siner += 1;
     }
-    if (this.specdraw == 0) {
+    if (this.specdraw == 0 && this.state != 8) {
       this.sprite_index = this.thissprite;
       this.image_index = this.index;
       draw_sprite_ext(this.thissprite, this.index, this.x, this.y, 2, 2, 0, this.image_blend, this.image_alpha);
@@ -218,6 +247,16 @@ export class HeroParent extends Instance {
         draw_sprite_ext(this.thissprite, this.index, this.x, this.y, 2, 2, 0, this.image_blend, -Math.cos(this.fsiner / 5) * 0.4 + 0.6);
         d3d_set_fog(false, 0, 0, 0);
       }
+      // (Chapter 5: a pink flash when Pink's ACTs touch the hero)
+      if (this.pinkflashtimer > 0) {
+        d3d_set_fog(true, 0xf75bc8, 0, 1);
+        draw_sprite_ext(this.thissprite, this.index, this.x, this.y, 2, 2, 0, this.image_blend, this.pinkflashtimer / 5);
+        d3d_set_fog(false, 0, 0, 0);
+        this.pinkflashtimer -= 1;
+      }
+    }
+    if (this.state == 8) {
+      draw_sprite_ext(this.sprite_index, this.image_index, this.x, this.y, this.image_xscale, this.image_yscale, this.image_angle ?? 0, this.image_blend, this.image_alpha);
     }
     this.specdraw = 0;
     if (this.becomeflash == 0) this.flash = 0;

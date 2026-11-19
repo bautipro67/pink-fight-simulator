@@ -14,14 +14,14 @@ import {
   clamp, left_h, right_h, up_h, down_h, button2_h, sprite_get_width, sprite_get_height, sprite_get_xoffset,
   sprite_get_yoffset, sprite_get_number, button1_p, withObj, draw_set_font, draw_text, string_width,
   string_hash_to_newline,
-} from '../runtime/gm.js?v=20261119135953';
+} from '../runtime/gm.js?v=20261119162300';
 import {
   snd_play, snd_pitch, snd_volume, snd_init, snd_loop, snd_stop, snd_free_all, mus_loop_ext, mus_volume, mus_stop,
   mus_pause, mus_resume,
-} from '../runtime/audio.js?v=20261119135953';
-import { assets } from '../runtime/assets.js?v=20261119135953';
-import { scr_darkbox } from './common.js?v=20261119135953';
-import { scr_lerpvar_instance, scr_shakeobj, scr_script_repeat } from '../pink/common.js?v=20261119135953';
+} from '../runtime/audio.js?v=20261119162300';
+import { assets } from '../runtime/assets.js?v=20261119162300';
+import { scr_darkbox } from './common.js?v=20261119162300';
+import { scr_lerpvar_instance, scr_shakeobj, scr_script_repeat } from '../pink/common.js?v=20261119162300';
 
 // ---------------------------------------------------------------- rooms
 
@@ -370,7 +370,7 @@ defineObject('obj_panner', Panner);
 // camera moves.
 class Dialoguer extends Instance {
   create() {
-    this.depth = -500;
+    this.depth = 2; // (the game's depth table: the box is behind its writer and face, at 0)
     this.active = 0;
     this.side = 1;
     this.writer = null;
@@ -390,11 +390,11 @@ class Dialoguer extends Instance {
     this.active = 1;
     const xx = Math.round(38 + G.camX), yy = Math.round(40 + G.camY);
     const w = instance_create(xx + 20, this.side === 0 ? yy - 10 : yy + 300, 'obj_writer');
-    w.depth = this.depth - 1;
+    w.depth = 0;
     w.dialoguer = 1;
     w.facer = 1;
     const face = instance_create(w.x + 16, w.y + 10, 'obj_face');
-    face.depth = this.depth - 2;
+    face.depth = 0;
     if (global.fc !== 0 && w.originalcharline === 33) w.charline = 26;
     this.writer = w;
     this.face = face;

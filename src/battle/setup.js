@@ -4,11 +4,11 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, room_reset, objectExists,
   font_add_sprite_ext,
-} from '../runtime/gm.js?v=20261119135953';
-import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261119135953';
-import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261119135953';
-import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261119135953';
-import { registerBackground } from './misc.js?v=20261119135953';
+} from '../runtime/gm.js?v=20261119162300';
+import { audio_stop_all, snd_init } from '../runtime/audio.js?v=20261119162300';
+import { WEAPONS, ARMORS, ARMOR_ELEMENTS, BASE_STATS, getLoadout } from './equipment.js?v=20261119162300';
+import { arr, arr2, view_x, view_y, splitCaller } from './common.js?v=20261119162300';
+import { registerBackground } from './misc.js?v=20261119162300';
 
 function scr_gamestart() {
   global.chapter = 5; // (Pink is Chapter 5's: its shared objects branch on it)

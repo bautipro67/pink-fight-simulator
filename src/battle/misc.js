@@ -3,8 +3,8 @@
 import {
   global, G, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   draw_sprite_ext, d3d_set_fog, objectExists, lerp, make_color_hsv, merge_color, instancesOf,
-} from '../runtime/gm.js?v=20261119135953';
-import { splitCaller, draw_sprite_tiled_ext, knightEnemy } from './common.js?v=20261119135953';
+} from '../runtime/gm.js?v=20261119162300';
+import { splitCaller, draw_sprite_tiled_ext, knightEnemy } from './common.js?v=20261119162300';
 
 // Generic effect objects the Knight modules may also register (their Chapter 3 versions win).
 const shared = (name, cls) => { if (!objectExists(name)) defineObject(name, cls); };
@@ -126,38 +126,35 @@ class Shake extends Instance {
     this.siner = 0;
     this.active = 0;
     this.permashake = 0;
-    this.camerax = G.camX;
-    this.cameray = G.camY;
+    this.cooldown = 0;
+    if (instancesOf('obj_shake').length >= 2) {
+      this.active = -1;
+      instance_destroy(this);
+    }
   }
-  step() {
+  // (Chapter 5 moved the shake to the End Step with a cooldown; same as src/pink/common.js)
+  endStep() {
     if (this.active == 0) {
-      this.camerax = G.camX;
-      this.cameray = G.camY;
-      if (!global.flag || global.flag[12] == 0) {
-        G.camX = this.camerax + this.shakex;
-        G.camY = this.cameray + this.shakey;
-      }
+      this.remx = G.camX;
+      this.remy = G.camY;
       this.shakesign = -this.shakesign;
       this.active = 1;
-      this.alarm[0] = this.shakespeed;
+      this.cooldown = this.shakespeed;
     }
-  }
-  alarm0() {
+    if (this.cooldown <= 0) {
+      if (this.permashake == 0) {
+        if (this.shakex > 0) this.shakex -= 1;
+        if (this.shakey > 0) this.shakey -= 1;
+      }
+      this.shakesign = -this.shakesign;
+      this.cooldown = this.shakespeed;
+    }
     if (!global.flag || global.flag[12] == 0) {
-      G.camX = this.camerax + this.shakex * this.shakesign;
-      G.camY = this.cameray + this.shakey * this.shakesign;
+      G.camX = this.remx + this.shakex * this.shakesign;
+      G.camY = this.remy + this.shakey * this.shakesign;
     }
-    if (this.permashake == 0) {
-      if (this.shakex > 0) this.shakex -= 1;
-      if (this.shakey > 0) this.shakey -= 1;
-    }
-    this.shakesign = -this.shakesign;
-    this.alarm[0] = this.shakespeed;
+    this.cooldown -= 1;
     if (this.shakex == 0 && this.shakey == 0) instance_destroy(this);
-  }
-  onDestroy() {
-    G.camX = this.camerax;
-    G.camY = this.cameray;
   }
 }
 shared('obj_shake', Shake);
@@ -254,7 +251,7 @@ class FadeOut extends Instance {
     this.x = -20; // Create moves it here, whatever position scr_fadeout gave it
     this.y = -20;
     this.fadein = 0;
-    this.depth = -1000;
+    this.depth = -99999; // (the game's depth table: over everything)
   }
   draw() {
     this.image_alpha += this.fadespeed;

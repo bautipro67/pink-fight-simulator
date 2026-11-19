@@ -555,6 +555,19 @@ def object_info(datawin, names):
     return info
 
 
+def depth_table(code):
+    """The game's __global_object_depths: DELTARUNE's instance_create gives these objects this depth
+    before their Create runs (any other object gets 0)."""
+    f = os.path.join(code, 'gml_Script___global_object_depths.gml')
+    if not os.path.exists(f):
+        f = os.path.join('research', 'code', 'gml_Script___global_object_depths.gml')  # (code may be a fixed-up copy)
+    if not os.path.exists(f):
+        return {}
+    s = open(f, encoding='utf-8').read()
+    dep = {int(i): v for i, v in re.findall(r'__objectDepths\[(\d+)\] = (-?[\d.]+);', s)}
+    return {n: dep[int(i)] for i, n in re.findall(r'__objectNames\[(\d+)\] = "(\w+)";', s) if int(i) in dep}
+
+
 def classname(obj):
     return ''.join(p.capitalize() for p in obj[4:].split('_'))
 
@@ -563,6 +576,7 @@ def main():
     code, datawin = sys.argv[1], sys.argv[2]
     objs = sys.argv[3:]
     info = object_info(datawin, set(objs))
+    depths = depth_table(code)
     unknown = set()
     out = []
     for obj in objs:
@@ -595,6 +609,8 @@ def main():
             ctor.append("    this.mask_index = '%s';" % i['mask'])
         if i.get('visible') == 0:
             ctor.append('    this.visible = false;')
+        if obj in depths and float(depths[obj]) != 0:
+            ctor.append('    this.depth = %s;' % depths[obj])
         if ctor:
             out.append('  constructor() {\n    super();\n%s\n  }' % '\n'.join(ctor))
         for name, arg, js in events:

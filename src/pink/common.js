@@ -13,8 +13,8 @@ import {
   collision_rectangle, d3d_set_fog, draw_set_blend_mode, gpu_get_blendmode, sprite_get_width, sprite_get_height,
   sprite_get_xoffset, sprite_get_yoffset, draw_triangle_color, draw_circle, draw_get_alpha, merge_color, random, S,
   defineScript,
-} from '../runtime/gm.js?v=20261119135953';
-import { snd_play, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261119135953';
+} from '../runtime/gm.js?v=20261119162300';
+import { snd_play, snd_volume, snd_pitch } from '../runtime/audio.js?v=20261119162300';
 
 export const VIEW_W = 640;
 export const VIEW_H = 480;
@@ -911,38 +911,32 @@ class Shake extends Instance {
       instance_destroy(this);
     }
   }
-  step() {
+  // (Chapter 5 moved the shake to the End Step with a cooldown: it starts on the other side and
+  // ends back on the remembered view)
+  endStep() {
     if (this.active == 0) {
+      this.remx = G.camX;
+      this.remy = G.camY;
       this.beenset = 1;
-      this.mycamerax = G.camX;
-      this.mycameray = G.camY;
-      if (!shakeOff()) {
-        G.camX = this.mycamerax + this.shakex;
-        G.camY = this.mycameray + this.shakey;
-      }
       this.shakesign = -this.shakesign;
       this.active = 1;
-      this.alarm[0] = this.shakespeed;
+      this.cooldown = this.shakespeed;
     }
-  }
-  alarm0() {
+    if (this.active == -1) return;
+    if (this.cooldown <= 0) {
+      if (this.permashake === 0) {
+        if (this.shakex > 0) this.shakex -= 1;
+        if (this.shakey > 0) this.shakey -= 1;
+      }
+      this.shakesign = -this.shakesign;
+      this.cooldown = this.shakespeed;
+    }
     if (!shakeOff()) {
-      G.camX = this.mycamerax + this.shakex * this.shakesign;
-      G.camY = this.mycameray + this.shakey * this.shakesign;
+      G.camX = this.remx + this.shakex * this.shakesign;
+      G.camY = this.remy + this.shakey * this.shakesign;
     }
-    if (this.permashake === 0) {
-      if (this.shakex > 0) this.shakex -= 1;
-      if (this.shakey > 0) this.shakey -= 1;
-    }
-    this.shakesign = -this.shakesign;
-    this.alarm[0] = this.shakespeed;
+    this.cooldown -= 1;
     if (this.shakex === 0 && this.shakey === 0) instance_destroy(this);
-  }
-  onDestroy() {
-    if (this.beenset) {
-      G.camX = this.mycamerax;
-      G.camY = this.mycameray;
-    }
   }
 }
 defineShared('obj_shake', Shake);

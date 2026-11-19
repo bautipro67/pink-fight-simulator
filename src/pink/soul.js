@@ -3,9 +3,9 @@
 import {
   G, global, Instance, defineObject, defineScript, instance_create, instance_destroy, instancesOf, place_meeting, point_distance, draw_self, draw_sprite_ext, event_user, S, snd_play, snd_stop,
   left_h, right_h, up_h, down_h, button2_h,
-} from './rt.js?v=20261119135953';
-import { first, view_x, view_y, move_towards_point } from './common.js?v=20261119135953';
-import { drawSoulHat } from '../hats.js?v=20261119135953';
+} from './rt.js?v=20261119162300';
+import { first, view_x, view_y, move_towards_point } from './common.js?v=20261119162300';
+import { drawSoulHat } from '../hats.js?v=20261119162300';
 
 const SOLID = 'obj_battlesolid';
 
@@ -157,6 +157,10 @@ export class Grazebox extends Instance {
     if (this.grazetimefactor > 3) this.grazetimefactor = 3;
     if (this.grazetpfactor > 3) this.grazetpfactor = 3;
     if (this.grazesizefactor > 3) this.grazesizefactor = 3;
+    // (Chapter 5 also keeps them from going negative)
+    if (this.grazetimefactor < 0) this.grazetimefactor = 0;
+    if (this.grazetpfactor < 0) this.grazetpfactor = 0;
+    if (this.grazesizefactor < 0) this.grazesizefactor = 0;
     this.image_xscale = this.grazesizefactor;
     this.image_yscale = this.grazesizefactor;
     const h = first('obj_heart');

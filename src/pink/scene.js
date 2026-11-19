@@ -12,16 +12,16 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, instance_exists,
   instancesOf, draw_sprite_ext, draw_sprite, lengthdir_x, lengthdir_y, sprite_get_xoffset, sprite_get_yoffset,
   sprite_get_width, sprite_get_height, sprite_get_number, choose, irandom, random,
-} from '../runtime/gm.js?v=20261119135953';
-import { snd_volume, snd_stop, audio_sound_set_track_position } from '../runtime/audio.js?v=20261119135953';
-import { loadMusic } from '../runtime/assets.js?v=20261119135953';
+} from '../runtime/gm.js?v=20261119162300';
+import { snd_volume, snd_stop, audio_sound_set_track_position } from '../runtime/audio.js?v=20261119162300';
+import { loadMusic } from '../runtime/assets.js?v=20261119162300';
 import {
   c, c_waitcustom_end, scr_cutscene_make, scr_actor_setup, scr_depth, loadRoom, enterRoom,
   scr_jump_to_point_sprite, moveToPoint,
-} from '../screens/cutscene.js?v=20261119135953';
-import { scr_dark_marker, scr_marker, scr_lerpvar_instance, scr_doom } from './common.js?v=20261119135953';
-import { startBattle } from '../battle/setup.js?v=20261119135953';
-import { gotoRoom } from '../screens/common.js?v=20261119135953';
+} from '../screens/cutscene.js?v=20261119162300';
+import { scr_dark_marker, scr_marker, scr_lerpvar_instance, scr_doom } from './common.js?v=20261119162300';
+import { startBattle } from '../battle/setup.js?v=20261119162300';
+import { gotoRoom } from '../screens/common.js?v=20261119162300';
 
 export { scr_depth };
 
@@ -231,8 +231,8 @@ class PinkSpeaker extends Instance {
     super();
     this.sprite_index = 'spr_pinkspeaker_silhouette';
   }
-  // (created at depth -50, in front of Chapter 5's dialogue box at depth 0; this port's box is at -500)
-  step() { this.depth = -600; }
+  // (at depth -50, in front of the dialogue box at depth 2)
+  step() { this.depth = -50; }
   create() {
     Object.assign(this, {
       anim_spd: 0.2, image_speed: 0.2, image_xscale: 2, image_yscale: 2, visi: false, playing: false, silhouette: true,
