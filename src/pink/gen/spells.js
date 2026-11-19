@@ -1,14 +1,14 @@
-// Ralsei's ReviveSong and Susie's Scythemare, Chapter 5's new spells (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
+// Ralsei's ReviveSong (and its falling feathers) and Susie's Scythemare, Chapter 5's new spells (machine-translated from the Chapter 5 GML by tools/gen_pink.sh; edit tools/postfix.py, not this file)
 /* eslint-disable */
 import {
-  Instance, S, choose, clamp, d3d_set_fog, defineObject, draw_clear_alpha, draw_self, draw_set_alpha, draw_set_blend_mode, draw_set_color, draw_sprite_ext, draw_surface, draw_surface_ext, global, gpu_set_alphatestenable, instance_create, instance_create_depth, instance_destroy, irandom_range, lengthdir_x, lerp, random, random_range, snd_pitch, snd_play, snd_stop, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
-} from '../rt.js?v=20261119162300';
+  Instance, S, choose, clamp, d3d_set_fog, defineObject, draw_clear_alpha, draw_self, draw_set_alpha, draw_set_blend_mode, draw_set_color, draw_sprite_ext, draw_surface, draw_surface_ext, global, gpu_set_alphatestenable, instance_create, instance_create_depth, instance_destroy, irandom, irandom_range, lengthdir_x, lerp, random, random_range, snd_pitch, snd_play, snd_stop, surface_create, surface_exists, surface_free, surface_reset_target, surface_set_target,
+} from '../rt.js?v=20261119213904';
 import {
-  cameray, clamp01, i_ex, scr_dark_marker, scr_ease_in, scr_ease_inout, scr_ease_out, snd_play_x,
-} from '../common.js?v=20261119162300';
+  cameray, clamp01, i_ex, scr_dark_marker, scr_ease_in, scr_ease_inout, scr_ease_out, scr_movetowards, snd_play_x,
+} from '../common.js?v=20261119213904';
 import {
   EXIT, O, T, W,
-} from '../gml.js?v=20261119162300';
+} from '../gml.js?v=20261119213904';
 
 // obj_spell_revivesong (default sprite spr_ralsei_cherub, depth 0)
 class SpellRevivesong extends Instance {
@@ -273,6 +273,56 @@ class SpellRevivesong extends Instance {
   }
 }
 defineObject('obj_spell_revivesong', SpellRevivesong);
+
+// obj_cherub_feathers (default sprite spr_cherub_feathers, depth 0)
+class CherubFeathers extends Instance {
+  constructor() {
+    super();
+    this.sprite_index = 'spr_cherub_feathers';
+  }
+  create() {
+    this.image_speed = 0;
+    this.image_index = irandom(this.image_number - 1);
+    this.speed = random_range(5, 15);
+    this.friction = 2;
+    this.fallspeed = 0;
+    this.siner = random(94.24777960769379);
+    this.spinner = 0;
+    this.spin_start = irandom_range(- 90, 90);
+    this.spin_offset = this.spin_start;
+    this.image_xscale = 2;
+    this.image_yscale = 2;
+    this.lifetime = 30;
+  }
+  step() {
+    let _spinease;
+    if (this.speed < 5) {
+        this.friction = 0.2;
+    }
+    if (this.speed < 2) {
+        this.fallspeed = scr_movetowards(this.fallspeed, 1, 0.05);
+    }
+    this.y = this.y + this.fallspeed;
+    this.x = this.x + Math.sin(this.siner / 15) * (this.fallspeed / 2);
+    this.siner = this.siner + 1;
+    this.image_angle = - Math.cos(this.siner / 15) * 30 + this.spin_offset;
+    if (this.spinner < 1) {
+        _spinease = scr_ease_out(this.spinner, 2);
+        this.spinner = this.spinner + 0.1;
+        this.spin_offset = lerp(this.spin_start, 0, _spinease);
+    }
+    if (this.fallspeed == 1) {
+        this.lifetime = this.lifetime - 1;
+    }
+    if (this.lifetime <= 0) {
+        this.image_alpha = this.image_alpha - 0.1;
+        if (this.image_alpha <= 0) {
+            instance_destroy(this);
+        }
+    }
+  }
+}
+defineObject('obj_cherub_feathers', CherubFeathers);
 
 // obj_spell_scythemare (default sprite spr_scythemare, depth 0)
 class SpellScythemare extends Instance {

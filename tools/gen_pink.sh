@@ -35,7 +35,7 @@ gen attacks "Pink's attack objects (cats, zaps, lanes, the 3D tunnel, meteors, b
 gen movement "Pink moving around the box during her attacks (obj_pink_battlemovement) $NOTE" obj_pink_battlemovement
 gen date "The DATE at DOKI MAX (obj_date_controller) and its hearts and smoke $NOTE" \
   obj_date_controller obj_date_heart obj_shinobeetle_smokecloud obj_fadein obj_afterimage_screen
-gen spells "Ralsei's ReviveSong and Susie's Scythemare, Chapter 5's new spells $NOTE" obj_spell_revivesong obj_spell_scythemare
+gen spells "Ralsei's ReviveSong (and its falling feathers) and Susie's Scythemare, Chapter 5's new spells $NOTE" obj_spell_revivesong obj_cherub_feathers obj_spell_scythemare
 gen encounter "Pink's encounter scene before and after the fight (obj_dw_pink_encounter, room_dw_pink_encounter) $NOTE" obj_dw_pink_encounter
 # obj_dbulletcontroller's types 200-210 (Pink's attacks), as typeNNN methods of the port's controller.
 python -I tools/gen_dbullet_types.py "$T/dbt" > /dev/null

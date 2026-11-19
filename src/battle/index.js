@@ -1,13 +1,13 @@
 // Imports every battle-system module so their objects and scripts get registered.
-import './misc.js?v=20261119162300';
-import './text.js?v=20261119162300';
-import './setup.js?v=20261119162300';
-import './controller.js?v=20261119162300';
-import './heroes.js?v=20261119162300';
-import './fight.js?v=20261119162300';
-import './damage.js?v=20261119162300';
-import './spells.js?v=20261119162300';
-import './endbattle.js?v=20261119162300';
+import './misc.js?v=20261119213904';
+import './text.js?v=20261119213904';
+import './setup.js?v=20261119213904';
+import './controller.js?v=20261119213904';
+import './heroes.js?v=20261119213904';
+import './fight.js?v=20261119213904';
+import './damage.js?v=20261119213904';
+import './spells.js?v=20261119213904';
+import './endbattle.js?v=20261119213904';
 
-export { startBattle } from './setup.js?v=20261119162300';
-export { MonsterParent } from './misc.js?v=20261119162300';
+export { startBattle } from './setup.js?v=20261119213904';
+export { MonsterParent } from './misc.js?v=20261119213904';
