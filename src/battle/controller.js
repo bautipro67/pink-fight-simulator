@@ -9,10 +9,10 @@ import {
   draw_sprite_ext, draw_text, draw_text_colour, draw_text_transformed, draw_line_width,
   surface_create, surface_exists, surface_free, surface_set_target, surface_reset_target, draw_surface, draw_clear_alpha,
   gpu_set_blendmode, d3d_set_fog, irandom, random,
-} from '../runtime/gm.js?v=20261119213904';
-import { scr_doom, scr_lerpvar_instance } from '../pink/common.js?v=20261119213904';
-import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261119213904';
-import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261119213904';
+} from '../runtime/gm.js?v=20261120034304';
+import { scr_doom, scr_lerpvar_instance } from '../pink/common.js?v=20261120034304';
+import { snd_play, snd_volume, snd_pitch, mus_loop_ext } from '../runtime/audio.js?v=20261120034304';
+import { arr, arr2, view_x, view_y, withInst, exists, gmlString, subst, knightEnemy } from './common.js?v=20261120034304';
 
 const sin = Math.sin, cos = Math.cos;
 const g = global;
@@ -242,7 +242,7 @@ class BattleController extends Instance {
       if (TARGET_MENUS.includes(g.bmenuno)) this.menuTargets(c);
     }
     if (this.movenoise == 1) { snd_play('snd_menumove'); this.movenoise = 0; }
-    if (this.grazenoise == 1) { snd_play('snd_graze'); this.grazenoise = 0; }
+    if (this.grazenoise == 1 && this.victory == 0) { snd_play('snd_graze'); this.grazenoise = 0; } // (Chapter 5: not once the fight is won)
     if (this.selnoise == 1) { snd_play('snd_select'); this.selnoise = 0; }
     if (this.damagenoise == 1) { snd_play('snd_damage'); this.damagenoise = 0; }
     if (this.laznoise == 1) { snd_play('snd_laz_c'); this.laznoise = 0; }
@@ -779,7 +779,7 @@ class BattleController extends Instance {
           draw_rectangle(xx + 400, yy + 380 + i * 30, xx + 500, yy + 380 + i * 30 + 15, false);
           draw_set_color(0x00ff00);
           let hp = g.hp[g.char[i]] / g.maxhp[g.char[i]] * 100;
-          if (hp <= -100) hp = -100;
+          // (Chapter 4 on draws the bar without Chapter 3's -100 floor)
           draw_rectangle(xx + 400, yy + 380 + i * 30, xx + 400 + hp, yy + 380 + i * 30 + 15, false);
         }
       }

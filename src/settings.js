@@ -1,6 +1,6 @@
 // Player options and control bindings, remembered in this browser when storage is available.
-import { G, controls, setControls } from './runtime/gm.js?v=20261119213904';
-import { setMasterVolume } from './runtime/audio.js?v=20261119213904';
+import { G, controls, setControls } from './runtime/gm.js?v=20261120034304';
+import { setMasterVolume } from './runtime/audio.js?v=20261120034304';
 
 const SETTINGS_KEY = 'pink-sim-settings';
 const CONTROLS_KEY = 'pink-sim-controls';

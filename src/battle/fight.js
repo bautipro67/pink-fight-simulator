@@ -4,8 +4,8 @@ import {
   withObj, event_user, choose, random, round, merge_color, button1_p, button2_p, button3_p,
   draw_set_color, draw_set_alpha, draw_set_font, draw_set_halign, draw_get_color, draw_rectangle,
   draw_sprite, draw_sprite_ext, draw_text_transformed,
-} from '../runtime/gm.js?v=20261119213904';
-import { withInst, gmlString, knightEnemy } from './common.js?v=20261119213904';
+} from '../runtime/gm.js?v=20261120034304';
+import { withInst, gmlString, knightEnemy } from './common.js?v=20261120034304';
 
 const g = global;
 
@@ -125,7 +125,7 @@ class AttackPress extends Instance {
         const base = { 1: 0x0000ff, 2: 0x800080, 3: 0x008000 }[j];
         draw_set_color(base);
         if (this.pressbuffer[j] > 0) draw_set_color(merge_color(base, 0xffffff, this.pressbuffer[j] / 5));
-        draw_rectangle(x + 78, y + 38 * i, x + 80 + 15 * this.boltspeed, y + 38 * i + 36, true);
+        draw_rectangle(x + 78, y + 38 * i + 1, x + 80 + 15 * this.boltspeed, y + 38 * i + 36, true);
         draw_rectangle(x + 79, y + 38 * i + 1, x + 80 + 15 * this.boltspeed - 1, y + 38 * i + 35, true);
         draw_sprite('spr_pressfront', j - 1, x, y + 38 * i);
         if (g.flag[13] == 0) draw_sprite('spr_pressfront_b', 0, x, y + 38 * i);
@@ -413,7 +413,7 @@ class DmgWriter extends Instance {
     if (this.type == 2) draw_set_color(this.lightg);
     if (this.type == 3) draw_set_color(0x00ff00);
     if (this.type == 4) draw_set_color(0xff0000);
-    if (this.type == 5 && this.damage < 0) draw_set_color(0xc0c0c0);
+    if (this.type == 5 && this.damage < 0) draw_set_color(0xff0000); // (Chapter 5: red; Chapters 2-4 silver)
     if (this.type == 6) draw_set_color(merge_color(0xffff00, 0xffffff, 0.3));
     let message = this.specialmessage;
     // (Chapter 5: in Pink's fight a 0 is written as 0, not MISS)
@@ -423,8 +423,9 @@ class DmgWriter extends Instance {
     if (this.type == 12) message = 10;
     if (this.init !== 1) {
       this.init = 1;
-      this.damagemessage = gmlString(this.damage);
-      if (this.type == 5) this.damagemessage = (this.damage < 0 ? '' : '+') + gmlString(this.damage) + '%';
+      // (Chapter 4 on: the number is rounded)
+      this.damagemessage = gmlString(round(this.damage));
+      if (this.type == 5) this.damagemessage = (this.damage < 0 ? '' : '+') + gmlString(round(this.damage)) + '%';
     }
     draw_set_font(g.damagefont);
     // Chapter 5: Pink's DOKI (type 15), pink numbers and the DOKI word (spr_battlemsg 15).
