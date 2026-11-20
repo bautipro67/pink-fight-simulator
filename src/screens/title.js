@@ -5,17 +5,17 @@ import {
   G, global, Instance, defineObject, defineScript, S, instance_create, instance_destroy, objectExists,
   draw_sprite_ext, draw_set_color, draw_set_font, draw_set_alpha, draw_rectangle, draw_text, controls,
   draw_set_halign, draw_text_transformed, fa_center, fa_left,
-} from '../runtime/gm.js?v=20261120034304';
-import { snd_init, snd_play, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261120034304';
-import { startBattle } from '../battle/setup.js?v=20261120034304';
-import * as SB from '../debug/sandbox.js?v=20261120034304';
-import { gotoRoom, fadeOut, centerText, whenSoundsReady } from './common.js?v=20261120034304';
-import { saveSettings, applyVolume, getBest, BOMB_MODES, bombMode } from '../settings.js?v=20261120034304';
-import { HATS, currentHat, drawHat } from '../hats.js?v=20261120034304';
-import { openEquipment } from './equipment.js?v=20261120034304';
-import { openControls, keyName } from './controls.js?v=20261120034304';
-import './gameover.js?v=20261120034304';
-import './ending.js?v=20261120034304';
+} from '../runtime/gm.js?v=20261120125011';
+import { snd_init, snd_play, mus_loop_ext, mus_volume, mus_stop } from '../runtime/audio.js?v=20261120125011';
+import { startBattle } from '../battle/setup.js?v=20261120125011';
+import * as SB from '../debug/sandbox.js?v=20261120125011';
+import { gotoRoom, fadeOut, centerText, whenSoundsReady } from './common.js?v=20261120125011';
+import { saveSettings, applyVolume, getBest, BOMB_MODES, bombMode } from '../settings.js?v=20261120125011';
+import { HATS, currentHat, drawHat } from '../hats.js?v=20261120125011';
+import { openEquipment } from './equipment.js?v=20261120125011';
+import { openControls, keyName } from './controls.js?v=20261120125011';
+import './gameover.js?v=20261120125011';
+import './ending.js?v=20261120125011';
 
 // Dark panel over the title art, behind the OPTIONS and CONTROLS lists.
 class Panel extends Instance {
